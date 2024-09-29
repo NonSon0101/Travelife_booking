@@ -135,7 +135,7 @@ const DiscountForm = (props: IDiscountFormProps) => {
                     selected={startDate}
                     dateFormat="MM/dd/yyyy"
                     onChange={(date: Date) => setValue('startDate', dayjs(date).toDate(), { shouldDirty: true })}
-                    customInput={createElement(forwardRef(DateInput))}
+                    customInput={<DateInput />}
                   />
                 </FormInput>
                 <FormInput name="endDate" label="End Date">
@@ -144,7 +144,7 @@ const DiscountForm = (props: IDiscountFormProps) => {
                     selected={endDate}
                     dateFormat="MM/dd/yyyy"
                     onChange={(date: Date) => setValue('endDate', dayjs(date).toDate(), { shouldDirty: true })}
-                    customInput={createElement(forwardRef(DateInput))}
+                    customInput={<DateInput />}
                   />
                 </FormInput>
                 <FormInput name="code" label="Code" placeholder="Enter Code" />

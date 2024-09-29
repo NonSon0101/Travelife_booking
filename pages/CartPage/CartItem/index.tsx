@@ -367,7 +367,7 @@ const CartItem = (props: ICartItem) => {
                     </MenuButton>
                   </VStack>
                   <MenuList minWidth="320px" padding="4px 10px">
-                    {tourDetail.priceOptions.map((participant) => {
+                    {tourDetail?.priceOptions?.map((participant) => {
                       const foundParticipant = tour.participants.filter(p => p.title === participant.title);
                       const quantity = foundParticipant[0]?.quantity ?? 0
                       return (

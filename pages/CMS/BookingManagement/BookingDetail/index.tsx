@@ -81,9 +81,9 @@ const BookingDetail = () => {
           </Text>
           <Box width="full" background="white" padding={8} borderRadius={8} borderWidth={1} boxShadow="sm">
             <SimpleGrid maxWidth="1200px" columns={{ base: 1, md: 4 }} gap={4}>
-              <FormLabel label="Discount" value={get(bookingDetail, 'checkoutOrder.discount', '')} />
-              <FormLabel label="Total Order" value={get(bookingDetail, 'checkoutOrder.totalOrder', '')} />
-              <FormLabel label="Total Price" value={get(bookingDetail, 'checkoutOrder.totalPrice', '')} />
+            <FormLabel label="Discount" value={String(get(bookingDetail, 'checkoutOrder.discount', ''))} />
+            <FormLabel label="Total Order" value={String(get(bookingDetail, 'checkoutOrder.totalOrder', ''))} />
+            <FormLabel label="Total Price" value={String(get(bookingDetail, 'checkoutOrder.totalPrice', ''))} />
             </SimpleGrid>
           </Box>
           <Text fontSize="lg" fontWeight={600}>

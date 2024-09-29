@@ -81,6 +81,8 @@ export interface IBookingDetail {
   personalInfo: IPersonalInfo
   payment?: IPayment
   bookingItems: IBookingItem[]
+  createdAt?: Date
+
 }
 
 export interface IBookingInfoPagination {

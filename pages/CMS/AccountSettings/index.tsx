@@ -71,6 +71,7 @@ const AccountSettings = () => {
     }
   }, [userId])
 
+
   useEffect(() => {
     if (userDetail?._id) {
       reset({

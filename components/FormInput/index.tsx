@@ -40,6 +40,7 @@ export interface IFormItemProps {
   autoComplete?: string
   hideErrorMessage?: boolean
 }
+
 const FormItem = (props: IFormItemProps) => {
   const {
     name,
@@ -60,9 +61,11 @@ const FormItem = (props: IFormItemProps) => {
     height,
     gridColumn,
     autoComplete,
-    hideErrorMessage
+    hideErrorMessage,
   } = props
-  const {register, formState: { errors }, control} = useFormContext()
+
+  const { register, formState: { errors }, control } = useFormContext()
+
   let pattern: { value: RegExp; message: string } | undefined
   switch (name) {
     case 'firstName':
@@ -93,7 +96,7 @@ const FormItem = (props: IFormItemProps) => {
         background: 'gray.100',
         opacity: '0.7 !important',
         color: 'gray.400',
-        variant: 'filled'
+        variant: 'filled',
       }
     : {}
 
@@ -119,6 +122,7 @@ const FormItem = (props: IFormItemProps) => {
           </Tooltip>
         )}
       </HStack>
+
       {children ? (
         children
       ) : type !== 'number' ? (
@@ -139,8 +143,7 @@ const FormItem = (props: IFormItemProps) => {
         <Controller
           name={name}
           control={control}
-          rules={{ required: true }}
-          isInvalid={!!errors[name]}
+          rules={{ required: isRequired ? `${label ?? startCase(name)} is required` : false }}
           render={({ field }) => (
             <NumberInput focusBorderColor="teal.500" {...field} min={min}>
               <NumberInputField />
@@ -152,8 +155,12 @@ const FormItem = (props: IFormItemProps) => {
           )}
         />
       )}
+
       {!hideErrorMessage && (
-      <FormErrorMessage className={errorClassName}>{/*get(errors, `${name}.message`, '')}*/}</FormErrorMessage>
+      <FormErrorMessage className={errorClassName}>
+       {get(errors, `${name}.message`, '') as string}
+      </FormErrorMessage>
+     
       )}
     </FormControl>
   )

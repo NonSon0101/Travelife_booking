@@ -11,7 +11,12 @@ export function getValidArray<T>(array?: T[]): T[] {
 }
 
 export function getAccessToken(platform: PLATFORM): string {
-  return localStorage.getItem(`${platform}Token`) ?? sessionStorage.getItem(`${platform}Token`) ?? ''
+  if (typeof window !== 'undefined') {
+    // Running in the browser, safe to access localStorage and sessionStorage
+    return localStorage.getItem(`${platform}Token`) ?? sessionStorage.getItem(`${platform}Token`) ?? '';
+  }
+  // Return an empty string or a default value when not in the browser
+  return '';
 }
 
 export function getOptions<T>(array: T[], labelKey: string, valueKey: string): IOption[] {

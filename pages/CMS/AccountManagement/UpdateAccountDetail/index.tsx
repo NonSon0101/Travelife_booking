@@ -140,7 +140,7 @@ const UpdateAccountDetail = () => {
                     selected={dateOfBirth}
                     dateFormat="MM/dd/yyyy"
                     onChange={(date: Date) => setValue('dateOfBirth', dayjs(date).toDate(), { shouldDirty: true })}
-                    customInput={createElement(forwardRef(DateInput))}
+                    customInput={<DateInput />}
                   />
                 </FormInput>
                 <FormInput name="passport" label="Passport" />
@@ -150,7 +150,7 @@ const UpdateAccountDetail = () => {
                     selected={dateOfIssuePassport}
                     dateFormat="MM/dd/yyyy"
                     onChange={(date: Date) => setValue('dateOfIssuePassport', dayjs(date).toDate(), { shouldDirty: true })}
-                    customInput={createElement(forwardRef(DateInput))}
+                    customInput={<DateInput />}
                   />
                 </FormInput>
                 <FormInput name="dateOfExpirationPassport" label="Date Of Expiration Passport">
@@ -159,7 +159,7 @@ const UpdateAccountDetail = () => {
                     selected={dateOfExpirationPassport}
                     dateFormat="MM/dd/yyyy"
                     onChange={(date: Date) => setValue('dateOfExpirationPassport', dayjs(date).toDate(), { shouldDirty: true })}
-                    customInput={createElement(forwardRef(DateInput))}
+                    customInput={<DateInput />}
                   />
                 </FormInput>
                 <FormControl id="role" marginBottom={6}>
