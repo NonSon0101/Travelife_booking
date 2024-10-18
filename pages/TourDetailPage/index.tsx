@@ -18,7 +18,10 @@ import {
   useBreakpointValue,
   VStack,
   GridItem,
-  Stack
+  Stack,
+  Switch,
+  FormControl,
+  FormLabel
 } from "@chakra-ui/react";
 import { toast } from 'react-toastify'
 import Slider from "react-slick";
@@ -142,7 +145,7 @@ const TourDetailPage = () => {
     let totalPrice: number = 0;
 
     guestInfo.forEach((guest) => {
-      totalPrice += guest.price;
+      totalPrice += guest.price * guest.quantity;
     });
     setTotalPrice(totalPrice);
   }, [guestInfo]);
@@ -371,9 +374,17 @@ const TourDetailPage = () => {
               background="rgb(4, 54, 74)"
               borderRadius="15px"
             >
-              <Text fontSize="2xl" fontWeight="bold" color="#fff">
-                Select participant and date
-              </Text>
+              <Stack width='full' flexDirection={{base: 'column', lg: 'row'}} justifyContent={{lg: 'space-between'}}>  
+                <Text fontSize="2xl" fontWeight="bold" color="#fff">
+                  Select participant and date
+                </Text>
+                <FormControl display='flex' alignItems='center' width='unset'>
+                  <FormLabel htmlFor='email-alerts' mb='0' color="#fff">
+                    Private tour?
+                  </FormLabel>
+                  <Switch id='email-alerts' />
+                </FormControl>
+              </Stack>
               <SimpleGrid
                 width='full'
                 columns={{base: 1, md: 2, lg: 3}}
@@ -534,9 +545,9 @@ const TourDetailPage = () => {
                     >
                       <Text fontWeight='500' fontSize="lg">
                         {guest.title} {guest.quantity} x{" "}
-                        {formatCurrency(guest.price / guest.quantity)}
+                        {formatCurrency(guest.price)}
                       </Text>
-                      <Text fontWeight='500' fontSize="lg">{guest.price && formatCurrency(guest.price)}</Text>
+                      <Text fontWeight='500' fontSize="lg">{guest.price && formatCurrency(guest.price * guest.quantity)}</Text>
                     </HStack>
                   ))}
                 </VStack>

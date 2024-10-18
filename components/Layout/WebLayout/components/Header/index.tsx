@@ -25,7 +25,7 @@ const Header = (props: IHeader) => {
   return (
     <Box
       width="full"
-      height="80px"
+      height={{base: '130px', md: '80px'}}
       paddingX={8}
       paddingTop="10px"
       display="flex"
@@ -63,7 +63,7 @@ const Header = (props: IHeader) => {
           underLineHoverColor={underLineHoverColor}
         />
       </HStack>
-      <SearchBarInput hideFrom="md" minHeight="44px" placeholder="Search tours by name" />
+      <SearchBarInput hideFrom="md" minHeight="50px" width='full' placeholder="Search tours by name" />
     </Box>
   );
 };

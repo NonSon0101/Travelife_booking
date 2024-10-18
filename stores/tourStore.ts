@@ -32,7 +32,7 @@ class TourStore {
   }
 
   async fetchActiveTours(page = 1, filter = ''): Promise<void> {
-    const { total, docs } = await getActiveTours(`?page=${page}&limit=4&${filter}`)
+    const { total, docs } = await getActiveTours(`?page=${page}&limit=12&${filter}`)
     this.tours = docs
     this.totalCount = total
   }

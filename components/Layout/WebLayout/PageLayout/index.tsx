@@ -32,7 +32,7 @@ const PageLayout = (props: IPageLayoutProps) => {
           position="sticky"
           top="0"
           openLoginModal={() => setIsOpenLoginModal(true)}
-          height="90px"
+          height={{base: '140px', md: '90px'}}
           background="#fff"
           color="#63687a"
           boxShadow="md"
