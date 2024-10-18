@@ -12,7 +12,7 @@ import { useRouter } from 'next/navigation'
 import { toast } from 'react-toastify'
 import routes from 'routes'
 import { getValidArray } from 'utils/common'
-import { getHeaderList } from './utils'
+import { getHeaderList } from 'utils/CMS/TourManagement/utils'
 
 const TourManagement = () => {
   const { tourStore } = useStores()

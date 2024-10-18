@@ -1,6 +1,6 @@
 'use client'
 import { ChangeEvent, useEffect, useRef, useState } from 'react'
-import { Box, Button, Center, HStack, Img, SimpleGrid, Text, VStack } from '@chakra-ui/react'
+import { Box, Button, Center, HStack, Img, SimpleGrid, Text, VStack, chakra } from '@chakra-ui/react'
 import { createTour, updateTourDetail } from 'API/tour'
 import { uploadImage, uploadTourImage } from 'API/upload'
 import Dropdown, { IOption } from 'components/Dropdown'
@@ -18,11 +18,10 @@ import { FormProvider, useForm, useWatch } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import routes from 'routes'
 import { getOptions, getValidArray } from 'utils/common'
-import { formatFormData } from '../utils'
+import { formatFormData } from 'utils/CMS/TourManagement/utils'
 import ManageExclusions from './ManageExclusions'
 import ManageInclusions from './ManageInclusions'
 import ManagePriceOptions from './ManagePriceOptions'
-import { ManageText } from './styles'
 import { currencyOptions, tourTypeOptions } from 'constants/common'
 
 export interface IUpdateTourForm extends ITour {
@@ -31,6 +30,16 @@ export interface IUpdateTourForm extends ITour {
   categoryValue: IOption
   currencyValue: IOption
 }
+
+export const ManageText = chakra(Text, {
+  baseStyle: () => ({
+    color: 'teal',
+    fontSize: 'lg',
+    fontWeight: '600',
+    cursor: 'pointer',
+    marginTop: 4,
+  })
+})
 
 const UpdateTourDetail = () => {
   const { categoryStore, locationStore, tourStore } = useStores()

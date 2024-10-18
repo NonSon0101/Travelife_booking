@@ -3,24 +3,24 @@ import { Box, HStack, MenuButton, MenuButtonProps, StackProps, Text } from "@cha
 
 interface ICustomMenuButton extends MenuButtonProps {
     text: string
-    icon?: string
+    icon?: React.ReactNode // Use ReactNode for actual icon components
 }
 
-const CustomMenuButton = (props: ICustomMenuButton) => {
-    const { text, ...rest } = props
-    return(
-        <Box  
-        position='relative'
-        width="full"
-        height="50px">
+const CustomMenuButton = ({ text, icon, ...rest }: ICustomMenuButton) => {
+    return (
+        <Box position='relative' width="full" height="50px">
             <MenuButton
                 width="full"
                 height='full'
-                background="#fff"
-                border="2px solid #dcdfe4"
+                backgroundColor="white"
+                border="2px solid"
+                borderColor="gray.300"
                 borderRadius="10px"
                 padding="8px 12px"
                 fontWeight="bold"
+                _hover={{ background: "gray.100" }} 
+                _active={{ background: "gray.200" }}
+                aria-label={text} // Accessibility
                 {...rest}
             >
                 <HStack justifyContent="space-between">
@@ -29,7 +29,6 @@ const CustomMenuButton = (props: ICustomMenuButton) => {
                 </HStack>
             </MenuButton>
         </Box>
-        
     )
 }
 

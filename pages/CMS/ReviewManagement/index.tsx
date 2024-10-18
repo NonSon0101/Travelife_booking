@@ -10,7 +10,7 @@ import { IReview } from 'interfaces/review'
 import get from 'lodash/get'
 import { observer } from 'mobx-react'
 import { getValidArray } from 'utils/common'
-import { getHeaderList } from './utils'
+import { getHeaderList } from '../../../utils/CMS/ReviewManagement/utils'
 import { toast } from 'react-toastify'
 
 const ReviewManagement = () => {

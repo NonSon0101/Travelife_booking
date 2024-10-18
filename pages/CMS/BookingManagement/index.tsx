@@ -8,7 +8,7 @@ import { useStores } from 'hooks/useStores'
 import capitalize from 'lodash/capitalize'
 import { observer } from 'mobx-react'
 import { getValidArray } from 'utils/common'
-import { getHeaderList, getStatusColor } from './utils'
+import { getHeaderList, getStatusColor } from '../../../utils/CMS/BookingManagement/utils'
 import { useRouter } from 'next/navigation'
 import routes from 'routes'
 

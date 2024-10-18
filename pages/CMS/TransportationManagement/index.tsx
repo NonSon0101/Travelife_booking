@@ -12,7 +12,7 @@ import { observer } from 'mobx-react'
 import { useRouter } from 'next/navigation'
 import { getValidArray } from 'utils/common'
 import TransportationForm from './TransportationForm'
-import { getHeaderList } from './utils'
+import { getHeaderList } from '../../../utils/CMS/TransportationManagement/utils'
 import { toast } from 'react-toastify'
 
 const TransportationManagement = () => {

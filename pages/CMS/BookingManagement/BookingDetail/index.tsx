@@ -9,7 +9,7 @@ import get from 'lodash/get'
 import { observer } from 'mobx-react'
 import { usePathname, useRouter } from 'next/navigation'
 import routes from 'routes'
-import { getStatusColor } from '../utils'
+import { getStatusColor } from '../../../../utils/CMS/BookingManagement/utils'
 
 const BookingDetail = () => {
   const { bookingStore } = useStores()

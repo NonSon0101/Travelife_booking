@@ -14,7 +14,7 @@ import { useRouter } from 'next/navigation'
 import { getValidArray } from 'utils/common'
 import { toast } from 'react-toastify'
 import CategoryForm from './CategoryForm'
-import { getHeaderList } from './utils'
+import { getHeaderList } from '../../../utils/CMS/CategoryManagement/utils'
 
 const CategoryManagement = () => {
   const { categoryStore } = useStores()

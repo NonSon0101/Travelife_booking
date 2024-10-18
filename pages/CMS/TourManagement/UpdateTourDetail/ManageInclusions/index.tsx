@@ -8,19 +8,31 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  VStack
+  VStack,
+  Text,
+  chakra
 } from '@chakra-ui/react'
 import FormInput from 'components/FormInput'
 import Icon from 'components/Icon'
 import { useFieldArray } from 'react-hook-form'
 import { getValidArray } from 'utils/common'
-import { ManageText } from '../styles'
+
 
 interface IManageInclusionsProps {
   isOpen: boolean
   onClose: () => void
   methods: any
 }
+
+export const ManageText = chakra(Text, {
+  baseStyle: () => ({
+    color: 'teal',
+    fontSize: 'lg',
+    fontWeight: '600',
+    cursor: 'pointer',
+    marginTop: 4,
+  })
+})
 
 const ManageInclusions = (props: IManageInclusionsProps) => {
   const { isOpen, onClose, methods } = props

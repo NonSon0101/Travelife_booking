@@ -13,7 +13,7 @@ import { observer } from 'mobx-react'
 import { useRouter } from 'next/navigation'
 import { getValidArray } from 'utils/common'
 import HotelForm from './HotelForm'
-import { getHeaderList } from './utils'
+import { getHeaderList } from '../../../utils/CMS/HotelManagement/utils'
 import { toast } from 'react-toastify'
 
 const HotelManagement = () => {

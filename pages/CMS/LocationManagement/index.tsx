@@ -13,7 +13,7 @@ import debounce from 'lodash/debounce'
 import { observer } from 'mobx-react'
 import { getValidArray } from 'utils/common'
 import LocationForm from './LocationForm'
-import { getHeaderList } from './utils'
+import { getHeaderList } from '../../../utils/CMS/LocationManagement/utils'
 import { toast } from 'react-toastify'
 
 const LocationManagement = () => {

@@ -17,7 +17,7 @@ const InvoiceItem = (props: IInvoiceItem) => {
             <Text alignSelf='flex-start' fontSize='xl' fontWeight='bold' color='#004747'>Tour 0{numOfItem + 1}</Text>
             <Box width='100%'>
                 <HStack align='flex-start' spacing={6}>
-                    <Image width={200} borderRadius="10px" src={`${bookingItems.tour.thumbnail}`} alt='tourimg' />
+                    <Image width={200} borderRadius="10px" src={`${bookingItems?.tour?.thumbnail}`} alt='tourimg' />
                     <VStack align='flex-start' spacing={2}>
                         <Text fontSize='lg' fontWeight='semibold'>{bookingItems.tour.title}</Text>
                         <RatingStart ratingAverage={bookingItems?.tour?.ratingAverage} numOfRating={bookingItems?.tour?.numOfRating} />

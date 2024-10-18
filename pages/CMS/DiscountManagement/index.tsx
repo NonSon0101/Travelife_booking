@@ -16,7 +16,7 @@ import { observer } from 'mobx-react'
 import { useRouter } from 'next/navigation'
 import { getValidArray } from 'utils/common'
 import DiscountForm from './DiscountForm'
-import { getHeaderList } from './utils'
+import { getHeaderList } from '../../../utils/CMS/DiscountManagement/utils'
 import { toast } from 'react-toastify'
 
 const DiscountManagement = () => {

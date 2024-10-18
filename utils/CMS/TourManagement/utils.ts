@@ -2,7 +2,7 @@ import { ITableHeader } from 'components/Table'
 import { IPriceOption } from 'interfaces/common'
 import { ITour } from 'interfaces/tour'
 import { getValidArray } from 'utils/common'
-import { IUpdateTourForm } from './UpdateTourDetail'
+import { IUpdateTourForm } from 'pages/CMS/TourManagement/UpdateTourDetail'
 
 export function getHeaderList(): ITableHeader[] {
   return [
