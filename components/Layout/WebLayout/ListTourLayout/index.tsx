@@ -36,9 +36,9 @@ const ListTourLayout = (props: IPageLayoutProps) => {
         underLineHoverColor="#ff5533"
         hoverColor="#1a2b49"
       />
-        {children}
-        
-        <LoginModal
+      {children}
+
+      <LoginModal
         openForgotPasswordModal={() => setIsOpenForgotPasswordModal(true)}
         openSignUpModal={() => setIsOpenSignUpModal(true)}
         isOpen={isOpenLoginModal}

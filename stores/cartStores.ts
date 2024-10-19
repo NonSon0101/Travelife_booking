@@ -29,7 +29,7 @@ class CartStrores {
     this.selectedCart = this.selectedCart.filter((item) => item.tour !== tour);
   }
 
- 
+
   async fetchCartCount(): Promise<void> {
     const { cart } = await getListCart();
     this.cartCount = cart.tours.length;

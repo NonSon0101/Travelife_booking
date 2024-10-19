@@ -26,9 +26,9 @@ import { useForm, FormProvider } from 'react-hook-form'
 import { FaPray } from 'react-icons/fa'
 
 interface ISignUpModalProps {
-    openLoginModal: () => void
-    isOpen: boolean
-    onClose: () => void
+  openLoginModal: () => void
+  isOpen: boolean
+  onClose: () => void
 }
 
 const SignUpModal = (props: ISignUpModalProps) => {
@@ -75,24 +75,24 @@ const SignUpModal = (props: ISignUpModalProps) => {
               <Box bg={{ base: 'transparent', sm: 'bg.surface' }} borderRadius={{ base: 'none', sm: 'xl' }}>
                 <Stack spacing={6}>
                   <Stack spacing="5">
-                    <FormInput 
-                        name="username" 
-                        label="Username" 
-                        autoComplete="off"/>
-                    <FormInput 
-                        name="email" 
-                        label="Email"
-                        autoComplete="off" />
                     <FormInput
-                        type="password"
-                        name="password"
-                        label="Password" 
-                      />
+                      name="username"
+                      label="Username"
+                      autoComplete="off" />
                     <FormInput
-                        type="password"
-                        name="passwordConfirm"
-                        label="Confirm password"/>
-                    
+                      name="email"
+                      label="Email"
+                      autoComplete="off" />
+                    <FormInput
+                      type="password"
+                      name="password"
+                      label="Password"
+                    />
+                    <FormInput
+                      type="password"
+                      name="passwordConfirm"
+                      label="Confirm password" />
+
                   </Stack>
                   <Stack spacing={6}>
                     <Button type="submit" colorScheme="teal" isLoading={isLoading}>
@@ -104,7 +104,7 @@ const SignUpModal = (props: ISignUpModalProps) => {
             </form>
           </FormProvider>
         </Stack>
-       
+
       </ModalContent>
     </Modal>
   )

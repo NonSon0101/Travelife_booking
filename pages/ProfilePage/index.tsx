@@ -40,8 +40,8 @@ const ProfilePage = () => {
     })
   }, [user])
 
-   const onSubmit = async (data: any): Promise<void> => {
-    try{
+  const onSubmit = async (data: any): Promise<void> => {
+    try {
       setIsLoading(true)
       const userInfo: IUser = {
         fullname: data?.fullname,
@@ -58,7 +58,7 @@ const ProfilePage = () => {
       toast.success("Update user successfully")
       setIsLoading(false)
 
-    }catch (error) {
+    } catch (error) {
       setIsLoading(false)
       console.error('errorMessage', error)
       const errorMessage: string = get(error, 'data.error.message', 'Sign up failed') || JSON.stringify(error)
@@ -118,20 +118,20 @@ const ProfilePage = () => {
             <Text>Notification</Text>
           </HStack>
         </VStack>
-        <form 
+        <form
           style={{
-            flex: 3, 
-            background: '#fff', 
-            padding: '16px', 
-            borderRadius: '12px', 
-            border: '1px solid teal', 
+            flex: 3,
+            background: '#fff',
+            padding: '16px',
+            borderRadius: '12px',
+            border: '1px solid teal',
             boxShadow: ' 5px 10px rgba(0, 0, 0, 0.1)'
-          }} 
+          }}
           onSubmit={handleSubmit(onSubmit)}
-          >
-          <VStack width='full'  align="flex-start">
+        >
+          <VStack width='full' align="flex-start">
             <FormControl isInvalid={!!errors.name}>
-              <Title text='Profile detail'/>
+              <Title text='Profile detail' />
               <SimpleGrid
                 width="full"
                 columns={{ base: 1, sm: 1, md: 2 }}
@@ -147,7 +147,7 @@ const ProfilePage = () => {
                       required: 'This is required',
                       minLength: { value: 4, message: 'Minimum length should be 4' },
                     })}
-                    />
+                  />
                 </VStack>
                 <VStack align='flex-start'>
                   <FormLabel htmlFor="fullname">Phone number</FormLabel>
@@ -159,7 +159,7 @@ const ProfilePage = () => {
                       required: 'This is required',
                       minLength: { value: 10, message: 'Minimum length should be 10' },
                     })}
-                    />
+                  />
                 </VStack>
                 <VStack align='flex-start'>
                   <FormLabel htmlFor="email">Email</FormLabel>
@@ -171,7 +171,7 @@ const ProfilePage = () => {
                       required: 'This is required',
                       minLength: { value: 10, message: 'Minimum length should be 10' },
                     })}
-                    />
+                  />
                 </VStack>
                 <VStack align='flex-start'>
                   <FormLabel htmlFor="dateOfBirth">Date of birth</FormLabel>
@@ -183,7 +183,7 @@ const ProfilePage = () => {
                       required: 'This is required',
                       minLength: { value: 10, message: 'Minimum length should be 10' },
                     })}
-                    />
+                  />
                 </VStack>
                 <VStack align='flex-start'>
                   <FormLabel htmlFor="gender">Gender</FormLabel>
@@ -195,7 +195,7 @@ const ProfilePage = () => {
                       required: 'This is required',
                       minLength: { value: 4, message: 'Minimum length should be 4' },
                     })}
-                    />
+                  />
                 </VStack>
                 <VStack align='flex-start'>
                   <FormLabel htmlFor="address">Address</FormLabel>
@@ -207,9 +207,9 @@ const ProfilePage = () => {
                       required: 'This is required',
                       minLength: { value: 10, message: 'Minimum length should be 10' },
                     })}
-                    />
+                  />
                 </VStack>
-                
+
                 <VStack align='flex-start'>
                   <FormLabel htmlFor="passport">Passport</FormLabel>
                   <Input
@@ -220,7 +220,7 @@ const ProfilePage = () => {
                       required: 'This is required',
                       minLength: { value: 10, message: 'Minimum length should be 10' },
                     })}
-                    />
+                  />
                 </VStack>
                 <VStack align='flex-start'>
                   <FormLabel htmlFor="dateOfExpirationPassport">Date of expiration passport</FormLabel>
@@ -233,20 +233,20 @@ const ProfilePage = () => {
                       required: 'This is required',
                       minLength: { value: 0, message: 'Minimum length should be 10' },
                     })}
-                    />
+                  />
                 </VStack>
-                
+
               </SimpleGrid>
               <FormErrorMessage>
                 {errors.name && typeof errors.name.message === 'string' && errors.name.message}
-                </FormErrorMessage>
+              </FormErrorMessage>
             </FormControl>
-            <Button mt={4} colorScheme='teal' type="submit" isLoading={isLoading}> 
+            <Button mt={4} colorScheme='teal' type="submit" isLoading={isLoading}>
               Save
             </Button>
           </VStack>
         </form>
-      </HStack>       
+      </HStack>
     </PageLayout>
   )
 }

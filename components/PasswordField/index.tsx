@@ -9,7 +9,7 @@ interface IPasswordField {
 }
 
 const PasswordField = (props: IPasswordField) => {
-  const {label} = props
+  const { label } = props
   const { isOpen, onToggle } = useDisclosure();
   const inputRef = useRef<HTMLInputElement>(null);
   const { register } = useFormContext();
@@ -38,7 +38,7 @@ const PasswordField = (props: IPasswordField) => {
           type={isOpen ? 'text' : 'password'}
           autoComplete="current-password"
           required
-          {...register("password", { required: "Password is required" })} 
+          {...register("password", { required: "Password is required" })}
         />
       </InputGroup>
     </FormControl>

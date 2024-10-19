@@ -1,18 +1,12 @@
 'use client'
 import { useState } from 'react'
 import {
-  Box,
   Button,
-  Checkbox,
-  Divider,
   Heading,
-  HStack,
-  Link,
   Modal,
   ModalOverlay,
   ModalContent,
   Stack,
-  Text,
   FormControl,
   FormLabel,
   FormErrorMessage,
@@ -23,10 +17,9 @@ import { useStores } from 'hooks/useStores'
 import get from 'lodash/get'
 import { useForm, FieldValues } from 'react-hook-form'
 
-
 interface IForgotPassModalProps {
-    isOpen: boolean
-    onClose: () => void
+  isOpen: boolean
+  onClose: () => void
 }
 
 const ForgotPasswordModal = (props: IForgotPassModalProps) => {
@@ -60,24 +53,24 @@ const ForgotPasswordModal = (props: IForgotPassModalProps) => {
               <Heading size={{ base: 'xs', md: 'lg' }}>Reset password</Heading>
             </Stack>
           </Stack>
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <FormControl isInvalid={!!errors.name}>
-                    <FormLabel htmlFor='name'>Email</FormLabel>
-                    <Input
-                    id='email'
-                    placeholder='Email'
-                    {...register('email', {
-                        required: 'This is required',
-                    })}
-                    />
-                    <FormErrorMessage>
-                    {errors.name && typeof errors.name.message === 'string' && errors.name.message}
-                    </FormErrorMessage>
-                </FormControl>
-                <Button mt={4} colorScheme='teal' isLoading={isSubmitting} type='submit'>
-                    Reset password
-                </Button>
-                </form>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <FormControl isInvalid={!!errors.name}>
+              <FormLabel htmlFor='name'>Email</FormLabel>
+              <Input
+                id='email'
+                placeholder='Email'
+                {...register('email', {
+                  required: 'This is required',
+                })}
+              />
+              <FormErrorMessage>
+                {errors.name && typeof errors.name.message === 'string' && errors.name.message}
+              </FormErrorMessage>
+            </FormControl>
+            <Button mt={4} colorScheme='teal' isLoading={isSubmitting} type='submit'>
+              Reset password
+            </Button>
+          </form>
         </Stack>
       </ModalContent>
     </Modal>

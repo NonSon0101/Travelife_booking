@@ -30,7 +30,7 @@ const HomePage = () => {
   const { tours } = tourStore;
 
   useEffect(() => {
-   
+
     const userId = searchParams?.get('userId')
     const accessToken = searchParams?.get('accessToken')
     const platform = PLATFORM.WEBSITE
@@ -39,16 +39,16 @@ const HomePage = () => {
       localStorage.setItem(`${platform}UserId`, userId);
       localStorage.setItem(`${platform}Token`, accessToken);
     }
-    if(userId){
+    if (userId) {
       authStore.getUserbyId(PLATFORM.WEBSITE)
       route.push('/')
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname, searchParams]);
 
   useEffect(() => {
     tourStore.fetchActiveTours();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function handleGoToAllActivities() {
@@ -65,16 +65,16 @@ const HomePage = () => {
           alignItems="center"
           mt="32px"
         >
-          <Title 
+          <Title
             maxWidth="1300px"
-            width='full' 
+            width='full'
             fontSize="3xl"
-            fontWeight="600" 
-            text='Unforgettable tours experiences'/>
+            fontWeight="600"
+            text='Unforgettable tours experiences' />
         </Box>
         <SimpleGrid
           maxWidth="1300px"
-          paddingY={{base: '24px'}}
+          paddingY={{ base: '24px' }}
           columns={{ base: 1, sm: 2, md: 3, xl: 4 }}
           gap={8}
           padding={1}

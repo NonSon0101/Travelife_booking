@@ -34,16 +34,16 @@ class ReviewStore {
       this.reviewDetail = null
     }
   }
-    async getReviewInTour(tourId: string): Promise<void> {
-        const { reviews, total, result } = await getReviewInTour(tourId)
-        this.tourReviews = reviews
-        this.totalReview = total
-        this.resultReview = result
-    }
+  async getReviewInTour(tourId: string): Promise<void> {
+    const { reviews, total, result } = await getReviewInTour(tourId)
+    this.tourReviews = reviews
+    this.totalReview = total
+    this.resultReview = result
+  }
 
-    async createReview(data: ICreateReview): Promise<void> {
-        await createReview(data)
-    }
+  async createReview(data: ICreateReview): Promise<void> {
+    await createReview(data)
+  }
 }
 
 export default ReviewStore

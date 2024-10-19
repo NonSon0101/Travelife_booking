@@ -9,7 +9,7 @@ import {
 import { observer } from "mobx-react";
 import { useRouter } from "next/navigation";
 import routes from "routes";
-import {toast} from 'react-toastify'
+import { toast } from 'react-toastify'
 import PageLayout from "components/Layout/WebLayout/PageLayout";
 import BookingStatus from "../../components/BookingStatus";
 import TextField from "components/TextField";
@@ -33,26 +33,26 @@ const CheckoutPage = () => {
   const { responeBookNow } = bookingStore;
 
   useEffect(() => {
-    if(!listCart && !selectedCart) return;
+    if (!listCart && !selectedCart) return;
     const cartId = listCart._id;
     const tourInfo: IRequestTour[] = [];
-    if (responeBookNow && responeBookNow.tours){
+    if (responeBookNow && responeBookNow.tours) {
       const data = responeBookNow
       setDataCheckoutReview(data)
       return
-    }else if (selectedCart.length !== 0) {
+    } else if (selectedCart.length !== 0) {
       selectedCart.forEach((tour) =>
         tourInfo.push({
           tour: tour.tour,
           startDate: tour.startDate.slice(0, 10),
         })
       );
-      setDataCheckoutReview({cart: cartId, tours: tourInfo})
+      setDataCheckoutReview({ cart: cartId, tours: tourInfo })
       return
     } else if (listCart && listCart.tours) {
-      setDataCheckoutReview({cart: cartId})
+      setDataCheckoutReview({ cart: cartId })
       return
-    } 
+    }
   }, [listCart, selectedCart, responeBookNow])
 
   useEffect(() => {
@@ -70,8 +70,8 @@ const CheckoutPage = () => {
   }, [dataCheckoutReview]);
 
   useEffect(() => {
-    if(checkCoupon){
-      if(order.discount === 0)
+    if (checkCoupon) {
+      if (order.discount === 0)
         toast.error('Not found discount match with tour')
       else if (checkout.length > itemPrice.length)
         toast.warn("Some tours can't apply this discount")
@@ -81,16 +81,16 @@ const CheckoutPage = () => {
   }, [coupon, checkCoupon])
 
   const handleGoToContactPage = () => {
-    checkoutStore.setOrderSummary({...dataCheckoutReview, discountCode: coupon})
+    checkoutStore.setOrderSummary({ ...dataCheckoutReview, discountCode: coupon })
     route.push(routes.booking.contact)
   }
   const handleChangeText = (event: ChangeEvent<HTMLInputElement>) => {
     setCoupon(event.target.value);
   };
 
-  const handleApplyCoupon = async(): Promise<void> => {
-    try{
-      if(coupon.length == 0){
+  const handleApplyCoupon = async (): Promise<void> => {
+    try {
+      if (coupon.length == 0) {
         toast.info('Please enter discount code')
         return;
       }
@@ -99,7 +99,7 @@ const CheckoutPage = () => {
       await checkoutStore.fetchCheckoutReview(dataCoupon);
       setIsLoading(false)
       setCheckCoupon(true)
-    }catch{
+    } catch {
       setIsLoading(false)
     }
   };
@@ -127,7 +127,7 @@ const CheckoutPage = () => {
             align="flex-start"
             spacing={7}
           >
-           <Title text='Your order'/>
+            <Title text='Your order' />
 
             {checkout &&
               checkout.map((tour) => (
@@ -146,7 +146,7 @@ const CheckoutPage = () => {
             flex="1"
             marginLeft="48px"
           >
-            <Title text='Total order'/>
+            <Title text='Total order' />
 
             <VStack
               position="relative"
@@ -196,8 +196,8 @@ const CheckoutPage = () => {
                   <VStack align='flex-end'>
                     <Text fontSize="2xl" color="#396973">
                       {itemPrice && itemPrice.length !== 0
-                        ? order.totalOrder && formatCurrency(order.totalOrder - order.discount): 
-                          order.totalOrder &&formatCurrency(order.totalOrder)}
+                        ? order.totalOrder && formatCurrency(order.totalOrder - order.discount) :
+                        order.totalOrder && formatCurrency(order.totalOrder)}
                     </Text>
                     <Text
                       fontSize="sm"
@@ -219,7 +219,7 @@ const CheckoutPage = () => {
                     padding="2px"
                     border="2px dashed #ccc"
                     fontSize="sm"
-                    // visible="false"
+                  // visible="false"
                   >
                     {" "}
                     <Text>Applied coupon: {coupon}</Text>

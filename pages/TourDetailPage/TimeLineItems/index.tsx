@@ -12,7 +12,7 @@ interface TimelineItemProps {
 
 const TimelineItem: React.FC<TimelineItemProps> = ({ icon, title, isFirst, isLast }) => {
   return (
-    <> 
+    <>
       <Stack direction="row" align="center" spacing={4}>
         <VStack align="center">
           <Icon as={icon} color="red.500" boxSize={6} />

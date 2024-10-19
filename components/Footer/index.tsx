@@ -14,7 +14,7 @@ const Footer = () => {
     <footer style={{ width: "100%", backgroundColor: "#04364A", color: "#fff", paddingTop: "20px", display: "flex", flexDirection: "column", alignItems: "center" }}>
       <Box width="100%" padding="40px 20px" textAlign="center">
         <HStack spacing="24px" justifyContent="space-evenly">
-          <VStack spacing={7} align='flex-start'> 
+          <VStack spacing={7} align='flex-start'>
             <Text fontWeight="bold">About Us</Text>
             <Link>Press</Link>
             <Link>Careers</Link>
@@ -34,7 +34,7 @@ const Footer = () => {
           <VStack spacing={7} align='flex-start'>
             <HStack>
               <Text fontWeight="bold">Travel Life</Text>
-              <Image width='70px' src="/assets/images/logo.jpg" alt="logo"/>
+              <Image width='70px' src="/assets/images/logo.jpg" alt="logo" />
             </HStack>
             <Text fontSize="sm">Connect with Us:</Text>
             <HStack spacing="8px">
@@ -44,7 +44,7 @@ const Footer = () => {
               <IconButton aria-label="LinkedIn" icon={<FaLinkedin />} />
             </HStack>
           </VStack>
-         
+
         </HStack>
       </Box>
       <Box width="100%" padding="10px 20px" textAlign="center" backgroundColor="#01272B">

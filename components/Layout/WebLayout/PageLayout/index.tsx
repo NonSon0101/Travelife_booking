@@ -32,7 +32,7 @@ const PageLayout = (props: IPageLayoutProps) => {
           position="sticky"
           top="0"
           openLoginModal={() => setIsOpenLoginModal(true)}
-          height={{base: '140px', md: '90px'}}
+          height={{ base: '140px', md: '90px' }}
           background="#fff"
           color="#63687a"
           boxShadow="md"
@@ -41,11 +41,11 @@ const PageLayout = (props: IPageLayoutProps) => {
           hoverColor="#1a2b49"
         />
       </Box>
-  
-        {children}
-   
-        
-        <LoginModal
+
+      {children}
+
+
+      <LoginModal
         openForgotPasswordModal={() => setIsOpenForgotPasswordModal(true)}
         openSignUpModal={() => setIsOpenSignUpModal(true)}
         isOpen={isOpenLoginModal}

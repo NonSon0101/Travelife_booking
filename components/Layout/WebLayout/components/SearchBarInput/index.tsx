@@ -65,9 +65,9 @@ const SearchBarInput = (props: ISearchInputProps) => {
   }, [debounceVal])
 
   function handleGoToAllActivities() {
-    if(debounceVal !== "")
+    if (debounceVal !== "")
       route.push(routes.allActivities.value + `?search=${debounceVal}`)
-    }
+  }
 
   return (
     <Tippy
@@ -77,13 +77,13 @@ const SearchBarInput = (props: ISearchInputProps) => {
         <VStack
           alignItems="center"
           justifyContent="center"
-          width={{ base: '400px', xl: '515px'  }}
+          width={{ base: '400px', xl: '515px' }}
           minHeight="100px"
           height='full'
           borderRadius="8px"
           padding="8px 16px 16px 16px"
           background="#fff"
-          boxShadow="rgba(0, 0, 0, 0.12) 0px 2px 12px"  
+          boxShadow="rgba(0, 0, 0, 0.12) 0px 2px 12px"
         >
           {suggestions.map((tours) => (
             <SearchItem
@@ -100,7 +100,7 @@ const SearchBarInput = (props: ISearchInputProps) => {
     >
       <HStack
         minHeight={`${minHeight}`}
-        width={{ base: '400px', xl: '515px'  }}
+        width={{ base: '400px', xl: '515px' }}
         height="full"
         background="#fff"
         borderRadius="44px"

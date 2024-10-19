@@ -12,7 +12,7 @@ import { usePathname, useSearchParams } from 'next/navigation';
 
 
 const ForgotPassword = () => {
-  const {authStore} = useStores();
+  const { authStore } = useStores();
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const route = useRouter();
@@ -20,46 +20,46 @@ const ForgotPassword = () => {
   const [resetToken, setResetToken] = useState<string>('');
 
   const methods = useForm<IResetPasswordRequest>()
-  const { handleSubmit } = methods 
+  const { handleSubmit } = methods
 
   useEffect(() => {
-   
+
     const token = searchParams?.get('token')
-    if(token){
+    if (token) {
       setResetToken(token)
     }
 
   }, [pathname, searchParams]);
 
-  async function onSubmit(data: IResetPasswordRequest){
-    try{
+  async function onSubmit(data: IResetPasswordRequest) {
+    try {
       setIsLoading(true)
       await authStore.resetPassword(data, resetToken)
       setIsLoading(false)
       toast.success('Reset password complete')
       route.push('/')
-    } catch{
+    } catch {
       setIsLoading(false)
     }
   }
 
   return (
-    <VStack 
+    <VStack
       display='flex'
-      justifyContent='center'  
-      alignItems='center'    
+      justifyContent='center'
+      alignItems='center'
       background="#F5F5F5"
-      minHeight="100vh"       
-      padding={0}            
-      margin={0}    
+      minHeight="100vh"
+      padding={0}
+      margin={0}
     >
-      <VStack 
+      <VStack
         height='520px'
         width='540px'
-        background={'#fff'} 
+        background={'#fff'}
         borderRadius='10px'
-        border='2px solid teal' 
-        boxShadow='lg' 
+        border='2px solid teal'
+        boxShadow='lg'
         padding='40px'
       >
         <FormProvider {...methods}>
@@ -70,29 +70,29 @@ const ForgotPassword = () => {
               <FormInput
                 type="password"
                 name="password"
-                label="New password" 
+                label="New password"
               />
               <FormInput
                 type="password"
                 name="passwordConfirm"
-                label="Confirm password"/>
-              
-              <Button 
-                type='submit' 
-                marginTop='20px' 
-                size='lg' 
-                width='full' 
-                colorScheme="teal" 
+                label="Confirm password" />
+
+              <Button
+                type='submit'
+                marginTop='20px'
+                size='lg'
+                width='full'
+                colorScheme="teal"
                 mb={4}
                 isLoading={isLoading}
               >
-                  Reset Password
-                </Button>
+                Reset Password
+              </Button>
             </VStack>
           </form>
         </FormProvider>
         {/* <Text alignSelf='flex-end' fontSize="md">Remember your password? <Link color="teal.500" href="/login">Log in</Link></Text> */}
-        
+
       </VStack>
     </VStack>
   );

@@ -21,7 +21,7 @@ const HeaderHome = (props: IHeaderProps) => {
       <Header
         openLoginModal={openLoginModal}
         bgGradient="linear(to-b, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0))"
-        paddingX={{base: '24px'}}
+        paddingX={{ base: '24px' }}
       />
       <Box
         width='full'
@@ -34,12 +34,12 @@ const HeaderHome = (props: IHeaderProps) => {
           color="#fff"
           margin="70px 0px"
           maxWidth='1300px'
-          paddingX={{base: '24px'}}
+          paddingX={{ base: '24px' }}
           width='full'
         >
           <Text
             width="50%"
-            fontSize={{base: '2xl', sm: '3xl', md: '4xl', lg: '5xl', xl: '6xl'}}
+            fontSize={{ base: '2xl', sm: '3xl', md: '4xl', lg: '5xl', xl: '6xl' }}
             fontWeight="900"
             alignSelf="flex-start"
             mb="28px"
@@ -48,7 +48,7 @@ const HeaderHome = (props: IHeaderProps) => {
           </Text>
           <Text
             width={{ md: '60%', lg: '50%' }}
-            fontSize={{base: 'lg', sm: 'xl', md: 'xl', lg: '2xl', xl: '2xl'}}
+            fontSize={{ base: 'lg', sm: 'xl', md: 'xl', lg: '2xl', xl: '2xl' }}
             fontWeight="700"
             alignSelf="flex-start"
             mb="18px"

@@ -38,8 +38,8 @@ class CheckoutStore {
     }
   }
 
-  async prePayCheckout(bookingId: string): Promise<void>{
-    const {paymentURL} = await preCheckOut(bookingId)
+  async prePayCheckout(bookingId: string): Promise<void> {
+    const { paymentURL } = await preCheckOut(bookingId)
     this.paymentURL = paymentURL
   }
 }

@@ -32,10 +32,10 @@ export function formatCurrency(amount: number): string {
   const reversedArray = amountArray.reverse();
   let resultArray: string[] = [];
   for (let i = 0; i < reversedArray.length; i++) {
-      if (i > 0 && i % 3 === 0) {
-          resultArray.push('.');
-      }
-      resultArray.push(reversedArray[i]);
+    if (i > 0 && i % 3 === 0) {
+      resultArray.push('.');
+    }
+    resultArray.push(reversedArray[i]);
   }
 
   const formattedAmount = resultArray.reverse().join('');

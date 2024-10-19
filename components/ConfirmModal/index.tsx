@@ -81,7 +81,7 @@ const ConfirmModal = (props: IConfirmModalProps) => {
             paddingY={2}
             onClick={onsubmit}
             isLoading={isLoading}
-            backgroundColor={confirmButtonText?.includes('delete') ? 'red.600' : 'teal.500' }
+            backgroundColor={confirmButtonText?.includes('delete') ? 'red.600' : 'teal.500'}
             _hover={{ background: confirmButtonText?.includes('delete') ? 'red.700' : 'teal.600' }}
             _active={{ background: confirmButtonText?.includes('delete') ? 'red.800' : 'teal.700' }}
           >

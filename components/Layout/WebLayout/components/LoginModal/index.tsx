@@ -41,7 +41,7 @@ const LoginModal = (props: ILoginModalProps) => {
   async function onSubmit(data: ILoginForm): Promise<void> {
     try {
       setIsLoading(true)
-      await authStore.login({ ...data, isRemember: true}, PLATFORM.WEBSITE)
+      await authStore.login({ ...data, isRemember: true }, PLATFORM.WEBSITE)
       setIsLoading(false)
       onClose()
       toast.success('Login successfully')
@@ -58,8 +58,8 @@ const LoginModal = (props: ILoginModalProps) => {
     openSignUpModal()
   }
 
-  function handleFogotPass(){
-   
+  function handleFogotPass() {
+
   }
 
   return (
@@ -73,7 +73,7 @@ const LoginModal = (props: ILoginModalProps) => {
               <Text color="fg.muted">
                 {`Don't have an account?`} <button onClick={handleOpenSigupModal}>Sign Up</button>
               </Text>
-              
+
             </Stack>
           </Stack>
           <FormProvider {...methods}>
@@ -103,7 +103,7 @@ const LoginModal = (props: ILoginModalProps) => {
                       </Text>
                       <Divider borderColor="gray.300" />
                     </HStack>
-                    <a style={{alignSelf: 'center', width: '100%'}} href="http://localhost:4001/api/v1/auth/google">
+                    <a style={{ alignSelf: 'center', width: '100%' }} href="http://localhost:4001/api/v1/auth/google">
                       <Button
                         width='full'
                         fontSize="sm"
@@ -117,7 +117,7 @@ const LoginModal = (props: ILoginModalProps) => {
                         </Text>
                       </Button>
                     </a>
-                   
+
                   </Stack>
                 </Stack>
               </Box>

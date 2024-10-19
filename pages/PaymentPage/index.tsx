@@ -1,13 +1,14 @@
 "use client";
-import { 
-  VStack,  
-  Flex, 
-  Box, 
-  Text, 
-  Image, 
-  Button, 
+import {
+  VStack,
+  Flex,
+  Box,
+  Text,
+  Image,
+  Button,
   HStack,
-  Divider} from "@chakra-ui/react";
+  Divider
+} from "@chakra-ui/react";
 import BookingStatus from "components/BookingStatus";
 import PageLayout from "components/Layout/WebLayout/PageLayout";
 import { useRouter } from "next/navigation";
@@ -21,9 +22,9 @@ import BillingInfo from "./BillingInfo";
 
 const PaymentPage = () => {
   const route = useRouter()
-  const {bookingStore, checkoutStore} = useStores();
-  const {bookingDetail, bookingId} = bookingStore
-  const {paymentURL} = checkoutStore
+  const { bookingStore, checkoutStore } = useStores();
+  const { bookingDetail, bookingId } = bookingStore
+  const { paymentURL } = checkoutStore
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('');
 
   const handlePaymentMethodClick = (paymentMethod: string) => {
@@ -35,7 +36,7 @@ const PaymentPage = () => {
   }, [bookingId]);
 
   useEffect(() => {
-    if(paymentURL){
+    if (paymentURL) {
       route.push(paymentURL)
     }
   }, [paymentURL])
@@ -46,12 +47,12 @@ const PaymentPage = () => {
   return (
     <PageLayout>
       <VStack
-      minHeight="700px"
-      height="full"
-      maxWidth="1300px"
-      width="full"
-      padding="24px">
-        <BookingStatus currentPage="payment"/>
+        minHeight="700px"
+        height="full"
+        maxWidth="1300px"
+        width="full"
+        padding="24px">
+        <BookingStatus currentPage="payment" />
         <VStack
           direction="column"
           width="500px"
@@ -62,7 +63,7 @@ const PaymentPage = () => {
           boxShadow='lg'
           padding='20px 14px'
         >
-          <Title text='How would you like to pay?'/>
+          <Title text='How would you like to pay?' />
 
           <Flex mt={10} justify="space-between" width="full" marginY='20px'>
             <Box
@@ -108,15 +109,15 @@ const PaymentPage = () => {
               <Image src="https://upload.wikimedia.org/wikipedia/vi/f/fe/MoMo_Logo.png" alt="Momo" width={100} />
             </Box>
           </Flex>
-          <Divider colorScheme='teal.300' size='xl' variant='solid'/>
+          <Divider colorScheme='teal.300' size='xl' variant='solid' />
           {bookingDetail && bookingDetail.personalInfo && (
-            <BillingInfo bookingDetail={bookingDetail}/>
+            <BillingInfo bookingDetail={bookingDetail} />
           )}
-          <Divider/>
+          <Divider />
           <Button marginY='20px' width='full' colorScheme="teal" onClick={handlePayment}>
             Continue to secure payment
           </Button>
-         
+
         </VStack>
       </VStack>
     </PageLayout>

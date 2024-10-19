@@ -25,7 +25,7 @@ const Header = (props: IHeader) => {
   return (
     <Box
       width="full"
-      height={{base: '130px', md: '80px'}}
+      height={{ base: '130px', md: '80px' }}
       paddingX={8}
       paddingTop="10px"
       display="flex"
@@ -53,7 +53,7 @@ const Header = (props: IHeader) => {
               cursor="pointer"
             />
           </Link>
-          
+
           <SearchBarInput hideBelow="md" minHeight="65px" placeholder="Search tours by name" />
         </HStack>
         <Action

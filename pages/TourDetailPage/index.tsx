@@ -61,7 +61,7 @@ type Value = ValuePiece | [ValuePiece, ValuePiece];
 
 
 const TourDetailPage = () => {
-  
+
   const route = useRouter()
   const [type, setType] = useState<string>("");
   const [quantity, setQuantity] = useState<number>(0);
@@ -78,6 +78,7 @@ const TourDetailPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [tourId, setTourId] = useState<string>()
   const [slider, setSlider] = useState<Slider | null>(null)
+  const [privateTour, setPrivateTour] = useState<boolean>(false)
   const { tourStore, cartStore, bookingStore } = useStores();
   const { tourDetail, priceOptions, startLocation } = tourStore;
   const settings = {
@@ -100,10 +101,10 @@ const TourDetailPage = () => {
   }, [])
 
   useEffect(() => {
-    if(tourId){
+    if (tourId) {
       tourStore.fetchTourDetail(tourId);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tourId]);
 
   useEffect(() => {
@@ -168,12 +169,12 @@ const TourDetailPage = () => {
 
 
   async function handleAddToCart(): Promise<void> {
-    try{
-      if(guestInfo.length === 0){
+    try {
+      if (guestInfo.length === 0) {
         toast.error("Please select participants")
         return
       }
-      if (userId){
+      if (userId) {
         const participant: IParticipants[] = guestInfo;
         const data: IAddToCart = {
           user: userId,
@@ -190,26 +191,26 @@ const TourDetailPage = () => {
         toast.success('Add to cart successfully')
         window.scrollTo({ top: 0, behavior: 'smooth' });
         route.refresh()
-      }else{
+      } else {
         toast.warning("Please login first")
         setIsLoading(false)
         window.scrollTo({ top: 0, behavior: 'smooth' });
         return
       }
-    }catch{
+    } catch {
       setIsLoading(false)
       toast.error('Add to cart failed!')
     }
   }
 
   async function handleBookNow(): Promise<void> {
-    try{
-      if(guestInfo.length === 0){
+    try {
+      if (guestInfo.length === 0) {
         toast.error("Please select participants")
         return
       }
       setIsLoading(true)
-      if (userId){
+      if (userId) {
         const participant: IParticipants[] = guestInfo;
         const data: IAddToCart = {
           user: userId,
@@ -223,22 +224,26 @@ const TourDetailPage = () => {
         await bookingStore.createBookNow(data)
         setIsLoading(false)
         route.push(routes.booking.activity)
-      } else{
+      } else {
         toast.warning("Please login first")
         setIsLoading(false)
         window.scrollTo({ top: 0, behavior: 'smooth' });
         return
       }
-    }catch{
+    } catch {
       setIsLoading(false)
       toast.error('Book now failed!')
     }
   }
-  
+
   function handleCheckAvailability() {
     guestInfo.length ? setIsMenuParticipant(true) : setIsMenuParticipant(false);
     showDate.length ? setIsMenuDatePick(true) : setIsMenuDatePick(false);
     setAvailability(!!guestInfo.length && !!showDate.length);
+  }
+
+  function switchPrivateTour() {
+    setPrivateTour(!privateTour)
   }
 
   return (
@@ -253,8 +258,8 @@ const TourDetailPage = () => {
         <Heading color="gray.800" fontWeight={700} lineHeight={10}>
           {tourDetail?.title}
         </Heading>
-        <RatingStart sizeStar={24} sizeText="md" ratingAverage={tourDetail?.ratingAverage} numOfRating={tourDetail?.numOfRating}/>
-        <Box position={'relative'} height={{ base: '300px', lg: '600px'}} width={'full'} overflow={'hidden'}>
+        <RatingStart sizeStar={24} sizeText="md" ratingAverage={tourDetail?.ratingAverage} numOfRating={tourDetail?.numOfRating} />
+        <Box position={'relative'} height={{ base: '300px', lg: '600px' }} width={'full'} overflow={'hidden'}>
           <IconButton
             aria-label="left-arrow"
             colorScheme="messenger"
@@ -266,7 +271,7 @@ const TourDetailPage = () => {
             zIndex={2}
             onClick={() => slider?.slickPrev()}
           >
-          <BiLeftArrowAlt />
+            <BiLeftArrowAlt />
           </IconButton>
           {/* Right Icon */}
           <IconButton
@@ -283,24 +288,22 @@ const TourDetailPage = () => {
             <BiRightArrowAlt />
           </IconButton>
           <Slider {...settings} ref={(slider) => setSlider(slider)}>
-          {tourDetail?.images?.map((url, index) => (
-            <Image
-              key={index}
-              height={{base: '300px', lg: '600px'}}
-              position="relative"
-              backgroundPosition="center"
-              backgroundRepeat="no-repeat"
-              backgroundSize="cover"
-              borderRadius='12px'
-              backgroundImage={`url(${url})`}
-              alt="tour img"
-            />
-          ))}
+            {tourDetail?.images?.map((url, index) => (
+              <Image
+                key={index}
+                height={{ base: '300px', lg: '600px' }}
+                position="relative"
+                backgroundPosition="center"
+                backgroundRepeat="no-repeat"
+                backgroundSize="cover"
+                borderRadius='12px'
+                backgroundImage={`url(${url})`}
+                alt="tour img"
+              />
+            ))}
           </Slider>
         </Box>
-
-        
-        <Stack width="full" flexDirection={{base: 'column', lg: 'row'}} justify="space-between" paddingTop="32px" gap={10}>
+        <Stack width="full" flexDirection={{ base: 'column', lg: 'row' }} justify="space-between" paddingTop="32px" gap={10}>
           <VStack
             alignSelf="flex-start"
             flex={2}
@@ -310,7 +313,7 @@ const TourDetailPage = () => {
             <Text fontSize="lg" paddingRight="30px">
               {tourDetail?.summary}
             </Text>
-            <Stack width="full" flexDirection={{base: 'column', lg: 'row'}} overflow="hidden" marginY='24px'>
+            <Stack width="full" flexDirection={{ base: 'column', lg: 'row' }} overflow="hidden" marginY='24px'>
               <Box width={{ base: '100%', lg: '60%' }} >
                 <Timeline />
               </Box>
@@ -319,7 +322,7 @@ const TourDetailPage = () => {
                 <Maps coordinates={startLocation?.coordinates} />
               </Box>
             </Stack>
-            <Title text='About this activity'/> 
+            <Title text='About this activity' />
             <HStack align="flex-start" padding="16px">
               <Text fontSize="3xl">
                 <FaRegCalendarCheck />
@@ -374,7 +377,7 @@ const TourDetailPage = () => {
               background="rgb(4, 54, 74)"
               borderRadius="15px"
             >
-              <Stack width='full' flexDirection={{base: 'column', lg: 'row'}} justifyContent={{lg: 'space-between'}}>  
+              <Stack width='full' flexDirection={{ base: 'column', lg: 'row' }} justifyContent={{ lg: 'space-between' }}>
                 <Text fontSize="2xl" fontWeight="bold" color="#fff">
                   Select participant and date
                 </Text>
@@ -387,7 +390,7 @@ const TourDetailPage = () => {
               </Stack>
               <SimpleGrid
                 width='full'
-                columns={{base: 1, md: 2, lg: 3}}
+                columns={{ base: 1, md: 2, lg: 3 }}
                 gap={4}
                 justifyContent="space-between"
                 paddingTop="8px"
@@ -415,9 +418,9 @@ const TourDetailPage = () => {
                             <Text>
                               {guestInfo.length > 0
                                 ? guestInfo.map(
-                                    (guest) =>
-                                      `${guest.title} x${guest.quantity} `
-                                  )
+                                  (guest) =>
+                                    `${guest.title} x${guest.quantity} `
+                                )
                                 : "Select participant"}
                             </Text>
                           </HStack>
@@ -482,7 +485,7 @@ const TourDetailPage = () => {
                     {!isMenuDatePick && "Please select date"}
                   </Text>
                 </GridItem>
-                
+
                 <GridItem colSpan={{ sm: 1, md: 2, lg: 1 }}>
                   <Button
                     width='full'
@@ -494,7 +497,7 @@ const TourDetailPage = () => {
                     Check availability
                   </Button>
                 </GridItem>
-                
+
               </SimpleGrid>
             </Box>
             <Box
@@ -590,7 +593,7 @@ const TourDetailPage = () => {
               borderRadius={2}
               spacing={0}
             >
-              <SimpleGrid columns={{base: 1, xl: 2}} alignItems='center' width='full'>
+              <SimpleGrid columns={{ base: 1, xl: 2 }} alignItems='center' width='full'>
                 <GridItem>
                   <Text>From</Text>
                   <Text fontSize="2xl" fontWeight={700} flex={2}>
@@ -599,15 +602,15 @@ const TourDetailPage = () => {
                   <Text>per person</Text>
                 </GridItem>
                 <GridItem width='full'>
-                  <Button 
-                    colorScheme="teal" 
+                  <Button
+                    colorScheme="teal"
                     borderRadius="80px"
-                    display={{base: 'none', lg: 'block' }}
-                    textAlign='center' 
-                    paddingX={8} 
-                    width="full" 
-                    flex={1} 
-                    alignSelf='center' 
+                    display={{ base: 'none', lg: 'block' }}
+                    textAlign='center'
+                    paddingX={8}
+                    width="full"
+                    flex={1}
+                    alignSelf='center'
                     marginTop='24px'
                   >
                     Check availability
@@ -624,9 +627,9 @@ const TourDetailPage = () => {
             </VStack>
           </VStack>
         </Stack>
-        <Divider borderColor="#888"/>
-        <Title text='Customer reviews'/>
-        <TourReviews tourId={`${tourDetail?._id}`} ratingAverage={tourDetail?.ratingAverage ?? 0} numOfRating={tourDetail?.numOfRating ?? 0}/>
+        <Divider borderColor="#888" />
+        <Title text='Customer reviews' />
+        <TourReviews tourId={`${tourDetail?._id}`} ratingAverage={tourDetail?.ratingAverage ?? 0} numOfRating={tourDetail?.numOfRating ?? 0} />
       </VStack>
     </PageLayout>
   );

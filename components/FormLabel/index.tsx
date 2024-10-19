@@ -19,7 +19,7 @@ const FormLabelValue = (props: IFormLabelValueProps) => {
         children
       ) : (
         <FormLabel color="gray.900" fontWeight={500} lineHeight={6} gridColumn={gridColumn}>
-          {value} 
+          {value}
         </FormLabel>
       )}
     </>

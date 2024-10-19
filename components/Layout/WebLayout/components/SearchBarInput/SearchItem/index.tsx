@@ -10,19 +10,19 @@ interface ISearchItem {
 }
 
 const SearchItem = (props: ISearchItem) => {
-  const { imgsrc, title, type, _id=''} = props;
+  const { imgsrc, title, type, _id = '' } = props;
   const route = useRouter()
 
   function handleClick() {
-    if(type === 'city'){
+    if (type === 'city') {
       route.push(routes.listtour.value(_id))
-    }else {
+    } else {
       route.push(routes.detail.value(_id))
     }
-      
+
   }
 
-  return (  
+  return (
     <HStack
       height="65px"
       width="full"

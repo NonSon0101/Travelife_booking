@@ -21,7 +21,7 @@ class BookingStore {
     makeAutoObservable(this)
   }
 
-  applyDiscount(discountCode: string){
+  applyDiscount(discountCode: string) {
     this.discountCode = discountCode
   }
 
@@ -37,8 +37,8 @@ class BookingStore {
 
   async fetchListBooking(page = 1): Promise<void> {
     const { bookings, total } = await getListBooking(`list?page=${page}&limit=4`)
-    this.bookingList = bookings 
-    this.totalResult = total 
+    this.bookingList = bookings
+    this.totalResult = total
   }
 
 
@@ -57,7 +57,7 @@ class BookingStore {
     this.responeBookNow = bookNow
   }
 
-  async deleteBooking(bookingId: string): Promise<void>{
+  async deleteBooking(bookingId: string): Promise<void> {
     await deleteBooking(bookingId)
   }
 }

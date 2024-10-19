@@ -41,7 +41,7 @@ const UserProfile = (props: IUserProfileProps) => {
   useEffect(() => {
     try {
       authStore.getMyUser(PLATFORM.WEBSITE)
-    } catch(error) {
+    } catch (error) {
       console.log('error at get user', error)
     }
   }, [])
@@ -111,7 +111,7 @@ const UserProfile = (props: IUserProfileProps) => {
                 color={color}
                 actionIcon={<FaRegUser />}
                 title="Login"
-                to={() => {}}
+                to={() => { }}
               />
             </VStack>
           )}

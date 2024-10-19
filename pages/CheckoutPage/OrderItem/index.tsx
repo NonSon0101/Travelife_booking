@@ -54,7 +54,7 @@ const OrderItem = (props: IOderItem) => {
           <Text color="#396973" fontSize="2xl" fontWeight="500">
             {discountitem && discountitem.length !== 0
               ? formatCurrency(discountitem[0].tour.totalPrice -
-                               discountitem[0].tour.discountPrice)
+                discountitem[0].tour.discountPrice)
               : formatCurrency(totalPrice)}
           </Text>
           <Text

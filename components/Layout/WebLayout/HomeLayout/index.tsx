@@ -21,10 +21,10 @@ const HomeLayout = (props: IMainLayoutProps) => {
 
   return (
     <VStack width="full" position="relative">
-      <HeaderHome 
+      <HeaderHome
         openLoginModal={() => setIsOpenLoginModal(true)}
-        openSignUpModal={() => setIsOpenLoginModal(true)}  />
-        
+        openSignUpModal={() => setIsOpenLoginModal(true)} />
+
       {children}
       <LoginModal
         openForgotPasswordModal={() => setIsOpenForgotPasswordModal(true)}

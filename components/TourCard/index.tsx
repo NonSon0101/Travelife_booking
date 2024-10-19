@@ -23,7 +23,7 @@ interface ITourCard {
 
 const TourCard = (props: ITourCard) => {
   const { tour } = props
-  
+
   const src = `${tour?.thumbnail}`
 
   return (
@@ -33,7 +33,7 @@ const TourCard = (props: ITourCard) => {
           position='relative'
           border={border}
           height="500px"
-          width={{base: 'full', md: '288px'}}
+          width={{ base: 'full', md: '288px' }}
           borderRadius={8}
           boxShadow="md"
           cursor="pointer"
@@ -69,10 +69,10 @@ const TourCard = (props: ITourCard) => {
             <Text fontSize="md" mb="4px" fontWeight="500">
               2 hours
             </Text>
-            <RatingStart sizeStar={24} sizeText="sm" ratingAverage={tour.ratingAverage} numOfRating={tour.numOfRating}/>
+            <RatingStart sizeStar={24} sizeText="sm" ratingAverage={tour.ratingAverage} numOfRating={tour.numOfRating} />
           </VStack>
           <Text padding="8px 12px 0px" position='absolute' bottom="0" fontSize="lg" fontWeight="600">
-              From {formatCurrency(tour?.regularPrice ?? 0)}
+            From {formatCurrency(tour?.regularPrice ?? 0)}
           </Text>
         </Box>
       </ThemeProvider>

@@ -29,7 +29,7 @@ const MenuItem = (props: IMenuItem) => {
       setType(type ?? '');
       setQuantity(count);
       setPrice(price ?? 0);
-    } else { 
+    } else {
       setStart(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -51,16 +51,16 @@ const MenuItem = (props: IMenuItem) => {
           background="transparent"
           {...(count <= 0
             ? {
-                cursor: "not-allowed",
-                onClick: () => {},
-                color: "#ccc",
-                _hover: { background: "transparent" },
-              }
+              cursor: "not-allowed",
+              onClick: () => { },
+              color: "#ccc",
+              _hover: { background: "transparent" },
+            }
             : {
-                cursor: "pointer",
-                color: "teal.300",
-                onClick: decreaseQuantityHandler,
-              })}
+              cursor: "pointer",
+              color: "teal.300",
+              onClick: decreaseQuantityHandler,
+            })}
         >
           <LuMinusCircle size="1.5rem" />
         </Button>

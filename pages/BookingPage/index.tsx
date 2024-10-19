@@ -1,5 +1,5 @@
 "use client";
-import { Box, HStack, VStack} from "@chakra-ui/react";
+import { Box, HStack, VStack } from "@chakra-ui/react";
 import { observer } from "mobx-react";
 import PageLayout from "components/Layout/WebLayout/PageLayout";
 import { useStores } from "hooks";
@@ -11,12 +11,12 @@ import Pagination from "components/Table/components/Pagination";
 
 
 const BookingPage = () => {
-  const {bookingStore} = useStores()
-  const {bookingList, totalResult} = bookingStore
+  const { bookingStore } = useStores()
+  const { bookingList, totalResult } = bookingStore
   const [pageIndex, setPageIndex] = useState<number>(1)
   const [pageSize, setPageSize] = useState<number>(10)
   const pagination: IPagination = { pageIndex, tableLength: totalResult, gotoPage: setPageIndex }
-  
+
   useEffect(() => {
     bookingStore.fetchListBooking(pageIndex)
   }, [pageIndex])
@@ -25,7 +25,7 @@ const BookingPage = () => {
   return (
     <PageLayout>
       <VStack
-        position='relative' 
+        position='relative'
         minHeight="700px"
         height="full"
         maxWidth="1300px"
@@ -33,15 +33,15 @@ const BookingPage = () => {
         padding="24px"
         align='flex-start'
       >
-        <Title text='Your booking'/>
-        <HStack width='full' justify='space-between' marginTop='20px' spacing={10} align='flex-start'> 
+        <Title text='Your booking' />
+        <HStack width='full' justify='space-between' marginTop='20px' spacing={10} align='flex-start'>
           <VStack width='full' flex={2} align='flex-start' spacing={8}>
-            {bookingList.length > 0 && (bookingList.map((booking) => <BookingItem key={booking._id} booking={booking}/>))}
+            {bookingList.length > 0 && (bookingList.map((booking) => <BookingItem key={booking._id} booking={booking} />))}
 
           </VStack>
         </HStack>
-        <Box position='absolute' bottom={0} left='50%' transform='translateX(-50%)'>   
-          <Pagination pagination={pagination} pageSize={4} setPageSize={setPageSize}/>
+        <Box position='absolute' bottom={0} left='50%' transform='translateX(-50%)'>
+          <Pagination pagination={pagination} pageSize={4} setPageSize={setPageSize} />
         </Box>
       </VStack>
     </PageLayout>

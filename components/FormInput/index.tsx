@@ -92,12 +92,12 @@ const FormItem = (props: IFormItemProps) => {
 
   const disabledProps = disabled
     ? {
-        disabled: true,
-        background: 'gray.100',
-        opacity: '0.7 !important',
-        color: 'gray.400',
-        variant: 'filled',
-      }
+      disabled: true,
+      background: 'gray.100',
+      opacity: '0.7 !important',
+      color: 'gray.400',
+      variant: 'filled',
+    }
     : {}
 
   return (
@@ -157,10 +157,10 @@ const FormItem = (props: IFormItemProps) => {
       )}
 
       {!hideErrorMessage && (
-      <FormErrorMessage className={errorClassName}>
-       {get(errors, `${name}.message`, '') as string}
-      </FormErrorMessage>
-     
+        <FormErrorMessage className={errorClassName}>
+          {get(errors, `${name}.message`, '') as string}
+        </FormErrorMessage>
+
       )}
     </FormControl>
   )

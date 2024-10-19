@@ -1,6 +1,6 @@
 "use client";
 import { HStack, VStack, Text, Button, Box } from "@chakra-ui/react";
-import { useRouter } from "next/navigation"; 
+import { useRouter } from "next/navigation";
 import PageLayout from "components/Layout/WebLayout/PageLayout";
 import routes from "routes";
 import CartItem from "./CartItem";
@@ -17,16 +17,16 @@ interface IPriceList {
 }
 
 const CartPage = () => {
-  const { cartStore, authStore } = useStores(); 
+  const { cartStore, authStore } = useStores();
   const { listCart } = cartStore;
   const { isLogin } = authStore;
   const [totalPrice, setTotalPrice] = useState(0);
 
   const router = useRouter();
 
-  useEffect(() => { 
+  useEffect(() => {
     cartStore.getListCart();
-  }, []); 
+  }, []);
 
   const calculateTotalPrice = () => {
     let total = 0;
@@ -61,9 +61,9 @@ const CartPage = () => {
         padding="8px 20px"
         spacing={10}
       >
-         {listCart?.tours?.length !== 0 ? (
+        {listCart?.tours?.length !== 0 ? (
           <VStack width="full" height="full" align="flex-start">
-            <Title text='Shopping cart'/>
+            <Title text='Shopping cart' />
             {listCart?.tours?.map((tour) => (
               <CartItem
                 key={tour._id}
@@ -83,7 +83,7 @@ const CartPage = () => {
 
         {listCart?.tours?.length !== 0 && (
           <VStack position="relative" width="full" align='flex-start' >
-            <Title text='Total'/>
+            <Title text='Total' />
             <VStack
               width="full"
               maxWidth="400px"

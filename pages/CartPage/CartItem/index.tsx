@@ -97,7 +97,7 @@ const CartItem = (props: ICartItem) => {
     tour.participants.forEach((tour) => {
       totalPrice += tour.price * tour.quantity;
     });
-    
+
     setTourPrice(totalPrice);
   }, [tour.participants]);
 
@@ -217,7 +217,7 @@ const CartItem = (props: ICartItem) => {
           borderRadius: "2px",
           top: 3,
           height: "42%",
-          background: checked ? "#38A59F" : "#c4c4c4"  ,
+          background: checked ? "#38A59F" : "#c4c4c4",
         }}
         _after={{
           position: "absolute",
@@ -226,7 +226,7 @@ const CartItem = (props: ICartItem) => {
           borderRadius: "2px",
           bottom: 3,
           height: "42%",
-          background:  checked ? "#38A59F" : "#c4c4c4",
+          background: checked ? "#38A59F" : "#c4c4c4",
         }}
       >
         <Checkbox
@@ -356,9 +356,9 @@ const CartItem = (props: ICartItem) => {
                           <Text>
                             {guestInfo.length > 0
                               ? guestInfo.map(
-                                  (guest) =>
-                                    `${guest.title} x${guest.quantity} `
-                                )
+                                (guest) =>
+                                  `${guest.title} x${guest.quantity} `
+                              )
                               : "Select participant"}
                           </Text>
                         </HStack>
@@ -371,17 +371,17 @@ const CartItem = (props: ICartItem) => {
                       const foundParticipant = tour.participants.filter(p => p.title === participant.title);
                       const quantity = foundParticipant[0]?.quantity ?? 0
                       return (
-                          <MenuItem
-                              quantity={quantity}
-                              key={participant._id}
-                              type={participant.title}
-                              price={participant.value}
-                              setPrice={setPrice}
-                              setType={setType}
-                              setQuantity={setQuantity}
-                          />
+                        <MenuItem
+                          quantity={quantity}
+                          key={participant._id}
+                          type={participant.title}
+                          price={participant.value}
+                          setPrice={setPrice}
+                          setType={setType}
+                          setQuantity={setQuantity}
+                        />
                       );
-                  })}
+                    })}
                   </MenuList>
                 </Menu>
               )}

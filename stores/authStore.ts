@@ -55,18 +55,18 @@ export default class AuthStore {
   }
 
   async signUp(data: ISignUpForm): Promise<void> {
-    const { accessToken } =  await signUp(data)
-    if(accessToken){
+    const { accessToken } = await signUp(data)
+    if (accessToken) {
       const loginData = { email: data?.email, password: data?.password }
       this.login({ ...loginData, isRemember: true }, PLATFORM.WEBSITE)
     }
   }
 
-  async fogotPassword(email: string){
+  async fogotPassword(email: string) {
     await forgotPassword(email)
   }
 
-  async resetPassword(data: IResetPasswordRequest, token: string){
+  async resetPassword(data: IResetPasswordRequest, token: string) {
     await resetPassword(data, token)
   }
 

@@ -1,5 +1,5 @@
 import { Link, VStack, Text } from "@chakra-ui/react";
-import {toast} from 'react-toastify'
+import { toast } from 'react-toastify'
 import { PLATFORM } from "enums/common";
 import { color } from "framer-motion";
 import { ReactNode } from "react";
@@ -20,9 +20,9 @@ const ActionItem = (props: IActionItemProps) => {
 
   function handleIsLogin() {
     const userId = localStorage.getItem(`${PLATFORM.WEBSITE}UserId`)
-    if(userId){
+    if (userId) {
       to()
-    }else{
+    } else {
       toast.warn("Please login first")
       return
     }
