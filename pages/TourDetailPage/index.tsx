@@ -8,13 +8,11 @@ import {
   HStack,
   IconButton,
   Image,
-  ListItem,
   Menu,
   MenuButton,
   MenuList,
   SimpleGrid,
   Text,
-  UnorderedList,
   useBreakpointValue,
   VStack,
   GridItem,
@@ -32,15 +30,15 @@ import { useRouter } from "next/navigation";
 import { useStores } from "hooks";
 import Icon from "components/Icon";
 import "react-calendar/dist/Calendar.css";
-import { FaRegCalendarCheck } from "react-icons/fa";
-import { FaCreditCard } from "react-icons/fa";
+import { FaRegCalendarCheck, FaHotel, FaCreditCard, FaBus } from "react-icons/fa";
 import { PiClockCountdownBold } from "react-icons/pi";
 import { RiMapPinUserLine } from "react-icons/ri";
 import { LuCalendarDays } from "react-icons/lu";
 import { IoPeople } from "react-icons/io5";
+import { BiLeftArrowAlt, BiRightArrowAlt } from "react-icons/bi";
+import { FaLocationDot } from "react-icons/fa6";
 import PageLayout from "components/Layout/WebLayout/PageLayout";
 import { TriangleDownIcon } from "@chakra-ui/icons";
-import { FaLocationDot } from "react-icons/fa6";
 import MenuItem from "components/Layout/WebLayout/components/MenuItem";
 import CustomCalendar from "./Calendar";
 import { IAddToCart, IParticipants } from "interfaces/cart";
@@ -49,16 +47,14 @@ import Maps from "./Maps";
 import RatingStart from "components/RatingStart";
 import { formatCurrency } from "utils/common";
 import routes from "routes";
-import { BiLeftArrowAlt, BiRightArrowAlt } from "react-icons/bi";
 import Title from "components/Title";
 import TourReviews from "./TourReviews";
 import Timeline from "./TimeLineItems";
+import PrivateOptions from "components/Layout/WebLayout/components/privateOptions";
 
 type ValuePiece = Date | null;
 
 type Value = ValuePiece | [ValuePiece, ValuePiece];
-
-
 
 const TourDetailPage = () => {
 
@@ -79,6 +75,8 @@ const TourDetailPage = () => {
   const [tourId, setTourId] = useState<string>()
   const [slider, setSlider] = useState<Slider | null>(null)
   const [privateTour, setPrivateTour] = useState<boolean>(false)
+  const [hotel, setHotel] = useState<{ id: string, name: string }>({ id: '', name: '' })
+  const [transport, setTransport] = useState<{ id: string, name: string }>({ id: '', name: '' })
   const { tourStore, cartStore, bookingStore } = useStores();
   const { tourDetail, priceOptions, startLocation } = tourStore;
   const settings = {
@@ -185,6 +183,14 @@ const TourDetailPage = () => {
             participants: participant,
           },
         };
+        if (privateTour) {
+          data.tour = {
+            ...data.tour,
+            isPrivate: true,
+            transports: [transport.id],
+            hotels: [hotel.id]
+          }
+        }
         setIsLoading(true)
         await cartStore.addToCart(data)
         setIsLoading(false)
@@ -242,8 +248,11 @@ const TourDetailPage = () => {
     setAvailability(!!guestInfo.length && !!showDate.length);
   }
 
-  function switchPrivateTour() {
-    setPrivateTour(!privateTour)
+  function setPrivateOptions(type: string, id: string, value: string) {
+    if (type === 'hotel')
+      setHotel({ id: id, name: value })
+    else
+      setTransport({ id: id, name: value })
   }
 
   return (
@@ -382,10 +391,10 @@ const TourDetailPage = () => {
                   Select participant and date
                 </Text>
                 <FormControl display='flex' alignItems='center' width='unset'>
-                  <FormLabel htmlFor='email-alerts' mb='0' color="#fff">
+                  <FormLabel htmlFor='private-tour' mb='0' color='#fff'>
                     Private tour?
                   </FormLabel>
-                  <Switch id='email-alerts' />
+                  <Switch id='private-tour' isChecked={privateTour} onChange={() => setPrivateTour(!privateTour)} />
                 </FormControl>
               </Stack>
               <SimpleGrid
@@ -429,16 +438,21 @@ const TourDetailPage = () => {
                       </MenuButton>
                     </VStack>
                     <MenuList minWidth="320px" padding="4px 10px">
-                      {priceOptions && priceOptions.map((participant) => (
-                        <MenuItem
-                          key={participant._id}
-                          type={participant.title}
-                          price={participant.value}
-                          setPrice={setPrice}
-                          setType={setType}
-                          setQuantity={setQuantity}
-                        />
-                      ))}
+                      {priceOptions &&
+                        priceOptions
+                          .filter((participant) => privateTour ? participant.participantsCategoryIdentifier === "Private" : !participant.participantsCategoryIdentifier)
+                          .map((participant) => (
+                            <MenuItem
+                              key={participant._id}
+                              type={participant.title}
+                              price={participant.value}
+                              setPrice={setPrice}
+                              setType={setType}
+                              setQuantity={setQuantity}
+                            />
+                          )
+                          )
+                      }
                     </MenuList>
                   </Menu>
                   <Text textAlign="center" color="red">
@@ -486,14 +500,85 @@ const TourDetailPage = () => {
                   </Text>
                 </GridItem>
 
+                {privateTour &&
+                  <>
+                    <GridItem>
+                      <Menu
+                        autoSelect={false}
+                        computePositionOnMount
+                        placement="bottom-start"
+                      >
+                        <MenuButton
+                          width="full"
+                          height="40px"
+                          background="#fff"
+                          borderRadius="999px"
+                          padding="8px 12px"
+                          fontWeight="bold"
+                        >
+                          <HStack justifyContent="space-between">
+                            <HStack fontSize="md" alignItems="center">
+                              <Text fontSize="2xl">
+                                <FaHotel />
+                              </Text>
+                              <Text>
+                                {hotel?.name !== '' ? hotel.name : 'Select hotel'}
+                              </Text>
+                            </HStack>
+                            <TriangleDownIcon />
+                          </HStack>
+                        </MenuButton>
+                        <MenuList>
+                          <VStack spacing={2}>
+                            {tourDetail?.hotels && tourDetail?.hotels.map((hotel, index) => (
+                              <Button height={{ base: '70px' }} width={{ base: 'full' }} onClick={() => setPrivateOptions('hotel', hotel._id, hotel.name)}>
+                                <PrivateOptions index={index} name={hotel.name} image={hotel.thumbnail} />
+                              </Button>
+                            ))}
+                          </VStack>
+                        </MenuList>
+                      </Menu>
+                    </GridItem>
+
+                    <GridItem>
+                      <Menu
+                        autoSelect={false} computePositionOnMount placement="bottom-start" >
+                        <MenuButton
+                          width="full"
+                          height="40px"
+                          background="#fff"
+                          borderRadius="999px"
+                          padding="8px 12px"
+                          fontWeight="bold"
+                        >
+                          <HStack justifyContent="space-between">
+                            <HStack fontSize="md" alignItems="center">
+                              <Text fontSize="2xl">
+                                <FaBus />
+                              </Text>
+                              <Text>
+                                {transport?.name !== '' ? transport.name : 'Select transportation'}
+                              </Text>
+                            </HStack>
+                            <TriangleDownIcon />
+                          </HStack>
+                        </MenuButton>
+                        <MenuList>
+                          <VStack spacing={2}>
+                            {tourDetail?.transports && tourDetail?.transports.map((transport, index) => (
+                              <Button height={{ base: '70px' }} width={{ base: 'full' }} onClick={() => setPrivateOptions('transport', transport._id, transport.name)}>
+                                <PrivateOptions index={index} name={transport.name} image={transport.image} />
+                              </Button>
+                            ))}
+                          </VStack>
+                        </MenuList>
+                      </Menu>
+                    </GridItem>
+                  </>
+                }
+
                 <GridItem colSpan={{ sm: 1, md: 2, lg: 1 }}>
-                  <Button
-                    width='full'
-                    colorScheme="teal"
-                    borderRadius="80px"
-                    flex={1}
-                    onClick={handleCheckAvailability}
-                  >
+                  <Button width='full' colorScheme="teal" borderRadius="80px" flex={1} onClick={handleCheckAvailability} >
                     Check availability
                   </Button>
                 </GridItem>
@@ -523,7 +608,7 @@ const TourDetailPage = () => {
                   }}
                 >
                   <Text fontSize="2xl" fontWeight="bold">
-                    {tourDetail?.title}
+                    {tourDetail?.title}{privateTour && ' (Private)'}
                   </Text>
                   <HStack>
                     <PiClockCountdownBold size="1.5rem" />
@@ -535,6 +620,18 @@ const TourDetailPage = () => {
                     <FaLocationDot size="1.5rem" />
                     <Text fontSize="md">Meet at {startLocation?.address} </Text>
                   </HStack>
+                  {privateTour &&
+                    <>
+                      <HStack>
+                        <FaHotel size="1.5rem" />
+                        <Text fontSize="md"> {hotel.name} </Text>
+                      </HStack>
+                      <HStack>
+                        <FaBus size="1.5rem" />
+                        <Text fontSize="md"> {transport.name} </Text>
+                      </HStack>
+                    </>
+                  }
                 </VStack>
                 <VStack width="50%" align="flex-start" margin="16px 24px 24px">
                   <Text fontSize="xl" fontWeight="bold">

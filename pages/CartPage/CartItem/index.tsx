@@ -16,7 +16,7 @@ import { useRouter } from "next/navigation";
 import { TfiTicket } from "react-icons/tfi";
 import { IoPeople, IoTimerOutline } from "react-icons/io5";
 import { MdPeopleAlt } from "react-icons/md";
-import { FaRegCheckCircle } from "react-icons/fa";
+import { FaBus, FaHotel, FaRegCheckCircle } from "react-icons/fa";
 import { GoPencil } from "react-icons/go";
 import { FaTrashAlt } from "react-icons/fa";
 import {
@@ -35,6 +35,7 @@ import MenuItem from "components/Layout/WebLayout/components/MenuItem";
 import { PLATFORM } from "enums/common";
 import { ISelectedCart } from "interfaces/checkout";
 import { formatCurrency } from "utils/common";
+import PrivateOptions from "components/Layout/WebLayout/components/privateOptions";
 
 interface ICartItem {
   tour: ITourCart;
@@ -62,6 +63,17 @@ const CartItem = (props: ICartItem) => {
   const [price, setPrice] = useState<number>(0);
   const [initialMount, setInitialMount] = useState(true);
   const [checked, setChecked] = useState<boolean>(false);
+  const [hotel, setHotel] = useState<{ id: string, name: string }>(
+    tour.hotels && tour.hotels.length > 0
+      ? { id: tour.hotels[0]._id, name: tour.hotels[0].name }
+      : { id: '', name: '' }
+  );
+  const [transport, setTransport] = useState<{ id: string, name: string }>(
+    tour.transports && tour.transports.length > 0
+      ? { id: tour.transports[0]._id, name: tour.transports[0].name }
+      : { id: '', name: '' }
+  );
+
 
   const { cartStore, tourStore } = useStores();
   const { listCart } = cartStore;
@@ -165,6 +177,14 @@ const CartItem = (props: ICartItem) => {
             participants: guestInfo,
           },
         };
+        if (tour.isPrivate) {
+          data.tour = {
+            ...data.tour,
+            isPrivate: true,
+            transports: [transport.id],
+            hotels: [hotel.id]
+          }
+        }
         cartStore.updateCart(data);
         handleEditTour();
       } else {
@@ -201,12 +221,21 @@ const CartItem = (props: ICartItem) => {
       notSetSelected();
     }
   };
+
+  function setPrivateOptions(type: string, id: string, value: string) {
+    if (type === 'hotel')
+      setHotel({ id: id, name: value })
+    else
+      setTransport({ id: id, name: value })
+  }
+
   return (
     <HStack
       height="full"
       position="relative"
       justifyContent="space-between"
       spacing={9}
+      onClick={() => handleCheckboxChange}
     >
       <VStack
         height="full"
@@ -270,76 +299,39 @@ const CartItem = (props: ICartItem) => {
               _hover={{ textDecoration: "none" }}
             >
               <Text fontSize="xl" fontWeight="bold">
-                {tour.tour.title}
+                {tour.tour.title}{tour.isPrivate ? ' (Private)' : ''}
               </Text>
             </Link>
             <HStack>
               <TfiTicket />
               <Text> Sunrise or Sunset Jeep Tour</Text>
             </HStack>
-            <HStack>
+            <HStack width='full'>
               {!editTour ? (
-                <>
-                  <IoTimerOutline />
-                  <Text>
-                    {convertDate} {tour.startTime}
-                  </Text>
-                </>
-              ) : (
-                <Menu
-                  autoSelect={false}
-                  computePositionOnMount
-                  placement="bottom-start"
-                >
-                  <MenuButton
-                    width="full"
-                    height="40px"
-                    background="#fff"
-                    borderRadius="999px"
-                    padding="8px 12px"
-                    fontWeight="bold"
-                  >
-                    <HStack justifyContent="space-between">
-                      <HStack fontSize="md" alignItems="center">
-                        <Text fontSize="2xl">
-                          <LuCalendarDays />
-                        </Text>
-                        <Text>
-                          {!selectedDate ? `${convertDate}` : `${showDate}`}
-                        </Text>
-                      </HStack>
-                      <TriangleDownIcon />
-                    </HStack>
-                  </MenuButton>
-
-                  <MenuList>
-                    <HStack spacing={8}>
-                      <CustomCalendar
-                        selectedDate={selectedDate}
-                        setSelectedDate={setSelectedDate}
-                      />
-                    </HStack>
-                  </MenuList>
-                </Menu>
-              )}
-            </HStack>
-            <HStack>
-              {!editTour ? (
-                <>
-                  <MdPeopleAlt />
-                  {tour.participants.map((participant) => (
-                    <Text key={participant.title}>
-                      {participant.quantity} {participant.title}
+                <HStack width='full' justifyContent='space-between'>
+                  <HStack>
+                    <IoTimerOutline />
+                    <Text>
+                      {convertDate} {tour.startTime}
                     </Text>
-                  ))}
-                </>
+                  </HStack>
+                  {tour.isPrivate &&
+                    <HStack>
+                      <FaHotel />
+                      <Text>
+                        {tour.hotels[0].name}
+                      </Text>
+                    </HStack>
+                  }
+                </HStack>
+
               ) : (
-                <Menu
-                  autoSelect={false}
-                  computePositionOnMount
-                  placement="bottom-start"
-                >
-                  <VStack>
+                <VStack width='full'>
+                  <Menu
+                    autoSelect={false}
+                    computePositionOnMount
+                    placement="bottom-start"
+                  >
                     <MenuButton
                       width="full"
                       height="40px"
@@ -348,42 +340,176 @@ const CartItem = (props: ICartItem) => {
                       padding="8px 12px"
                       fontWeight="bold"
                     >
-                      <HStack justifyContent="space-between">
-                        <HStack fontSize="md" alignItems="center">
-                          <Text fontSize="2xl">
-                            <IoPeople />
+                      <HStack>
+                        <HStack alignItems="center">
+                          <Text fontSize="xl">
+                            <LuCalendarDays />
                           </Text>
-                          <Text>
-                            {guestInfo.length > 0
-                              ? guestInfo.map(
-                                (guest) =>
-                                  `${guest.title} x${guest.quantity} `
-                              )
-                              : "Select participant"}
+                          <Text fontSize="md">
+                            {!selectedDate ? `${convertDate}` : `${showDate}`}
                           </Text>
                         </HStack>
                         <TriangleDownIcon />
                       </HStack>
                     </MenuButton>
-                  </VStack>
-                  <MenuList minWidth="320px" padding="4px 10px">
-                    {tourDetail?.priceOptions?.map((participant) => {
-                      const foundParticipant = tour.participants.filter(p => p.title === participant.title);
-                      const quantity = foundParticipant[0]?.quantity ?? 0
-                      return (
-                        <MenuItem
-                          quantity={quantity}
-                          key={participant._id}
-                          type={participant.title}
-                          price={participant.value}
-                          setPrice={setPrice}
-                          setType={setType}
-                          setQuantity={setQuantity}
+
+                    <MenuList>
+                      <HStack spacing={8}>
+                        <CustomCalendar
+                          selectedDate={selectedDate}
+                          setSelectedDate={setSelectedDate}
                         />
-                      );
-                    })}
-                  </MenuList>
-                </Menu>
+                      </HStack>
+                    </MenuList>
+                  </Menu>
+                  {tour.isPrivate &&
+                    <Menu
+                      autoSelect={false}
+                      computePositionOnMount
+                      placement="bottom-start"
+                    >
+                      <MenuButton
+                        width="full"
+                        height="40px"
+                        background="#fff"
+                        borderRadius="999px"
+                        padding="8px 12px"
+                        fontWeight="bold"
+                      >
+                        <HStack>
+                          <HStack alignItems="center">
+                            <Text fontSize="xl">
+                              <FaHotel />
+                            </Text>
+                            <Text fontSize="md">
+                              {hotel?.name !== '' ? hotel.name : 'Select hotel'}
+                            </Text>
+                          </HStack>
+                          <TriangleDownIcon />
+                        </HStack>
+                      </MenuButton>
+                      <MenuList>
+                        <VStack spacing={2}>
+                          {tourDetail?.hotels && tourDetail?.hotels.map((hotel, index) => (
+                            <Button height={{ base: '70px' }} width={{ base: 'full' }} onClick={() => setPrivateOptions('hotel', hotel._id, hotel.name)}>
+                              <PrivateOptions index={index} name={hotel.name} image={hotel.thumbnail} />
+                            </Button>
+                          ))}
+                        </VStack>
+                      </MenuList>
+                    </Menu>
+                  }
+                </VStack>
+              )}
+            </HStack>
+            <HStack width='full'>
+              {!editTour ? (
+                <HStack width='full' justifyContent='space-between'>
+                  <HStack>
+                    <MdPeopleAlt />
+                    {tour.participants.map((participant) => (
+                      <Text key={participant.title}>
+                        {participant.quantity} {participant.title}
+                      </Text>
+                    ))}
+                  </HStack>
+                  {tour.isPrivate &&
+                    <HStack>
+                      <FaBus />
+                      <Text>
+                        {tour.transports[0].name}
+                      </Text>
+                    </HStack>
+                  }
+                </HStack>
+              ) : (
+                <VStack width='full' alignItems='start'>
+                  <Menu
+                    autoSelect={false}
+                    computePositionOnMount
+                    placement="bottom-start"
+                  >
+                    <VStack>
+                      <MenuButton
+                        width="full"
+                        height="40px"
+                        background="#fff"
+                        borderRadius="999px"
+                        padding="8px 12px"
+                        fontWeight="bold"
+                      >
+                        <HStack>
+                          <HStack>
+                            <Text fontSize="xl">
+                              <IoPeople />
+                            </Text>
+                            <Text fontSize="md">
+                              {guestInfo.length > 0
+                                ? guestInfo.map(
+                                  (guest) =>
+                                    `${guest.title} x${guest.quantity} `
+                                )
+                                : "Select participant"}
+                            </Text>
+                          </HStack>
+                          <TriangleDownIcon />
+                        </HStack>
+                      </MenuButton>
+                    </VStack>
+                    <MenuList minWidth="320px" padding="4px 10px">
+                      {tourDetail?.priceOptions?.filter((participant) => tour.isPrivate ? participant.participantsCategoryIdentifier === "Private" : !participant.participantsCategoryIdentifier)
+                        .map((participant) => {
+                          const foundParticipant = tour.participants.filter(p => p.title === participant.title);
+                          const quantity = foundParticipant[0]?.quantity ?? 0
+                          return (
+                            <MenuItem
+                              quantity={quantity}
+                              key={participant._id}
+                              type={participant.title}
+                              price={participant.value}
+                              setPrice={setPrice}
+                              setType={setType}
+                              setQuantity={setQuantity}
+                            />
+                          );
+                        })}
+                    </MenuList>
+                  </Menu>
+                  {tour.isPrivate &&
+                    <Menu
+                      autoSelect={false} computePositionOnMount placement="bottom-start" >
+                      <MenuButton
+                        width="full"
+                        height="40px"
+                        background="#fff"
+                        borderRadius="999px"
+                        padding="8px 12px"
+                        fontWeight="bold"
+                      >
+                        <HStack>
+                          <HStack fontSize="md" alignItems="center">
+                            <Text fontSize="2xl">
+                              <FaBus />
+                            </Text>
+                            <Text>
+                              {transport?.name !== '' ? transport.name : 'Select transportation'}
+                            </Text>
+                          </HStack>
+                          <TriangleDownIcon />
+                        </HStack>
+                      </MenuButton>
+                      <MenuList>
+                        <VStack spacing={2}>
+                          {tourDetail?.transports && tourDetail?.transports.map((transport, index) => (
+                            <Button height={{ base: '70px' }} width={{ base: 'full' }} onClick={() => setPrivateOptions('transport', transport._id, transport.name)}>
+                              <PrivateOptions index={index} name={transport.name} image={transport.image} />
+                            </Button>
+                          ))}
+                        </VStack>
+                      </MenuList>
+                    </Menu>
+                  }
+                </VStack>
               )}
             </HStack>
             <HStack>

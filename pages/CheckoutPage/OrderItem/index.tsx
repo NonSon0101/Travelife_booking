@@ -3,6 +3,7 @@ import TextField from "components/TextField";
 import { ITourCart } from "interfaces/cart";
 import { IDiscountItem } from "interfaces/checkout";
 import { useState, useEffect } from "react";
+import { FaBus, FaHotel } from "react-icons/fa";
 import { IoTimerOutline } from "react-icons/io5";
 import { MdPeopleAlt } from "react-icons/md";
 import { formatCurrency } from "utils/common";
@@ -48,7 +49,7 @@ const OrderItem = (props: IOderItem) => {
       />
       <VStack align="flex-start">
         <Text fontSize="xl" fontWeight="bold">
-          {`${tour.tour.title}`}
+          {`${tour.tour.title}${tour.isPrivate ? ' (Private)' : ''}`}
         </Text>
         <HStack>
           <Text color="#396973" fontSize="2xl" fontWeight="500">
@@ -69,18 +70,35 @@ const OrderItem = (props: IOderItem) => {
               : ""}
           </Text>
         </HStack>
-        <HStack fontSize="md" fontWeight="bold">
-          <IoTimerOutline />
-          <Text>{`${tour.startDate.slice(0, 10)}`}</Text>
-        </HStack>
-        <HStack>
-          <MdPeopleAlt />
-
-          {tour.participants.map((participant) => (
-            <Text fontSize="md" fontWeight="bold" key={participant.title}>
-              {participant.quantity} {participant.title}
+        <HStack width='full' justifyContent='space-between'>
+          <HStack>
+            <IoTimerOutline />
+            <Text fontSize="md" fontWeight="bold">
+              {`${tour.startDate.slice(0, 10)}`}
             </Text>
-          ))}
+          </HStack>
+          <HStack>
+            <FaHotel/>
+            <Text fontSize="md" fontWeight="bold" >
+              {tour.hotels[0].name}
+            </Text>
+          </HStack>
+        </HStack>
+        <HStack width='full' justifyContent='space-between'>
+          <HStack>
+            <MdPeopleAlt />
+            {tour.participants.map((participant) => (
+              <Text fontSize="md" fontWeight="bold" key={participant.title}>
+                {participant.quantity} {participant.title}
+              </Text>
+            ))}
+          </HStack>
+          <HStack>
+            <FaBus />
+            <Text fontSize="md" fontWeight="bold">
+              {tour.transports[0].name}
+            </Text>
+          </HStack>
         </HStack>
       </VStack>
     </HStack>

@@ -2,6 +2,7 @@ import { Box, HStack, VStack, Image, Text, Divider } from "@chakra-ui/react"
 import RatingStart from "components/RatingStart";
 import { ITourCart } from "interfaces/cart";
 import { IDiscountItem } from "interfaces/checkout";
+import { FaBus, FaHotel } from "react-icons/fa";
 import { IoTimerOutline } from "react-icons/io5";
 import { LuCalendarDays } from "react-icons/lu";
 import { MdPeopleAlt } from "react-icons/md";
@@ -30,6 +31,14 @@ const OrderItem = (props: IOrderItem) => {
         <HStack>
           <IoTimerOutline />
           <Text>{tour.startTime}</Text>
+        </HStack>
+        <HStack>
+          <FaHotel />
+          <Text>{tour.hotels[0].name}</Text>
+        </HStack>
+        <HStack>
+          <FaBus />
+          <Text>{tour.transports[0].name}</Text>
         </HStack>
         <HStack>
           <MdPeopleAlt />

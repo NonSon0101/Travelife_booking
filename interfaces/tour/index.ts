@@ -1,4 +1,6 @@
 import { IPriceOption } from 'interfaces/common'
+import { IHotel } from 'interfaces/hotel'
+import { ITransportation } from 'interfaces/transportation'
 
 export interface ITour {
   _id?: string
@@ -29,9 +31,9 @@ export interface ITour {
   regularPrice?: number
   currency?: string
   isActive?: boolean
-  hotels?: string[]
+  hotels?: IHotel[]
   locations?: string[]
-  transports?: string[]
+  transports?: ITransportation[]
 }
 
 export interface ITourPagination {
@@ -89,3 +91,4 @@ export interface IUploadTourImage {
   thumbnailURL: string
   imagesURL: string[]
 }
+

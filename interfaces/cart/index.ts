@@ -1,3 +1,6 @@
+import { IHotel } from "interfaces/hotel";
+import { ITransportation } from "interfaces/transportation";
+
 export interface IListCart {
   _id: string;
   status: string;
@@ -14,6 +17,9 @@ export interface IAddToCart {
     startDate: string;
     startTime: string;
     participants: IParticipants[];
+    isPrivate?: boolean;
+    transports?: [string];
+    hotels?: [string];
   };
 }
 
@@ -24,6 +30,9 @@ export interface IUpdateToCart {
     startDate: string;
     startTime: string;
     participants: IParticipants[];
+    isPrivate?: boolean;
+    transports?: [string];
+    hotels?: [string];
   };
 }
 
@@ -45,8 +54,8 @@ export interface ITourCart {
   startDate: string;
   startTime: string;
   participants: IParticipants[];
-  transports: [];
-  hotels: [];
+  transports: ITransportation[];
+  hotels: IHotel[];
   _id: string;
 }
 

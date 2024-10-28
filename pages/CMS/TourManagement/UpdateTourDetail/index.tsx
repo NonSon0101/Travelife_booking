@@ -23,6 +23,7 @@ import ManageExclusions from './ManageExclusions'
 import ManageInclusions from './ManageInclusions'
 import ManagePriceOptions from './ManagePriceOptions'
 import { currencyOptions, tourTypeOptions } from 'constants/common'
+import PrivateTour from './PrivateTour'
 
 export interface IUpdateTourForm extends ITour {
   typeValue: IOption
@@ -58,6 +59,7 @@ const UpdateTourDetail = () => {
   const [isImageLoading, setIsImageLoading] = useState<boolean>(false)
   const [isManageInclusion, setIsManageInclusion] = useState<boolean>(false)
   const [isManageExclusion, setIsManageExclusion] = useState<boolean>(false)
+  const [isPrivateTour, setIsPrivateTour] = useState<boolean>(false)
   const [isManagePriceOptions, setIsManagePriceOptions] = useState<boolean>(false)
   const [existingPriceOptions, setExistingPriceOptions] = useState<IPriceOption[]>([])
   const thumbnail = useWatch({ control, name: 'thumbnail' }) ?? ''
@@ -78,7 +80,7 @@ const UpdateTourDetail = () => {
     if (!event.target.files || event.target.files.length === 0) {
       return
     }
-    try { 
+    try {
       const files = event.target.files
       const formData = new FormData()
       for (let i = 0; i < files?.length; i++) {
@@ -99,7 +101,7 @@ const UpdateTourDetail = () => {
     if (!event.target.files || event.target.files.length === 0) {
       return
     }
-    try { 
+    try {
       const formData = new FormData()
       formData.append('image', event.target.files[0])
       const imageUrl: string = await uploadImage('tour', formData)
@@ -206,7 +208,7 @@ const UpdateTourDetail = () => {
                 <SimpleGrid width="full" maxWidth="1200px" columns={{ base: 1, md: 2 }} gap={6}>
                   <FormInput name="code" label="Code" />
                   <FormInput name="title" label="Title" />
-                  <FormInput name="description" label="Description" gridColumn="span 2"  />
+                  <FormInput name="description" label="Description" gridColumn="span 2" />
                   <FormInput name="summary" label="Summary" />
                   <Dropdown
                     name="typeValue"
@@ -234,10 +236,10 @@ const UpdateTourDetail = () => {
                   />
                   {/* <FormInput name="interest" label="Interest" /> */}
                   {/* <FormInput name="details" label="Details" /> */}
-                  <FormInput name="regularPrice" label="Regular Price"  type="number" min={1} />
-                  <FormInput name="discountPrice" label="Discount Price"  type="number" min={1} />
-                  <FormInput name="discountPercentage" label="Discount Percentage"  type="number" min={1} />
-                  <FormInput name="duration" label="Duration"  type="number" min={0} />
+                  <FormInput name="regularPrice" label="Regular Price" type="number" min={1} />
+                  <FormInput name="discountPrice" label="Discount Price" type="number" min={1} />
+                  <FormInput name="discountPercentage" label="Discount Percentage" type="number" min={1} />
+                  <FormInput name="duration" label="Duration" type="number" min={0} />
                   <FormInput name="priceOptions" label="Price Options">
                     <ManageText onClick={() => setIsManagePriceOptions(true)}>
                       Manage Price Options
@@ -251,6 +253,11 @@ const UpdateTourDetail = () => {
                   <FormInput name="exclusions" label="Exclusions">
                     <ManageText onClick={() => setIsManageExclusion(true)}>
                       Manage Exclusions
+                    </ManageText>
+                  </FormInput>
+                  <FormInput name="privateTour" label="Private Tour">
+                    <ManageText onClick={() => setIsPrivateTour(true)}>
+                      Private Tour
                     </ManageText>
                   </FormInput>
                 </SimpleGrid>
@@ -291,8 +298,8 @@ const UpdateTourDetail = () => {
                 )}
               </VStack>
             </Box>
-            <VStack 
-              width="full" 
+            <VStack
+              width="full"
               maxWidth={300}
               align="flex-start"
               background="white"
@@ -332,6 +339,7 @@ const UpdateTourDetail = () => {
           />
           <ManageInclusions methods={methods} isOpen={isManageInclusion} onClose={() => setIsManageInclusion(false)} />
           <ManageExclusions methods={methods} isOpen={isManageExclusion} onClose={() => setIsManageExclusion(false)} />
+          <PrivateTour methods={methods} isOpen={isPrivateTour} onClose={() => setIsPrivateTour(false)}/>
         </form>
       </FormProvider>
     </Box>
