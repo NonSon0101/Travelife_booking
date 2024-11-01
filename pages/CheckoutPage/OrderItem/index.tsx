@@ -77,12 +77,14 @@ const OrderItem = (props: IOderItem) => {
               {`${tour.startDate.slice(0, 10)}`}
             </Text>
           </HStack>
-          <HStack>
-            <FaHotel/>
-            <Text fontSize="md" fontWeight="bold" >
-              {tour.hotels[0].name}
-            </Text>
-          </HStack>
+          {tour.isPrivate &&
+            <HStack>
+              <FaHotel />
+              <Text fontSize="md" fontWeight="bold" >
+                {tour.hotels[0]?.name}
+              </Text>
+            </HStack>
+          }
         </HStack>
         <HStack width='full' justifyContent='space-between'>
           <HStack>
@@ -93,12 +95,14 @@ const OrderItem = (props: IOderItem) => {
               </Text>
             ))}
           </HStack>
-          <HStack>
-            <FaBus />
-            <Text fontSize="md" fontWeight="bold">
-              {tour.transports[0].name}
-            </Text>
-          </HStack>
+          {tour.isPrivate &&
+            <HStack>
+              <FaBus />
+              <Text fontSize="md" fontWeight="bold" >
+                {tour.transports[0]?.name}
+              </Text>
+            </HStack>
+          }
         </HStack>
       </VStack>
     </HStack>

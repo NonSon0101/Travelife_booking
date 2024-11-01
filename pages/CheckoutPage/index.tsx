@@ -69,21 +69,11 @@ const CheckoutPage = () => {
     }
   }, [dataCheckoutReview]);
 
-  useEffect(() => {
-    if (checkCoupon) {
-      if (order.discount === 0)
-        toast.error('Not found discount match with tour')
-      else if (checkout.length > itemPrice.length)
-        toast.warn("Some tours can't apply this discount")
-      else
-        toast.success('Apply discount successfully')
-    }
-  }, [coupon, checkCoupon])
-
   const handleGoToContactPage = () => {
     checkoutStore.setOrderSummary({ ...dataCheckoutReview, discountCode: coupon })
     route.push(routes.booking.contact)
   }
+  
   const handleChangeText = (event: ChangeEvent<HTMLInputElement>) => {
     setCoupon(event.target.value);
   };
@@ -97,6 +87,14 @@ const CheckoutPage = () => {
       setIsLoading(true)
       const dataCoupon = { ...dataCheckoutReview, discountCode: coupon };
       await checkoutStore.fetchCheckoutReview(dataCoupon);
+      if (checkCoupon) {
+        if (order.discount === 0)
+          toast.error('Not found discount match with tour')
+        else if (checkout.length > itemPrice.length)
+          toast.warn("Some tours can't apply this discount")
+        else
+          toast.success('Apply discount successfully')
+      }
       setIsLoading(false)
       setCheckCoupon(true)
     } catch {

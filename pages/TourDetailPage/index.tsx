@@ -622,14 +622,18 @@ const TourDetailPage = () => {
                   </HStack>
                   {privateTour &&
                     <>
-                      <HStack>
-                        <FaHotel size="1.5rem" />
-                        <Text fontSize="md"> {hotel.name} </Text>
-                      </HStack>
-                      <HStack>
-                        <FaBus size="1.5rem" />
-                        <Text fontSize="md"> {transport.name} </Text>
-                      </HStack>
+                      {hotel.name !== '' &&
+                        <HStack>
+                          <FaHotel size="1.5rem" />
+                          <Text fontSize="md"> {hotel.name} </Text>
+                        </HStack>
+                      }
+                      {transport.name !== '' &&
+                        <HStack>
+                          <FaBus size="1.5rem" />
+                          <Text fontSize="md"> {transport.name} </Text>
+                        </HStack>
+                      }
                     </>
                   }
                 </VStack>
