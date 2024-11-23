@@ -34,7 +34,7 @@ interface IManagePriceOptionsProps {
 
 const ManagePriceOptions = (props: IManagePriceOptionsProps) => {
   const { isOpen, onClose, tourId, methods, existingOptions, setExistingOptions } = props
-  const { getValues, setValue } = methods
+  const { getValues, setValue } = methods || { getValues: () => {}, setValue: () => {} };
   
   function handleAddNewPriceOption(): void {
     const newTitle = getValues('newPriceOptionTitle.value')
@@ -69,11 +69,11 @@ const ManagePriceOptions = (props: IManagePriceOptionsProps) => {
   }
 
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && methods) {
       setValue('newPriceOptionTitle', '')
       setValue('newPriceOptionValue', '')
     }
-  }, [isOpen])
+  }, [isOpen, methods])  
 
   return (
     <Modal size="md" isOpen={isOpen} onClose={onClose}>

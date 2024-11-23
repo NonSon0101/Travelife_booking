@@ -17,11 +17,10 @@ import { IPagination } from "components/Table"
 import FilterModal from "./FilterModal"
 
 export interface IApplyFilter {
-  priceMin: number
-  priceMax: number
-  duration: number
-  time: number
-  star: number
+  priceMin?: number;
+  priceMax?: number;
+  duration?: number;
+  star?: number;
 }
 
 const AllActivitiesPage = () => {

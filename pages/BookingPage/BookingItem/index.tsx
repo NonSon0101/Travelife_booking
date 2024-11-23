@@ -14,6 +14,11 @@ interface IBookingItem {
 
 const BookingItem = (props: IBookingItem) => {
   const { booking } = props
+
+  if (!booking) {
+    return <Text>Error: Booking information is missing.</Text>;
+  }  
+
   const route = useRouter();
   const { bookingStore } = useStores();
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -49,8 +54,8 @@ const BookingItem = (props: IBookingItem) => {
       justify="space-between"
     >
       <Stack flex={2} spacing={2} fontSize="md">
-        <Text fontWeight="bold">{booking.personalInfo.name}</Text>
-        <Text fontSize="sm">{booking.personalInfo.phone}</Text>
+        <Text fontWeight="bold">{booking.personalInfo?.name || "N/A"}</Text>
+        <Text fontSize="sm">{booking.personalInfo?.phone || "N/A"}</Text>
         <Text
           color='teal'
           fontWeight='bold'

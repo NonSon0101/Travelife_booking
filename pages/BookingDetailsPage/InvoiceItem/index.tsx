@@ -12,18 +12,34 @@ interface IInvoiceItem {
 
 const InvoiceItem = (props: IInvoiceItem) => {
   const { bookingItems, numOfItem = 0, openRatingModal } = props
+
+  if (!bookingItems || !bookingItems.tour) {
+    return (
+      <VStack width="100%" marginTop="10px">
+        <Text alignSelf="flex-start" fontSize="xl" fontWeight="bold" color="#004747">
+          Tour 0{numOfItem + 1}
+        </Text>
+        <Text color="red.500">No booking details available.</Text>
+      </VStack>
+    );
+  }
+
   return (
     <VStack width='100%' marginTop='10px'>
       <Text alignSelf='flex-start' fontSize='xl' fontWeight='bold' color='#004747'>Tour 0{numOfItem + 1}</Text>
       <Box width='100%'>
         <HStack align='flex-start' spacing={6}>
-          <Image width={200} borderRadius="10px" src={`${bookingItems?.tour?.thumbnail}`} alt='tourimg' />
+          <Image width={200} borderRadius="10px" src={`${bookingItems.tour.thumbnail}`} alt='tourimg' />
           <VStack align='flex-start' spacing={2}>
-            <Text fontSize='lg' fontWeight='semibold'>{bookingItems.tour.title}</Text>
-            <RatingStart ratingAverage={bookingItems?.tour?.ratingAverage} numOfRating={bookingItems?.tour?.numOfRating} />
+            <Text fontSize="lg" fontWeight="semibold">
+              {bookingItems.tour.title || 'Tour title unavailable'}
+            </Text>
+            <RatingStart ratingAverage={bookingItems.tour.ratingAverage || 0} numOfRating={bookingItems.tour.numOfRating || 0} />
             <Text
               color="#ffd900"
               textUnderlineOffset={2}
+              role="button"
+              tabIndex={0}
               onClick={() => openRatingModal(bookingItems.tour)}
               userSelect="none"
               _hover={{
@@ -34,7 +50,7 @@ const InvoiceItem = (props: IInvoiceItem) => {
             >
               Give us a rate
             </Text>
-          </VStack>a
+          </VStack>
         </HStack>
       </Box>
       <TableContainer width='full' mt={4}>
@@ -46,14 +62,22 @@ const InvoiceItem = (props: IInvoiceItem) => {
               <Th isNumeric>Price</Th>
             </Tr>
           </Thead>
-          <Tbody fontSize='lg' fontWeight={500}>
-            {bookingItems.participants.map((participant) => (
+          <Tbody fontSize="lg" fontWeight={500}>
+            {bookingItems.participants?.length > 0 ? (
+              bookingItems.participants.map((participant, index) => (
+                <Tr key={index}>
+                  <Td>{participant.title}</Td>
+                  <Td>{participant.quantity}</Td>
+                  <Td isNumeric>{formatCurrency(participant.price)}</Td>
+                </Tr>
+              ))
+            ) : (
               <Tr>
-                <Td>{participant.title}</Td>
-                <Td>{participant.quantity}</Td>
-                <Td isNumeric>{formatCurrency(participant.price)}</Td>
+                <Td colSpan={3} textAlign="center">
+                  No participants available
+                </Td>
               </Tr>
-            ))}
+            )}
           </Tbody>
         </Table>
       </TableContainer>

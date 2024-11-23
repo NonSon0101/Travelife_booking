@@ -36,6 +36,7 @@ export const ManageText = chakra(Text, {
 
 const ManageInclusions = (props: IManageInclusionsProps) => {
   const { isOpen, onClose, methods } = props
+  if (!methods) return null
   const { control, register } = methods
   const { fields, append, remove } = useFieldArray({ control, name: 'inclusions' })
 

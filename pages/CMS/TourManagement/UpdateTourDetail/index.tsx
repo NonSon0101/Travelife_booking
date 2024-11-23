@@ -339,7 +339,9 @@ const UpdateTourDetail = () => {
           />
           <ManageInclusions methods={methods} isOpen={isManageInclusion} onClose={() => setIsManageInclusion(false)} />
           <ManageExclusions methods={methods} isOpen={isManageExclusion} onClose={() => setIsManageExclusion(false)} />
-          <PrivateTour methods={methods} isOpen={isPrivateTour} onClose={() => setIsPrivateTour(false)}/>
+          <PrivateTour methods={methods} isOpen={isPrivateTour} onClose={() => setIsPrivateTour(false)} tourId={''} existingOptions={[]} setExistingOptions={function (options: IPriceOption[]): void {
+            throw new Error('Function not implemented.')
+          } }/>
         </form>
       </FormProvider>
     </Box>

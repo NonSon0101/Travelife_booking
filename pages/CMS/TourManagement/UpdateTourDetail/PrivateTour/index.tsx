@@ -34,7 +34,7 @@ interface IPrivateTourProps {
 
 const PrivateTour = (props: IPrivateTourProps) => {
   const { isOpen, onClose, tourId, methods, existingOptions, setExistingOptions } = props
-  const { getValues, setValue } = methods
+  const { getValues, setValue } = methods || { getValues: () => {}, setValue: () => {} };
   
   function handleAddNewPriceOption(): void {
     const newTitle = getValues('newPriceOptionTitle.value')

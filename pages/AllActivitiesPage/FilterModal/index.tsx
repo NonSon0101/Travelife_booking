@@ -34,16 +34,25 @@ interface IFilterModal {
 }
 
 const FilterModal = (props: IFilterModal) => {
-  const { isOpen, onClose, setFliterOptions, filterOptions } = props
-  const { handleSubmit, register, reset, formState: { errors, isSubmitting } } = useForm<IApplyFilter>();
+  const { isOpen, onClose, setFliterOptions, filterOptions = { priceMin: 0, priceMax: 0, duration: 0, star: 0 } } = props
+  const { handleSubmit, register, reset, formState: { errors, isSubmitting } } = useForm<IApplyFilter>({
+    defaultValues: {
+      priceMin: filterOptions.priceMin || 0,
+      priceMax: filterOptions.priceMax || 0,
+    },
+  });
+  
   const [filterValue, setFilterValue] = useState<IApplyFilter>(filterOptions)
 
   useEffect(() => {
-    reset({
-      priceMax: filterOptions.priceMax,
-      priceMin: filterOptions.priceMin
-    })
-  }, [filterValue.priceMax, filterValue.priceMin])
+    if (filterOptions) {
+      setFilterValue(filterOptions);
+      reset({
+        priceMax: filterOptions.priceMax || 0,
+        priceMin: filterOptions.priceMin || 0,
+      });
+    }
+  }, [filterOptions, reset]);  
 
   useEffect(() => {
     setFilterValue(filterOptions)
@@ -154,7 +163,7 @@ const FilterModal = (props: IFilterModal) => {
             p={6}
             rounded="md"
             onChange={handleChangeDuration}
-            {...(filterValue.duration && { defaultValue: `${filterValue.duration}` })}
+            defaultValue={filterValue.duration ? `${filterValue.duration}` : undefined}
           >
             <Stack spacing={4}>
               <Radio value="3">0-3 hours</Radio>
@@ -165,13 +174,13 @@ const FilterModal = (props: IFilterModal) => {
           <Divider />
           <Text>Star</Text>
           <RadioGroup
-            as="fieldset"
-            borderColor="gray.300"
-            p={6}
-            rounded="md"
-            colorScheme="teal"
-            onChange={handleChangeStar}
-            {...(filterValue.star && { defaultValue: `${filterValue.star}` })}
+             as="fieldset"
+             borderColor="gray.300"
+             p={6}
+             rounded="md"
+             colorScheme="teal"
+             onChange={handleChangeStar}
+             defaultValue={filterValue.star ? `${filterValue.star}` : undefined}
           >
             <Stack spacing={4}>
               <Radio value="3">3.0+</Radio>
