@@ -1,6 +1,6 @@
 'use client'
 import { ChangeEvent, useEffect, useRef, useState } from 'react'
-import { Box, Button, Center, HStack, Img, SimpleGrid, Text, VStack, chakra } from '@chakra-ui/react'
+import { Box, Button, Center, FormControl, FormLabel, HStack, Img, SimpleGrid, Switch, Text, VStack, chakra } from '@chakra-ui/react'
 import { createTour, updateTourDetail } from 'API/tour'
 import { uploadImage, uploadTourImage } from 'API/upload'
 import Dropdown, { IOption } from 'components/Dropdown'
@@ -24,6 +24,7 @@ import ManageInclusions from './ManageInclusions'
 import ManagePriceOptions from './ManagePriceOptions'
 import { currencyOptions, tourTypeOptions } from 'constants/common'
 import PrivateTour from './PrivateTour'
+import ManageHotels from './ManageHotels'
 
 export interface IUpdateTourForm extends ITour {
   typeValue: IOption
@@ -60,8 +61,10 @@ const UpdateTourDetail = () => {
   const [isManageInclusion, setIsManageInclusion] = useState<boolean>(false)
   const [isManageExclusion, setIsManageExclusion] = useState<boolean>(false)
   const [isPrivateTour, setIsPrivateTour] = useState<boolean>(false)
+  const [isManageHotels, setIsManageHotels] = useState<boolean>(false)
   const [isManagePriceOptions, setIsManagePriceOptions] = useState<boolean>(false)
   const [existingPriceOptions, setExistingPriceOptions] = useState<IPriceOption[]>([])
+  const [privateTour, setPrivateTour] = useState<boolean>(false)
   const thumbnail = useWatch({ control, name: 'thumbnail' }) ?? ''
   const images = useWatch({ control, name: 'images' }) ?? []
   const locationOptions = getOptions(locations, 'title', '_id')
@@ -117,6 +120,7 @@ const UpdateTourDetail = () => {
   async function onSubmit(formData: IUpdateTourForm) {
     setIsLoading(true)
     const data: ITour = formatFormData(formData, existingPriceOptions)
+    console.log("data", data)
     try {
       if (isEditMode) {
         await updateTourDetail(tourId, data)
@@ -175,7 +179,6 @@ const UpdateTourDetail = () => {
       })
       const priceOptionsData: IPriceOption[] = getValidArray(tourDetail?.priceOptions).map(option => {
         return {
-          _id: option?._id,
           title: option?.title,
           value: Number(option?.value),
           currency: option?.currency
@@ -190,9 +193,17 @@ const UpdateTourDetail = () => {
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <HStack width="full" justify="space-between" marginBottom={6}>
-            <Text fontSize="lg" fontWeight={600}>
-              {isEditMode ? 'Update Tour Detail' : 'Create New Tour'}
-            </Text>
+            <VStack>
+              <Text fontSize="lg" fontWeight={600}>
+                {isEditMode ? 'Update Tour Detail' : 'Create New Tour'}
+              </Text>
+              <HStack display='flex' alignItems='center' width='unset'>
+                <Text mb='0'>
+                  Private tour?
+                </Text>
+                <Switch id='private-tour' isChecked={privateTour} onChange={() => setPrivateTour(!privateTour)} />
+              </HStack>
+            </VStack>
             <HStack spacing={4}>
               <Button background="white" borderWidth={1} borderColor="gray.300" isLoading={isLoading} onClick={backToTourList}>
                 Cancel
@@ -255,11 +266,25 @@ const UpdateTourDetail = () => {
                       Manage Exclusions
                     </ManageText>
                   </FormInput>
-                  <FormInput name="privateTour" label="Private Tour">
-                    <ManageText onClick={() => setIsPrivateTour(true)}>
-                      Private Tour
-                    </ManageText>
-                  </FormInput>
+                  {privateTour &&
+                    <>
+                      <FormInput name="privateTourPriceOptions" label="Private Tour Price Options">
+                        <ManageText onClick={() => setIsPrivateTour(true)}>
+                          Private Tour Price Options
+                        </ManageText>
+                      </FormInput>
+                      <FormInput name="itinerary" label="Itinerary">
+                        <ManageText onClick={() => setIsPrivateTour(true)}>
+                          Manage itinerary
+                        </ManageText>
+                      </FormInput>
+                      <FormInput name="hotel" label="Hotel">
+                        <ManageText onClick={() => setIsManageHotels(true)}>
+                          Manage hotel
+                        </ManageText>
+                      </FormInput>
+                    </>
+                  }
                 </SimpleGrid>
                 {isEditMode && (
                   <VStack width="full" align="flex-start" spacing={0}>
@@ -339,9 +364,8 @@ const UpdateTourDetail = () => {
           />
           <ManageInclusions methods={methods} isOpen={isManageInclusion} onClose={() => setIsManageInclusion(false)} />
           <ManageExclusions methods={methods} isOpen={isManageExclusion} onClose={() => setIsManageExclusion(false)} />
-          <PrivateTour methods={methods} isOpen={isPrivateTour} onClose={() => setIsPrivateTour(false)} tourId={''} existingOptions={[]} setExistingOptions={function (options: IPriceOption[]): void {
-            throw new Error('Function not implemented.')
-          } }/>
+          <PrivateTour methods={methods} isOpen={isPrivateTour} onClose={() => setIsPrivateTour(false)} tourId={tourId} existingOptions={existingPriceOptions} setExistingOptions={setExistingPriceOptions} />
+          <ManageHotels isOpen={isManageHotels} onClose={() => setIsManageHotels(false)} methods={methods}/>
         </form>
       </FormProvider>
     </Box>

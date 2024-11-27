@@ -61,6 +61,7 @@ const PrivateTour = (props: IPrivateTourProps) => {
       return {
         title: option?.title,
         value: Number(option?.value),
+        participantsCategoryIdentifier: 'true',
         currency: option?.currency
       }
     })
@@ -100,7 +101,7 @@ const PrivateTour = (props: IPrivateTourProps) => {
           <FormInput name="priceOptions" label="Existing Price Options">
             <VStack width="full" align="flex-start">
               {getValidArray(existingOptions).map((option, index) => (
-                <HStack key={option?._id} width="full">
+                <HStack key={index} width="full">
                   <HStack width="full" marginLeft={10}>
                     <Text width="200px" fontWeight={500}>{option?.title}</Text>
                     <Text width="full" fontWeight={500}>{`${option?.value} ${option?.currency}`}</Text>

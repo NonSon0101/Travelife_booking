@@ -21,7 +21,7 @@ export interface ITour {
   }[]
   inclusions?: string[]
   exclusions?: string[]
-  itinerary?: ITourItinerary
+  itinerary?: ITourItinerary[]
   duration?: number
   discountPrice?: number
   discountPercentage?: number

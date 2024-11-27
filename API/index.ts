@@ -41,6 +41,14 @@ export function handleUnauthorized(): void {
       window.location.href = routes.cms.login.value
     }, 3000)
   }
+
+  if (window.location.href.includes(PLATFORM.WEBSITE)) {
+    localStorage.removeItem('websiteToken')
+    localStorage.removeItem('websiteUserId')
+    setTimeout(() => {
+      window.location.href = '/'
+    }, 3000)
+  }
 }
 
 export function handleError(error: Error, filePath: string, functionName: string) {
