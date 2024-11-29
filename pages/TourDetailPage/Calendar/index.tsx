@@ -14,18 +14,16 @@ const CustomCalendar = (props: ICustomCalendar) => {
   const { selectedDate, setSelectedDate } = props;
 
   return (
-    <div
-      style={{
-        maxWidth: "400px",
-        padding: "20px",
-        boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
-        borderRadius: "8px",
-        background: "#fff",
-        border: "none", // Added to remove the default border
-      }}
+    <Box
+      maxW="400px"
+      p="20px"
+      boxShadow="0 4px 6px rgba(0,0,0,0.1)"
+      borderRadius="8px"
+      bg="#fff"
+      border="none"
     >
       <Calendar onChange={setSelectedDate} value={selectedDate} />
-    </div>
+    </Box>
   );
 };
 

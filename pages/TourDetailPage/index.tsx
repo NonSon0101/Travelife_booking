@@ -71,6 +71,8 @@ const TourDetailPage = () => {
   const [availability, setAvailability] = useState<boolean>(false);
   const [isMenuParticipant, setIsMenuParticipant] = useState<boolean>(true);
   const [isMenuDatePick, setIsMenuDatePick] = useState<boolean>(true);
+  const [isMenuHotel, setIsMenuHotel] = useState<boolean>(true);
+  const [isMenuTransport, setIsMenuTransport] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [tourId, setTourId] = useState<string>()
   const [slider, setSlider] = useState<Slider | null>(null)
@@ -245,7 +247,12 @@ const TourDetailPage = () => {
   function handleCheckAvailability() {
     guestInfo.length ? setIsMenuParticipant(true) : setIsMenuParticipant(false);
     showDate.length ? setIsMenuDatePick(true) : setIsMenuDatePick(false);
-    setAvailability(!!guestInfo.length && !!showDate.length);
+    privateTour && hotel.name.length ? setIsMenuHotel(true) : setIsMenuHotel(false);
+    privateTour && transport.name.length ? setIsMenuTransport(true) : setIsMenuTransport(false);
+    if (privateTour)
+      setAvailability(!!guestInfo.length && !!showDate.length && !!hotel.name.length && !!transport.name.length);
+    else
+      setAvailability(!!guestInfo.length && !!showDate.length);
   }
 
   function setPrivateOptions(type: string, id: string, value: string) {
@@ -397,20 +404,82 @@ const TourDetailPage = () => {
                   <Switch id='private-tour' isChecked={privateTour} onChange={() => setPrivateTour(!privateTour)} />
                 </FormControl>
               </Stack>
-              <SimpleGrid
-                width='full'
-                columns={{ base: 1, md: 2, lg: 3 }}
-                gap={4}
+              <Stack
+                width="full"
+                flexDirection={{base: 'column', md: 'row'}}
+                alignItems='center'
                 justifyContent="space-between"
-                paddingTop="8px"
               >
-                <GridItem>
-                  <Menu
-                    autoSelect={false}
-                    computePositionOnMount
-                    placement="bottom-start"
-                  >
-                    <VStack>
+                <SimpleGrid
+                  flex={{base: 1, md: 2}}
+                  width='full'
+                  columns={{ base: 1, md: 2}}
+                  gap={4}
+                  justifyContent="space-between"
+                  paddingTop="8px"
+                >
+                  <GridItem>
+                    <Menu
+                      autoSelect={false}
+                      computePositionOnMount
+                      placement="bottom-start"
+                    >
+                      <VStack>
+                        <MenuButton
+                          width="full"
+                          height="40px"
+                          background="#fff"
+                          borderRadius="999px"
+                          padding="8px 12px"
+                          fontWeight="bold"
+                        >
+                          <HStack justifyContent="space-between">
+                            <HStack fontSize="md" alignItems="center">
+                              <Text fontSize="2xl">
+                                <IoPeople />
+                              </Text>
+                              <Text>
+                                {guestInfo.length > 0
+                                  ? guestInfo.map(
+                                    (guest) =>
+                                      `${guest.title} x${guest.quantity} `
+                                  )
+                                  : "Select participant"}
+                              </Text>
+                            </HStack>
+                            <TriangleDownIcon />
+                          </HStack>
+                        </MenuButton>
+                      </VStack>
+                      <MenuList minWidth="320px" padding="4px 10px">
+                        {priceOptions &&
+                          priceOptions
+                            .filter((participant) => privateTour ? participant.participantsCategoryIdentifier === "Private" : !participant.participantsCategoryIdentifier)
+                            .map((participant, index) => (
+                              <MenuItem
+                                key={index}
+                                type={participant.title}
+                                price={participant.value}
+                                currency={tourDetail?.currency ?? ''}
+                                setPrice={setPrice}
+                                setType={setType}
+                                setQuantity={setQuantity}
+                              />
+                            )
+                            )
+                        }
+                      </MenuList>
+                    </Menu>
+                    <Text textAlign="center" color="red">
+                      {!isMenuParticipant && "Please choose participants"}
+                    </Text>
+                  </GridItem>
+                  <GridItem>
+                    <Menu
+                      autoSelect={false}
+                      computePositionOnMount
+                      placement="bottom-start"
+                    >
                       <MenuButton
                         width="full"
                         height="40px"
@@ -422,168 +491,117 @@ const TourDetailPage = () => {
                         <HStack justifyContent="space-between">
                           <HStack fontSize="md" alignItems="center">
                             <Text fontSize="2xl">
-                              <IoPeople />
+                              <LuCalendarDays />
                             </Text>
                             <Text>
-                              {guestInfo.length > 0
-                                ? guestInfo.map(
-                                  (guest) =>
-                                    `${guest.title} x${guest.quantity} `
-                                )
-                                : "Select participant"}
+                              {!selectedDate ? "Select date" : `${showDate}`}
                             </Text>
                           </HStack>
                           <TriangleDownIcon />
                         </HStack>
                       </MenuButton>
-                    </VStack>
-                    <MenuList minWidth="320px" padding="4px 10px">
-                      {priceOptions &&
-                        priceOptions
-                          .filter((participant) => privateTour ? participant.participantsCategoryIdentifier === "Private" : !participant.participantsCategoryIdentifier)
-                          .map((participant) => (
-                            <MenuItem
-                              key={participant._id}
-                              type={participant.title}
-                              price={participant.value}
-                              setPrice={setPrice}
-                              setType={setType}
-                              setQuantity={setQuantity}
-                            />
-                          )
-                          )
-                      }
-                    </MenuList>
-                  </Menu>
-                  <Text textAlign="center" color="red">
-                    {!isMenuParticipant && "Please choose participants"}
-                  </Text>
-                </GridItem>
-                <GridItem>
-                  <Menu
-                    autoSelect={false}
-                    computePositionOnMount
-                    placement="bottom-start"
-                  >
-                    <MenuButton
-                      width="full"
-                      height="40px"
-                      background="#fff"
-                      borderRadius="999px"
-                      padding="8px 12px"
-                      fontWeight="bold"
-                    >
-                      <HStack justifyContent="space-between">
-                        <HStack fontSize="md" alignItems="center">
-                          <Text fontSize="2xl">
-                            <LuCalendarDays />
-                          </Text>
-                          <Text>
-                            {!selectedDate ? "Select date" : `${showDate}`}
-                          </Text>
+
+                      <MenuList>
+                        <HStack spacing={8}>
+                          <CustomCalendar
+                            selectedDate={selectedDate}
+                            setSelectedDate={setSelectedDate}
+                          />
                         </HStack>
-                        <TriangleDownIcon />
-                      </HStack>
-                    </MenuButton>
+                      </MenuList>
+                    </Menu>
+                    <Text textAlign="center" color="red">
+                      {!isMenuDatePick && "Please select date"}
+                    </Text>
+                  </GridItem>
 
-                    <MenuList>
-                      <HStack spacing={8}>
-                        <CustomCalendar
-                          selectedDate={selectedDate}
-                          setSelectedDate={setSelectedDate}
-                        />
-                      </HStack>
-                    </MenuList>
-                  </Menu>
-                  <Text textAlign="center" color="red">
-                    {!isMenuDatePick && "Please select date"}
-                  </Text>
-                </GridItem>
-
-                {privateTour &&
-                  <>
-                    <GridItem>
-                      <Menu
-                        autoSelect={false}
-                        computePositionOnMount
-                        placement="bottom-start"
-                      >
-                        <MenuButton
-                          width="full"
-                          height="40px"
-                          background="#fff"
-                          borderRadius="999px"
-                          padding="8px 12px"
-                          fontWeight="bold"
+                  {privateTour &&
+                    <>
+                      <GridItem>
+                        <Menu
+                          autoSelect={false}
+                          computePositionOnMount
+                          placement="bottom-start"
                         >
-                          <HStack justifyContent="space-between">
-                            <HStack fontSize="md" alignItems="center">
-                              <Text fontSize="2xl">
-                                <FaHotel />
-                              </Text>
-                              <Text>
-                                {hotel?.name !== '' ? hotel.name : 'Select hotel'}
-                              </Text>
+                          <MenuButton
+                            width="full"
+                            height="40px"
+                            background="#fff"
+                            borderRadius="999px"
+                            padding="8px 12px"
+                            fontWeight="bold"
+                          >
+                            <HStack justifyContent="space-between">
+                              <HStack fontSize="md" alignItems="center">
+                                <Text fontSize="2xl">
+                                  <FaHotel />
+                                </Text>
+                                <Text>
+                                  {hotel?.name !== '' ? hotel.name : 'Select hotel'}
+                                </Text>
+                              </HStack>
+                              <TriangleDownIcon />
                             </HStack>
-                            <TriangleDownIcon />
-                          </HStack>
-                        </MenuButton>
-                        <MenuList>
-                          <VStack spacing={2}>
-                            {tourDetail?.hotels && tourDetail?.hotels.map((hotel, index) => (
-                              <Button height={{ base: '70px' }} width={{ base: 'full' }} onClick={() => setPrivateOptions('hotel', hotel._id, hotel.name)}>
-                                <PrivateOptions index={index} name={hotel.name} image={hotel.thumbnail} />
-                              </Button>
-                            ))}
-                          </VStack>
-                        </MenuList>
-                      </Menu>
-                    </GridItem>
+                          </MenuButton>
+                          <MenuList>
+                            <VStack spacing={2}>
+                              {tourDetail?.hotels && tourDetail?.hotels.map((hotel, index) => (
+                                <Button height={{ base: '70px' }} width={{ base: 'full' }} onClick={() => setPrivateOptions('hotel', hotel._id, hotel.name)}>
+                                  <PrivateOptions index={index} name={hotel.name} image={hotel.thumbnail} />
+                                </Button>
+                              ))}
+                            </VStack>
+                          </MenuList>
+                        </Menu>
+                        <Text textAlign="center" color="red">
+                          {!isMenuHotel && "Please select hotel"}
+                        </Text>
+                      </GridItem>
 
-                    <GridItem>
-                      <Menu
-                        autoSelect={false} computePositionOnMount placement="bottom-start" >
-                        <MenuButton
-                          width="full"
-                          height="40px"
-                          background="#fff"
-                          borderRadius="999px"
-                          padding="8px 12px"
-                          fontWeight="bold"
-                        >
-                          <HStack justifyContent="space-between">
-                            <HStack fontSize="md" alignItems="center">
-                              <Text fontSize="2xl">
-                                <FaBus />
-                              </Text>
-                              <Text>
-                                {transport?.name !== '' ? transport.name : 'Select transportation'}
-                              </Text>
+                      <GridItem>
+                        <Menu
+                          autoSelect={false} computePositionOnMount placement="bottom-start" >
+                          <MenuButton
+                            width="full"
+                            height="40px"
+                            background="#fff"
+                            borderRadius="999px"
+                            padding="8px 12px"
+                            fontWeight="bold"
+                          >
+                            <HStack justifyContent="space-between">
+                              <HStack fontSize="md" alignItems="center">
+                                <Text fontSize="2xl">
+                                  <FaBus />
+                                </Text>
+                                <Text>
+                                  {transport?.name !== '' ? transport.name : 'Select transportation'}
+                                </Text>
+                              </HStack>
+                              <TriangleDownIcon />
                             </HStack>
-                            <TriangleDownIcon />
-                          </HStack>
-                        </MenuButton>
-                        <MenuList>
-                          <VStack spacing={2}>
-                            {tourDetail?.transports && tourDetail?.transports.map((transport, index) => (
-                              <Button height={{ base: '70px' }} width={{ base: 'full' }} onClick={() => setPrivateOptions('transport', transport._id, transport.name)}>
-                                <PrivateOptions index={index} name={transport.name} image={transport.image} />
-                              </Button>
-                            ))}
-                          </VStack>
-                        </MenuList>
-                      </Menu>
-                    </GridItem>
-                  </>
-                }
-
-                <GridItem colSpan={{ sm: 1, md: 2, lg: 1 }}>
-                  <Button width='full' colorScheme="teal" borderRadius="80px" flex={1} onClick={handleCheckAvailability} >
-                    Check availability
-                  </Button>
-                </GridItem>
-
-              </SimpleGrid>
+                          </MenuButton>
+                          <MenuList>
+                            <VStack spacing={2}>
+                              {tourDetail?.transports && tourDetail?.transports.map((transport, index) => (
+                                <Button height={{ base: '70px' }} width={{ base: 'full' }} onClick={() => setPrivateOptions('transport', transport._id, transport.name)}>
+                                  <PrivateOptions index={index} name={transport.name} image={transport.image} />
+                                </Button>
+                              ))}
+                            </VStack>
+                          </MenuList>
+                        </Menu>
+                        <Text textAlign="center" color="red">
+                          {!isMenuTransport && "Please select transport"}
+                        </Text>
+                      </GridItem>
+                    </>
+                  }
+                </SimpleGrid>
+                <Button flex={{base: 1}} paddingY='10px' width='full' colorScheme="teal" borderRadius="80px" onClick={handleCheckAvailability} >
+                  Check availability
+                </Button>
+              </Stack>
             </Box>
             <Box
               width="full"
@@ -649,9 +667,9 @@ const TourDetailPage = () => {
                     >
                       <Text fontWeight='500' fontSize="lg">
                         {guest.title} {guest.quantity} x{" "}
-                        {formatCurrency(guest.price)}
+                        {formatCurrency(guest.price, tourDetail?.currency ?? '')}
                       </Text>
-                      <Text fontWeight='500' fontSize="lg">{guest.price && formatCurrency(guest.price * guest.quantity)}</Text>
+                      <Text fontWeight='500' fontSize="lg">{guest.price && formatCurrency(guest.price * guest.quantity, tourDetail?.currency ?? '')}</Text>
                     </HStack>
                   ))}
                 </VStack>
@@ -668,7 +686,7 @@ const TourDetailPage = () => {
                         Total price
                       </Text>
                       <Text fontSize="2xl" fontWeight="bold">
-                        {totalPrice !== 0 ? `${totalPrice && formatCurrency(totalPrice)}` : ""}
+                        {totalPrice !== 0 ? `${totalPrice && formatCurrency(totalPrice, tourDetail?.currency ?? '')}` : ""}
                       </Text>
                     </VStack>
                     <HStack>
@@ -698,7 +716,7 @@ const TourDetailPage = () => {
                 <GridItem>
                   <Text>From</Text>
                   <Text fontSize="2xl" fontWeight={700} flex={2}>
-                    {tourDetail?.regularPrice && formatCurrency(tourDetail?.regularPrice)}
+                    {tourDetail?.regularPrice && formatCurrency(tourDetail?.regularPrice, tourDetail?.currency ?? '')}
                   </Text>
                   <Text>per person</Text>
                 </GridItem>

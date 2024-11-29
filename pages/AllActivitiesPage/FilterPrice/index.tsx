@@ -29,6 +29,7 @@ const FilterPrice = (props: IFilterPrice) => {
         placement="bottom-start"
       >
         <CustomMenuButton
+          as={MenuButton}
           text='Price'
           {...(isAppliedfilter && {
             _after: {

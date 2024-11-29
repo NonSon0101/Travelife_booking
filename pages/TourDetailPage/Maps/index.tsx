@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState } from 'react'
 import * as maptilersdk from '@maptiler/sdk'
 import '@maptiler/sdk/dist/maptiler-sdk.css'
 import './map.css'
+import { Box } from '@chakra-ui/react'
 
 interface IMaps {
   coordinates?: number[]
@@ -38,10 +39,10 @@ const Maps = (props: IMaps) => {
   }, [startLocation.lng, startLocation.lat, zoom])
 
   return (
-    <div className="map-wrap">
-      <div ref={mapContainer} className="map" />
-    </div>
-  )
-}
+    <Box className="map-wrap" >
+      <Box ref={mapContainer} className="map"/>
+    </Box>
+  );
+};
 
 export default Maps

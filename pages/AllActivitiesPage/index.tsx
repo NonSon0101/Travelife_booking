@@ -15,6 +15,7 @@ import FilterStar from "./FilterStar"
 import Pagination from "components/Table/components/Pagination"
 import { IPagination } from "components/Table"
 import FilterModal from "./FilterModal"
+import PageLayout from "components/Layout/WebLayout/PageLayout"
 
 export interface IApplyFilter {
   priceMin?: number;
@@ -68,7 +69,7 @@ const AllActivitiesPage = () => {
   }, [filterOptions])
 
   return (
-    <ListTourLayout>
+    <PageLayout>
       <VStack
         minHeight="700px"
         height="full"
@@ -113,7 +114,7 @@ const AllActivitiesPage = () => {
         setFliterOptions={setFliterOptions}
         filterOptions={filterOptions}
       />
-    </ListTourLayout>
+    </PageLayout>
   )
 }
 

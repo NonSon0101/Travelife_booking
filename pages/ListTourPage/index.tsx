@@ -1,6 +1,7 @@
 "use client";
 import { SimpleGrid, VStack, Text, Box } from "@chakra-ui/react"
 import ListTourLayout from "components/Layout/WebLayout/ListTourLayout"
+import PageLayout from "components/Layout/WebLayout/PageLayout";
 import Title from "components/Title"
 import TourCard from "components/TourCard";
 import { useStores } from "hooks";
@@ -32,7 +33,7 @@ const ListTourPage = () => {
   }, []);
 
   return (
-    <ListTourLayout >
+    <PageLayout >
       <VStack
         minHeight="700px"
         height="full"
@@ -71,7 +72,7 @@ const ListTourPage = () => {
           ))}
         </SimpleGrid>
       </VStack>
-    </ListTourLayout>
+    </PageLayout>
   )
 }
 

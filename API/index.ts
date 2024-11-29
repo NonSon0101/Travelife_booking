@@ -16,6 +16,7 @@ api.interceptors.response.use(
   function (error) {
     if (error?.response?.data?.code === 401) {
       handleUnauthorized()
+      return
       // toast.error(error?.response?.data?.message)
     }
     console.error('API', 'error', error)
@@ -26,9 +27,6 @@ api.interceptors.response.use(
 )
 
 export function auth(platform: PLATFORM): IHeader {
-  if (typeof window === 'undefined') {
-    return {}
-  }
   const token = localStorage.getItem(`${platform}Token`) ?? sessionStorage.getItem(`${platform}Token`) ?? ''
   return { Authorization: `Bearer ${token}` }
 }
@@ -40,9 +38,7 @@ export function handleUnauthorized(): void {
     setTimeout(() => {
       window.location.href = routes.cms.login.value
     }, 3000)
-  }
-
-  if (window.location.href.includes(PLATFORM.WEBSITE)) {
+  }else {
     localStorage.removeItem('websiteToken')
     localStorage.removeItem('websiteUserId')
     setTimeout(() => {

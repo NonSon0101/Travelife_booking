@@ -11,12 +11,7 @@ export function getValidArray<T>(array?: T[]): T[] {
 }
 
 export function getAccessToken(platform: PLATFORM): string {
-  if (typeof window !== 'undefined') {
-    // Running in the browser, safe to access localStorage and sessionStorage
-    return localStorage.getItem(`${platform}Token`) ?? sessionStorage.getItem(`${platform}Token`) ?? '';
-  }
-  // Return an empty string or a default value when not in the browser
-  return '';
+  return localStorage.getItem(`${platform}Token`) ?? sessionStorage.getItem(`${platform}Token`) ?? '';
 }
 
 export function getOptions<T>(array: T[], labelKey: string, valueKey: string): IOption[] {
@@ -26,7 +21,7 @@ export function getOptions<T>(array: T[], labelKey: string, valueKey: string): I
   }))
 }
 
-export function formatCurrency(amount: number): string {
+export function formatCurrency(amount: number, currency: string): string {
   const amountString = amount.toString();
   const amountArray = amountString.split('');
   const reversedArray = amountArray.reverse();
@@ -39,5 +34,5 @@ export function formatCurrency(amount: number): string {
   }
 
   const formattedAmount = resultArray.reverse().join('');
-  return formattedAmount + ' VNĐ';
+  return formattedAmount + ` ${currency}`;
 }

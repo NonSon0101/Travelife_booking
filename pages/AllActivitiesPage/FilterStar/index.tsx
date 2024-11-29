@@ -28,6 +28,7 @@ const FilterStar = (props: IFilterStar) => {
         placement="bottom-start"
       >
         <CustomMenuButton
+          as={MenuButton}
           text='Star'
           {...(isAppliedfilter && {
             _after: {

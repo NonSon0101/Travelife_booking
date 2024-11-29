@@ -10,8 +10,6 @@ import {
   Text,
   Divider,
   HStack,
-  SimpleGrid,
-  VStack,
   Button,
   FormControl,
   FormLabel,
@@ -52,7 +50,7 @@ const FilterModal = (props: IFilterModal) => {
         priceMin: filterOptions.priceMin || 0,
       });
     }
-  }, [filterOptions, reset]);  
+  }, [filterOptions, reset]);
 
   useEffect(() => {
     setFilterValue(filterOptions)
@@ -81,8 +79,23 @@ const FilterModal = (props: IFilterModal) => {
     }));
   }
 
+  const cancelFilter = (key: string) => {
+    let newFilter = { ...filterValue };
+    console.log('before cancel', newFilter)
+    if (key === 'duration')
+      delete newFilter.duration;
+    if (key === 'star')
+      delete newFilter.star;
+    setFliterOptions(newFilter)
+    console.log('after cancel', newFilter)
+    console.log('after cancel filter value', filterValue)
+    console.log('after cancel filter options', filterOptions)
+
+  }
+ 
   const resetAllFilter = () => {
-    setFliterOptions({} as IApplyFilter)
+    setFliterOptions({} as IApplyFilter);
+    setFilterValue({} as IApplyFilter);
   }
 
   return (
@@ -94,26 +107,21 @@ const FilterModal = (props: IFilterModal) => {
         <ModalBody fontWeight='500'>
           <Text>Applied filters</Text>
           <HStack wrap="wrap" spacing={1}>
-            <HStack padding={2} background='#f5f5f5' width='fit-content' border='2px solid #888' borderRadius={10}>
-              <Text>meo meo meo meo</Text>
-              <RxCross2 />
-            </HStack>
-            <HStack padding={2} background='#f5f5f5' width='fit-content' border='2px solid #888' borderRadius={10}>
-              <Text>meo meo</Text>
-              <RxCross2 />
-            </HStack>
-            <HStack padding={2} background='#f5f5f5' width='fit-content' border='2px solid #888' borderRadius={10}>
-              <Text>meo meo meo</Text>
-              <RxCross2 />
-            </HStack>
-            <HStack padding={2} background='#f5f5f5' width='fit-content' border='2px solid #888' borderRadius={10}>
-              <Text>meo meo meo meo</Text>
-              <RxCross2 />
-            </HStack>
-            <HStack padding={2} background='#f5f5f5' width='fit-content' border='2px solid #888' borderRadius={10}>
-              <Text>meo meo meo meo</Text>
-              <RxCross2 />
-            </HStack>
+            {Object.entries(filterValue).map(([key, value]) => (
+              <HStack
+                key={key}
+                padding={2}
+                background="#f5f5f5"
+                width="fit-content"
+                border="2px solid #888"
+                borderRadius={10}
+              >
+                <Text>{`${value} ${key}`}</Text>
+                <Button onClick={() => cancelFilter(key)}>
+                  <RxCross2/>
+                </Button>
+              </HStack>
+            ))}
           </HStack>
           <Divider />
           <Text>Price</Text>
@@ -163,7 +171,7 @@ const FilterModal = (props: IFilterModal) => {
             p={6}
             rounded="md"
             onChange={handleChangeDuration}
-            defaultValue={filterValue.duration ? `${filterValue.duration}` : undefined}
+            value={filterValue.duration ? `${filterValue.duration}` : ''}
           >
             <Stack spacing={4}>
               <Radio value="3">0-3 hours</Radio>
@@ -174,13 +182,13 @@ const FilterModal = (props: IFilterModal) => {
           <Divider />
           <Text>Star</Text>
           <RadioGroup
-             as="fieldset"
-             borderColor="gray.300"
-             p={6}
-             rounded="md"
-             colorScheme="teal"
-             onChange={handleChangeStar}
-             defaultValue={filterValue.star ? `${filterValue.star}` : undefined}
+            as="fieldset"
+            borderColor="gray.300"
+            p={6}
+            rounded="md"
+            colorScheme="teal"
+            onChange={handleChangeStar}
+            value={filterValue.star ? `${filterValue.star}` : ''}
           >
             <Stack spacing={4}>
               <Radio value="3">3.0+</Radio>

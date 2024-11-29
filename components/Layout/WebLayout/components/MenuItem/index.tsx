@@ -7,13 +7,14 @@ interface IMenuItem {
   quantity?: number;
   type?: string;
   price?: number;
+  currency?: string;
   setType: React.Dispatch<React.SetStateAction<string>>;
   setQuantity: React.Dispatch<React.SetStateAction<number>>;
   setPrice: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const MenuItem = (props: IMenuItem) => {
-  const { quantity = 0, type, price, setType, setQuantity, setPrice } = props;
+  const { quantity = 0, type, price, setType, setQuantity, setPrice, currency } = props;
   const [count, setCount] = useState(quantity);
   const [start, setStart] = useState<boolean>(true);
   function increaseQuantityHandler() {
@@ -44,7 +45,7 @@ const MenuItem = (props: IMenuItem) => {
     >
       <VStack align="flex-start" fontWeight="bold">
         <Text>{type}</Text>
-        <Text>price: {formatCurrency(price ?? 0)}</Text>
+        <Text>price: {formatCurrency(price ?? 0, currency ?? '')}</Text>
       </VStack>
       <HStack spacing={2} fontSize="xl">
         <Button

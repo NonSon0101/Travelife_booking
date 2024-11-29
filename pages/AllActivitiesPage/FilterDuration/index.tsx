@@ -33,6 +33,7 @@ const FilterDuration = (props: IFilterDuration) => {
       placement="bottom-start"
     >
       <CustomMenuButton 
+        as={MenuButton}
         text='Duration'
         {...(isAppliedfilter && {
           _after: {
