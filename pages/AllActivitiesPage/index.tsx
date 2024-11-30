@@ -1,5 +1,5 @@
 "use client"
-import { border, Button, HStack, SimpleGrid, VStack } from "@chakra-ui/react"
+import { border, Button, HStack, SimpleGrid, VStack, Text, Box, Menu, MenuButton, MenuList, RadioGroup, Stack, Radio } from "@chakra-ui/react"
 import { usePathname, useSearchParams } from 'next/navigation'
 import ListTourLayout from "components/Layout/WebLayout/ListTourLayout"
 import Title from "components/Title"
@@ -16,13 +16,8 @@ import Pagination from "components/Table/components/Pagination"
 import { IPagination } from "components/Table"
 import FilterModal from "./FilterModal"
 import PageLayout from "components/Layout/WebLayout/PageLayout"
-
-export interface IApplyFilter {
-  priceMin?: number;
-  priceMax?: number;
-  duration?: number;
-  star?: number;
-}
+import { IApplyFilter } from "interfaces/common"
+import CustomMenuButton from "./CustomMenuButton"
 
 const AllActivitiesPage = () => {
   const pathname = usePathname()
@@ -35,6 +30,7 @@ const AllActivitiesPage = () => {
   const [isOpenFilterModal, setIsOpenFilterModal] = useState<boolean>(false)
   const [filterOptions, setFliterOptions] = useState<IApplyFilter>({} as IApplyFilter)
   const [countFilter, setCountFilter] = useState<number>(0)
+  const [isApplySort, setIsApplySort] = useState<string>('')
   const pagination: IPagination = { pageIndex, tableLength: totalCount, gotoPage: setPageIndex }
 
   useEffect(() => {
@@ -52,27 +48,55 @@ const AllActivitiesPage = () => {
     let filter = ""
     setCountFilter(0)
     if (filterOptions.priceMax && filterOptions.priceMin) {
-      filter += `regularPrice[lt]=${filterOptions.priceMax}&`
-      filter += `regularPrice[gt]=${filterOptions.priceMin}&`
+      filter += `regularPrice[lt]=${filterOptions.priceMax.value}&`
+      filter += `regularPrice[gt]=${filterOptions.priceMin.value}&`
       setCountFilter(prevCount => prevCount + 1)
     }
     if (filterOptions.star) {
-      filter += `ratingAverage[gt]=${filterOptions.star}&`
+      filter += `ratingAverage[gt]=${filterOptions.star.value}&`
       setCountFilter(prevCount => prevCount + 1)
     }
     if (filterOptions.duration) {
-      filter += `duration[gt]=${filterOptions.duration}&`
+      filter += `duration[lt]=${filterOptions.duration.value}&`
       setCountFilter(prevCount => prevCount + 1)
     }
 
     tourStore.fetchActiveTours(pageIndex, filter)
   }, [filterOptions])
 
+  async function handleSort(sortOption: string) {
+    let sortFilter = '';
+    
+    switch (sortOption) {
+      case 'recommeded':
+        sortFilter = ''
+        setIsApplySort('Recommended')
+      case 'priceUp':
+        sortFilter = 'sort=regularPrice';
+        setIsApplySort('Price - Low To High')
+        break;
+      case 'priceDown':
+        sortFilter = 'sort=-regularPrice';
+        setIsApplySort('Price - Hign To Low')
+        break;
+      case 'rating':
+        sortFilter = 'sort=-ratingAverage';
+        setIsApplySort('Rating')
+        break;
+      default:
+        console.warn('Invalid sort option:', sortOption);
+        return;
+    }
+    await tourStore.fetchActiveTours(pageIndex, sortFilter);
+  }
+  
+
   return (
     <PageLayout>
       <VStack
         minHeight="700px"
         height="full"
+        mt='5'
         maxWidth="1300px"
         width="full"
         align='flex-start'
@@ -94,6 +118,40 @@ const AllActivitiesPage = () => {
           >
             {<TbAdjustmentsHorizontal size={24} />} Filters {countFilter !== 0 ? `applied: ${countFilter}` : ''}
           </Button>
+        </HStack>
+        <HStack width='full' justify='space-between'>
+          <Text fontWeight="semibold">{totalCount} activities found</Text>
+          <HStack>
+            <Text whiteSpace='nowrap' fontWeight="bold" fontSize='md'>Sort by: </Text>
+            <Menu
+              autoSelect={false}
+              computePositionOnMount
+              placement="bottom-start"
+            >
+              <CustomMenuButton
+                as={MenuButton}
+                text={isApplySort || 'Recommended'}
+              />
+
+              <MenuList>
+                <RadioGroup
+                  as="fieldset"
+                  borderColor="gray.300"
+                  p={6}
+                  rounded="md"
+                  colorScheme="teal"
+                  onChange={handleSort}
+                >
+                  <Stack spacing={4}>
+                    <Radio value="recommended">Recommended</Radio>
+                    <Radio value="priceUp">Price - Low To High</Radio>
+                    <Radio value="priceDown">Price - High To Low</Radio>
+                    <Radio value="rating">Rating</Radio>
+                  </Stack>
+                </RadioGroup>
+              </MenuList>
+            </Menu>
+          </HStack>
         </HStack>
         <SimpleGrid
           maxWidth="1300px"

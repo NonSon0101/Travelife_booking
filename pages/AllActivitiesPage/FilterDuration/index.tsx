@@ -1,8 +1,8 @@
 import { Box, RadioGroup, Radio, FormControl, FormLabel, Stack, Text, HStack, MenuButton, Menu, MenuList } from "@chakra-ui/react"
 import { TriangleDownIcon } from "@chakra-ui/icons"
 import { useState } from "react";
-import { IApplyFilter } from "..";
 import CustomMenuButton from "../CustomMenuButton";
+import { IApplyFilter } from "interfaces/common";
 
 interface WorkHours {
   hours: number | null;
@@ -18,10 +18,9 @@ const FilterDuration = (props: IFilterDuration) => {
   const {setFliterOptions, isAppliedfilter = false} = props
 
   const handleChange = (value: string) => {
-    const numericValue = parseFloat(value)
     setFliterOptions((prevOptions) => ({
       ...prevOptions,
-      duration: numericValue
+      duration: { name: 'Hours', value: Number(value) },
     }))
   }
 

@@ -21,7 +21,7 @@ import {
 import { RxCross2 } from "react-icons/rx";
 import Title from 'components/Title'
 import { useForm } from 'react-hook-form';
-import { IApplyFilter } from '..';
+import { IApplyFilter } from 'interfaces/common';
 import { useEffect, useState } from 'react';
 
 interface IFilterModal {
@@ -32,22 +32,48 @@ interface IFilterModal {
 }
 
 const FilterModal = (props: IFilterModal) => {
-  const { isOpen, onClose, setFliterOptions, filterOptions = { priceMin: 0, priceMax: 0, duration: 0, star: 0 } } = props
+  const { isOpen, onClose, setFliterOptions,
+    filterOptions = {
+      priceMin: {
+        name: 'Minimum price',
+        value: 0
+      },
+      priceMax: {
+        name: 'Maximum price',
+        value: 0
+      },
+      duration: {
+        name: 'Hours',
+        value: 0
+      },
+      star: {
+        name: 'Star',
+        value: 0
+      },
+    } } = props;
   const { handleSubmit, register, reset, formState: { errors, isSubmitting } } = useForm<IApplyFilter>({
     defaultValues: {
-      priceMin: filterOptions.priceMin || 0,
-      priceMax: filterOptions.priceMax || 0,
+      priceMin: filterOptions.priceMin?.value
+        ? { name: filterOptions.priceMin.name, value: filterOptions.priceMin.value }
+        : { name: 'Minimum price', value: 0 },
+      priceMax: filterOptions.priceMax?.value
+        ? { name: filterOptions.priceMax.name, value: filterOptions.priceMax.value }
+        : { name: 'Maximum price', value: 0 },
     },
   });
-  
+
   const [filterValue, setFilterValue] = useState<IApplyFilter>(filterOptions)
 
   useEffect(() => {
     if (filterOptions) {
       setFilterValue(filterOptions);
       reset({
-        priceMax: filterOptions.priceMax || 0,
-        priceMin: filterOptions.priceMin || 0,
+        priceMin: filterOptions.priceMin?.value
+          ? { name: filterOptions.priceMin.name, value: filterOptions.priceMin.value }
+          : { name: 'Minimum price', value: 0 },
+        priceMax: filterOptions.priceMax?.value
+          ? { name: filterOptions.priceMax.name, value: filterOptions.priceMax.value }
+          : { name: 'Maximum price', value: 0 },
       });
     }
   }, [filterOptions, reset]);
@@ -57,25 +83,23 @@ const FilterModal = (props: IFilterModal) => {
   }, [filterOptions])
 
   const handleChangeStar = (value: string) => {
-    const numericValue = parseFloat(value);
     setFliterOptions(prevOptions => ({
       ...prevOptions,
-      star: numericValue
+      star: { name: 'Star', value: Number(value) },
     }));
   };
   const handleChangeDuration = (value: string) => {
-    const numericValue = parseFloat(value)
     setFliterOptions((prevOptions) => ({
       ...prevOptions,
-      duration: numericValue
+      duration: { name: 'Hours', value: Number(value) },
     }))
   }
 
-  const onSubmit = (data: IApplyFilter) => {
+  const onSubmit = (data: any) => {
     setFliterOptions((prevOptions) => ({
       ...prevOptions,
-      priceMin: data.priceMin,
-      priceMax: data.priceMax
+      priceMin: { name: 'Maximum price', value: data.priceMin },
+      priceMax: { name: 'Maximum price', value: data.priceMax }
     }));
   }
 
@@ -92,7 +116,7 @@ const FilterModal = (props: IFilterModal) => {
     console.log('after cancel filter options', filterOptions)
 
   }
- 
+
   const resetAllFilter = () => {
     setFliterOptions({} as IApplyFilter);
     setFilterValue({} as IApplyFilter);
@@ -116,9 +140,9 @@ const FilterModal = (props: IFilterModal) => {
                 border="2px solid #888"
                 borderRadius={10}
               >
-                <Text>{`${value} ${key}`}</Text>
+                <Text>{`${value.value} ${value.name}`}</Text>
                 <Button onClick={() => cancelFilter(key)}>
-                  <RxCross2/>
+                  <RxCross2 />
                 </Button>
               </HStack>
             ))}
@@ -171,7 +195,7 @@ const FilterModal = (props: IFilterModal) => {
             p={6}
             rounded="md"
             onChange={handleChangeDuration}
-            value={filterValue.duration ? `${filterValue.duration}` : ''}
+            value={filterValue.duration ? `${filterValue.duration.value}` : ''}
           >
             <Stack spacing={4}>
               <Radio value="3">0-3 hours</Radio>
@@ -188,7 +212,7 @@ const FilterModal = (props: IFilterModal) => {
             rounded="md"
             colorScheme="teal"
             onChange={handleChangeStar}
-            value={filterValue.star ? `${filterValue.star}` : ''}
+            value={filterValue.star ? `${filterValue.star.value}` : ''}
           >
             <Stack spacing={4}>
               <Radio value="3">3.0+</Radio>

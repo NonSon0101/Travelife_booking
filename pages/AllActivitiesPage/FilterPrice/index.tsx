@@ -1,8 +1,8 @@
 import { Box, HStack, Menu, MenuButton, MenuList, Text, FormControl, FormLabel, Input, Button } from "@chakra-ui/react"
 import { TriangleDownIcon } from "@chakra-ui/icons"
 import { useForm } from "react-hook-form";
-import { IApplyFilter } from "..";
 import CustomMenuButton from "../CustomMenuButton";
+import { IApplyFilter } from "interfaces/common";
 
 interface IFilterPrice {
   setFliterOptions: React.Dispatch<React.SetStateAction<IApplyFilter>>
@@ -13,11 +13,11 @@ const FilterPrice = (props: IFilterPrice) => {
   const { setFliterOptions, isAppliedfilter = false } = props;
   const { handleSubmit, register, reset, formState: { errors, isSubmitting } } = useForm<IApplyFilter>();
 
-  const onSubmit = (data: IApplyFilter) => {
+  const onSubmit = (data: any) => {
     setFliterOptions((prevOptions) => ({
       ...prevOptions,
-      priceMin: data.priceMin,
-      priceMax: data.priceMax
+      priceMin: { name: 'Maximum price', value: data.priceMin },
+      priceMax: { name: 'Maximum price', value: data.priceMax }
     }));
   }
 

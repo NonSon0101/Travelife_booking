@@ -4,3 +4,22 @@ export interface IPriceOption {
   currency?: string
   participantsCategoryIdentifier?: string
 }
+
+export interface IApplyFilter {
+  priceMin?: {
+    name: string
+    value: number
+  };
+  priceMax?: {
+    name: string
+    value: number
+  };
+  duration?: {
+    name: string
+    value: number
+  };
+  star?: {
+    name: string
+    value: number
+  };
+}

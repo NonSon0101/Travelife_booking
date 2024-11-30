@@ -1,8 +1,9 @@
 import { Box, HStack, Menu, MenuButton, MenuList, Radio, RadioGroup, Stack, Text } from "@chakra-ui/react";
 import { TriangleDownIcon } from "@chakra-ui/icons";
 import { useState } from "react";
-import { IApplyFilter } from "..";
+
 import CustomMenuButton from "../CustomMenuButton";
+import { IApplyFilter } from "interfaces/common";
 
 interface IFilterStar {
   setFliterOptions: React.Dispatch<React.SetStateAction<IApplyFilter>>
@@ -13,10 +14,9 @@ const FilterStar = (props: IFilterStar) => {
   const { setFliterOptions, isAppliedfilter = false } = props;
 
   const handleChange = (value: string) => {
-    const numericValue = parseFloat(value);
     setFliterOptions(prevOptions => ({
       ...prevOptions,
-      star: numericValue
+      star: { name: 'Star', value: Number(value) },
     }));
   };
 
