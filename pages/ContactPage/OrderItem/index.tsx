@@ -32,14 +32,18 @@ const OrderItem = (props: IOrderItem) => {
           <IoTimerOutline />
           <Text>{tour.startTime}</Text>
         </HStack>
-        <HStack>
-          <FaHotel />
-          <Text>{tour.hotels[0].name}</Text>
-        </HStack>
-        <HStack>
-          <FaBus />
-          <Text>{tour.transports[0].name}</Text>
-        </HStack>
+        {tour.isPrivate &&
+          <>
+            <HStack>
+              <FaHotel />
+              <Text>{tour.hotels[0].name}</Text>
+            </HStack>
+            <HStack>ß
+              <FaBus />
+              <Text>{tour.transports[0].name}</Text>
+            </HStack>
+          </>
+        }
         <HStack>
           <MdPeopleAlt />
           {tour.participants.map((participant) => (
