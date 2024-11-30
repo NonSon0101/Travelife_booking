@@ -3,6 +3,7 @@ import { ITourCart } from "interfaces/cart";
 export interface IRequsetCheckoutReview {
   cart?: string;
   tours?: IRequestTour[];
+  currency?: string;
   discountCode?: string;
 }
 

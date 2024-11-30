@@ -125,8 +125,8 @@ const ContactPage = () => {
                 <VStack align='flex-end'>
                   <Text fontSize="2xl" color="#396973">
                     {itemPrice && itemPrice.length !== 0
-                      ? order.totalOrder && formatCurrency(order.totalOrder - order.discount) :
-                      order.totalOrder && formatCurrency(order.totalOrder)}
+                      ? order.totalOrder && formatCurrency(order.totalOrder - order.discount, orderSummary.currency ?? '') :
+                      order.totalOrder && formatCurrency(order.totalOrder, orderSummary.currency ?? '')}
                   </Text>
                   <Text
                     fontSize="sm"
@@ -134,7 +134,7 @@ const ContactPage = () => {
                     opacity="0.5"
                   >
                     {itemPrice && itemPrice.length !== 0
-                      ? order.totalOrder && formatCurrency(order.totalOrder)
+                      ? order.totalOrder && formatCurrency(order.totalOrder, orderSummary.currency ?? '')
                       : ""}
                   </Text>
                 </VStack>

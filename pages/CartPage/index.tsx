@@ -18,7 +18,7 @@ interface IPriceList {
 
 const CartPage = () => {
   const { cartStore, authStore } = useStores();
-  const { listCart } = cartStore;
+  const { listCart, currentCurrency } = cartStore;
   const { isLogin } = authStore;
   const [totalPrice, setTotalPrice] = useState(0);
 
@@ -69,6 +69,7 @@ const CartPage = () => {
                 key={tour._id}
                 idCart={tour._id}
                 tour={tour}
+                currentCurrency={currentCurrency}
               />
             ))}
           </VStack>
@@ -101,7 +102,7 @@ const CartPage = () => {
                 fontWeight="bold"
               >
                 <Text>Subtotal ({listCart?.tours?.length} items): </Text>
-                <Text>{formatCurrency(totalPrice)}</Text>
+                <Text>{formatCurrency(totalPrice, currentCurrency)}</Text>
               </HStack>
               <Button
                 width="full"

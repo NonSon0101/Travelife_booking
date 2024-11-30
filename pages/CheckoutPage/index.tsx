@@ -28,7 +28,7 @@ const CheckoutPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [dataCheckoutReview, setDataCheckoutReview] = useState<IRequsetCheckoutReview>({} as IRequsetCheckoutReview);
   const { listCart, selectedCart } = cartStore;
-  const { checkout, order, itemPrice } = checkoutStore;
+  const { checkout, order, itemPrice, currentCurrecy } = checkoutStore;
   const { isLogin } = authStore;
   const { responeBookNow } = bookingStore;
 
@@ -70,7 +70,7 @@ const CheckoutPage = () => {
   }, [dataCheckoutReview]);
 
   const handleGoToContactPage = () => {
-    checkoutStore.setOrderSummary({ ...dataCheckoutReview, discountCode: coupon })
+    checkoutStore.setOrderSummary({ ...dataCheckoutReview, discountCode: coupon, currency: currentCurrecy })
     route.push(routes.booking.contact)
   }
   
@@ -132,6 +132,7 @@ const CheckoutPage = () => {
                 <OrderItem
                   key={tour.tour._id}
                   tour={tour}
+                  currentCurrency={currentCurrecy}
                   discountitem={itemPrice.filter(
                     (item) => item.tour.tourId === tour.tour._id
                   )}
@@ -194,8 +195,8 @@ const CheckoutPage = () => {
                   <VStack align='flex-end'>
                     <Text fontSize="2xl" color="#396973">
                       {itemPrice && itemPrice.length !== 0
-                        ? order.totalOrder && formatCurrency(order.totalOrder - order.discount) :
-                        order.totalOrder && formatCurrency(order.totalOrder)}
+                        ? order.totalOrder && formatCurrency(order.totalOrder - order.discount, currentCurrecy) :
+                        order.totalOrder && formatCurrency(order.totalOrder, currentCurrecy)}
                     </Text>
                     <Text
                       fontSize="sm"
@@ -203,7 +204,7 @@ const CheckoutPage = () => {
                       opacity="0.5"
                     >
                       {itemPrice && itemPrice.length !== 0
-                        ? order.totalOrder && formatCurrency(order.totalOrder)
+                        ? order.totalOrder && formatCurrency(order.totalOrder, currentCurrecy)
                         : ""}
                     </Text>
                   </VStack>

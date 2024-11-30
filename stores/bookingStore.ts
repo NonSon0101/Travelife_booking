@@ -16,6 +16,7 @@ class BookingStore {
   listBooking: ICreateBooking | null = null
   bookingId: string = ''
   responeBookNow: IRequsetCheckoutReview | null = null
+  currentCurrency: string =''
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore
     makeAutoObservable(this)
@@ -45,6 +46,7 @@ class BookingStore {
   async fetchBookingDetail(bookingId: string): Promise<void> {
     const booking = await getBookingDetail(bookingId)
     this.bookingDetail = booking
+    this.currentCurrency = booking.bookingItems[0].participants[0].currency ?? ''
   }
 
   async createBooking(data: ICreateBookingForm): Promise<void> {

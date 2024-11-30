@@ -19,13 +19,16 @@ class CheckoutStore {
   itemPrice: IDiscountItem[] = [];
   orderSummary: IRequsetCheckoutReview = {} as IRequsetCheckoutReview
   paymentURL: string = ''
+  currentCurrecy: string
   constructor(rootStore: RootStore) {
     makeAutoObservable(this)
     this.rootStore = rootStore
+    this.currentCurrecy = ''
   }
 
   setOrderSummary(data: IRequsetCheckoutReview) {
     this.orderSummary = data
+    
   }
 
   async fetchCheckoutReview(data: IRequsetCheckoutReview) {
@@ -33,6 +36,7 @@ class CheckoutStore {
       await getCheckoutReview(data)
     this.checkout = checkoutReview
     this.order = checkoutOrder
+    this.currentCurrecy = checkoutReview[0].participants[0].currency ?? ''
     if (itemPrices) {
       this.itemPrice = itemPrices;
     }

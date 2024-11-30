@@ -40,6 +40,7 @@ import PrivateOptions from "components/Layout/WebLayout/components/privateOption
 interface ICartItem {
   tour: ITourCart;
   idCart: string;
+  currentCurrency: string;
 }
 
 type ValuePiece = Date | null;
@@ -47,7 +48,7 @@ type ValuePiece = Date | null;
 type Value = ValuePiece | [ValuePiece, ValuePiece];
 
 const CartItem = (props: ICartItem) => {
-  const { tour, idCart } = props;
+  const { tour, idCart, currentCurrency } = props;
   const route = useRouter()
   const [convertDate, setConvertDate] = useState<string>();
   const [tourPrice, setTourPrice] = useState<number>(0);
@@ -458,13 +459,13 @@ const CartItem = (props: ICartItem) => {
                     </VStack>
                     <MenuList minWidth="320px" padding="4px 10px">
                       {tourDetail?.priceOptions?.filter((participant) => tour.isPrivate ? participant.participantsCategoryIdentifier === "Private" : !participant.participantsCategoryIdentifier)
-                        .map((participant) => {
+                        .map((participant, index) => {
                           const foundParticipant = tour.participants.filter(p => p.title === participant.title);
                           const quantity = foundParticipant[0]?.quantity ?? 0
                           return (
                             <MenuItem
                               quantity={quantity}
-                              key={participant._id}
+                              key={index}
                               type={participant.title}
                               price={participant.value}
                               setPrice={setPrice}
@@ -537,7 +538,7 @@ const CartItem = (props: ICartItem) => {
                 </Button>
               </HStack>
               <Text fontSize="xl" fontWeight="600">
-                {formatCurrency(tourPrice)}
+                {formatCurrency(tourPrice, currentCurrency)}
               </Text>
             </HStack>
           </VStack>

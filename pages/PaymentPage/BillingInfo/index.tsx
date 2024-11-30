@@ -1,14 +1,15 @@
 import { HStack, VStack, Text } from "@chakra-ui/react"
 import Title from "components/Title"
-import { IBookingDetail, IBookingInfoBody } from "interfaces/booking"
+import { IBookingDetail } from "interfaces/booking"
 import { formatCurrency } from "utils/common"
 
 interface IBillingInfo {
   bookingDetail: IBookingDetail
+  currentCurrency: string
 }
 
 const BillingInfo = (props: IBillingInfo) => {
-  const { bookingDetail } = props
+  const { bookingDetail, currentCurrency } = props
   return (
     <VStack marginY='20px' fontSize='md' fontWeight='bold' width='full' align='flex-start' spacing={19}>
       <Title text='Your billing details' />
@@ -23,7 +24,7 @@ const BillingInfo = (props: IBillingInfo) => {
       {bookingDetail.checkoutOrder && bookingDetail.checkoutOrder.totalOrder && (
         <HStack fontSize='xl' fontWeight='bold' width='full' justify='space-between'>
           <Text>Total Order: </Text>
-          <Text>{formatCurrency(bookingDetail.checkoutOrder.totalPrice)}</Text>
+          <Text>{formatCurrency(bookingDetail.checkoutOrder.totalPrice, currentCurrency)}</Text>
         </HStack>
       )}
     </VStack>

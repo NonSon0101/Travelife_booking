@@ -14,12 +14,14 @@ class CartStrores {
     makeAutoObservable(this)
     this.rootStore = rootStore
     this.selectedCart = []
+    this.currentCurrency = ''
   }
 
   rootStore: RootStore
   listCart = {} as IListCart
   cartCount: number = 0
   selectedCart: ISelectedCart[]
+  currentCurrency: string
 
   setSelectedCart(data: ISelectedCart): void {
     this.selectedCart.push(data)
@@ -43,6 +45,7 @@ class CartStrores {
   async getListCart(): Promise<void> {
     const { cart } = await getListCart()
     this.listCart = cart
+    this.currentCurrency = cart.tours[0].participants[0].currency ?? '';
   }
 
   async updateCart(data: IUpdateToCart): Promise<void> {

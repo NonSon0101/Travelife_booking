@@ -11,10 +11,11 @@ import { formatCurrency } from "utils/common";
 interface IOderItem {
   tour: ITourCart
   discountitem?: IDiscountItem[]
+  currentCurrency: string
 }
 
 const OrderItem = (props: IOderItem) => {
-  const { tour, discountitem } = props
+  const { tour, discountitem, currentCurrency } = props
   const [totalPrice, setTotalPrice] = useState(0)
 
   useEffect(() => {
@@ -55,8 +56,8 @@ const OrderItem = (props: IOderItem) => {
           <Text color="#396973" fontSize="2xl" fontWeight="500">
             {discountitem && discountitem.length !== 0
               ? formatCurrency(discountitem[0].tour.totalPrice -
-                discountitem[0].tour.discountPrice)
-              : formatCurrency(totalPrice)}
+                discountitem[0].tour.discountPrice, currentCurrency)
+              : formatCurrency(totalPrice, currentCurrency)}
           </Text>
           <Text
             textAlign="inherit"
@@ -66,7 +67,7 @@ const OrderItem = (props: IOderItem) => {
             opacity="0.55"
           >
             {discountitem && discountitem.length !== 0
-              ? formatCurrency(discountitem[0].tour.totalPrice)
+              ? formatCurrency(discountitem[0].tour.totalPrice, currentCurrency)
               : ""}
           </Text>
         </HStack>

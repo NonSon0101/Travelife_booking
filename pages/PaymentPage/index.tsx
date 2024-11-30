@@ -23,7 +23,7 @@ import BillingInfo from "./BillingInfo";
 const PaymentPage = () => {
   const route = useRouter()
   const { bookingStore, checkoutStore } = useStores();
-  const { bookingDetail, bookingId } = bookingStore
+  const { bookingDetail, bookingId, currentCurrency } = bookingStore
   const { paymentURL } = checkoutStore
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('');
 
@@ -111,7 +111,7 @@ const PaymentPage = () => {
           </Flex>
           <Divider colorScheme='teal.300' size='xl' variant='solid' />
           {bookingDetail && bookingDetail.personalInfo && (
-            <BillingInfo bookingDetail={bookingDetail} />
+            <BillingInfo bookingDetail={bookingDetail} currentCurrency={currentCurrency} />
           )}
           <Divider />
           <Button marginY='20px' width='full' colorScheme="teal" onClick={handlePayment}>
