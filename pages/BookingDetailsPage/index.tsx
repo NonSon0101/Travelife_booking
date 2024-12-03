@@ -56,13 +56,13 @@ const BookingDetailsPage = () => {
             <Text fontSize='2xl' fontWeight='bold' mb={2}>Personal Information</Text>
             <HStack fontSize='lg' fontWeight={500} width='full' justify='space-between' spacing={12}>
               <VStack align='flex-start' spacing={1}>
-                <Text>{bookingDetail?.personalInfo.name}</Text>
-                <Text>{bookingDetail?.personalInfo.phone}</Text>
+                <Text>{bookingDetail?.personalInfo.name ?? ''}</Text>
+                <Text>{bookingDetail?.personalInfo.phone ?? ''}</Text>
               </VStack>
               <VStack align='flex-start' spacing={1}>
                 <Text>Date: {dayjs(bookingDetail?.bookingItems[0].startDate).format('YYYY-MM-DD')}</Text>
-                <Text>Invoice ID: {bookingDetail?.payment?.transactionNo}</Text>
-                <Text>Payment Method: {bookingDetail?.payment?.method}</Text>
+                <Text>Invoice ID: {bookingDetail?.payment?.transactionNo ?? ''}</Text>
+                <Text>Payment Method: {bookingDetail?.payment?.method ?? ''}</Text>
               </VStack>
             </HStack>
           </Box>
@@ -77,17 +77,17 @@ const BookingDetailsPage = () => {
             <VStack align='flex-start' spacing={5}>
               <HStack width='full' justify='space-between' spacing={4}>
                 <Text fontSize='lg' fontWeight='bold'>Subtotal: </Text>
-                <Text fontSize='lg' fontWeight={500}>{formatCurrency(bookingDetail?.checkoutOrder.totalOrder ?? 0)}</Text>
+                <Text fontSize='lg' fontWeight={500}>{formatCurrency(bookingDetail?.checkoutOrder.totalOrder ?? 0, 'VND')}</Text>
               </HStack>
               <Divider />
               <HStack width='full' justify='space-between' spacing={4}>
                 <Text fontSize='lg' fontWeight='bold'>Discount: </Text>
-                <Text fontSize='lg' fontWeight={500}>{formatCurrency(bookingDetail?.checkoutOrder.discount ?? 0)}</Text>
+                <Text fontSize='lg' fontWeight={500}>{formatCurrency(bookingDetail?.checkoutOrder.discount ?? 0, 'VND')}</Text>
               </HStack>
               <Divider />
               <HStack width='full' justify='space-between' spacing={4}>
                 <Text fontSize='lg' fontWeight='bold'>Total price: </Text>
-                <Text fontSize='lg' fontWeight={500}>{formatCurrency(bookingDetail?.checkoutOrder.totalPrice ?? 0)}</Text>
+                <Text fontSize='lg' fontWeight={500}>{formatCurrency(bookingDetail?.checkoutOrder.totalPrice ?? 0, 'VND')}</Text>
               </HStack>
               {bookingDetail?.status === 'pending' ?
                 <Button width='full' colorScheme="teal" onClick={handleGoToPayment}>Go to payment</Button>

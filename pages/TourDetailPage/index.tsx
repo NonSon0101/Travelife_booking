@@ -244,6 +244,21 @@ const TourDetailPage = () => {
     }
   }
 
+  const handleEnablePrivate = () => {
+    //setAvailability(false)
+    setPrivateTour(!privateTour)
+    const guestList = [...guestInfo]
+    const privateGuestList = priceOptions?.filter((participant) =>
+      privateTour ? participant.participantsCategoryIdentifier !== "Private" : participant.participantsCategoryIdentifier === "Private"
+    );
+    privateGuestList?.forEach((privateItem) => {
+      const normalItem = guestList.find((item) => item.title === privateItem.title);
+      if (normalItem) {
+        normalItem.price = privateItem.value ?? 0;
+      }
+    });
+    
+  }
   function handleCheckAvailability() {
     guestInfo.length ? setIsMenuParticipant(true) : setIsMenuParticipant(false);
     showDate.length ? setIsMenuDatePick(true) : setIsMenuDatePick(false);
@@ -401,19 +416,19 @@ const TourDetailPage = () => {
                   <FormLabel htmlFor='private-tour' mb='0' color='#fff'>
                     Private tour?
                   </FormLabel>
-                  <Switch id='private-tour' isChecked={privateTour} onChange={() => setPrivateTour(!privateTour)} />
+                  <Switch id='private-tour' isChecked={privateTour} onChange={handleEnablePrivate} />
                 </FormControl>
               </Stack>
               <Stack
                 width="full"
-                flexDirection={{base: 'column', md: 'row'}}
+                flexDirection={{ base: 'column', md: 'row' }}
                 alignItems='center'
                 justifyContent="space-between"
               >
                 <SimpleGrid
-                  flex={{base: 1, md: 2}}
+                  flex={{ base: 1, md: 2 }}
                   width='full'
-                  columns={{ base: 1, md: 2}}
+                  columns={{ base: 1, md: 2 }}
                   gap={4}
                   justifyContent="space-between"
                   paddingTop="8px"
@@ -598,7 +613,7 @@ const TourDetailPage = () => {
                     </>
                   }
                 </SimpleGrid>
-                <Button flex={{base: 1}} paddingY='10px' width='full' colorScheme="teal" borderRadius="80px" onClick={handleCheckAvailability} >
+                <Button flex={{ base: 1 }} paddingY='10px' width='full' colorScheme="teal" borderRadius="80px" onClick={handleCheckAvailability} >
                   Check availability
                 </Button>
               </Stack>

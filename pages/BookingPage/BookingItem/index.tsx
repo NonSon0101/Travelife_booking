@@ -85,7 +85,7 @@ const BookingItem = (props: IBookingItem) => {
       <Stack flex={1} spacing={1} alignItems="flex-end">
         <HStack fontSize='lg'>
           <Text fontWeight="bold" color="gray.600">Total:</Text>
-          <Text fontWeight="bold">{formatCurrency(booking.checkoutOrder.totalPrice)}</Text>
+          <Text fontWeight="bold">{formatCurrency(booking.checkoutOrder.totalPrice, 'VND')}</Text>
         </HStack>
         <HStack spacing={5}>
           {booking.status == 'pending' ? (

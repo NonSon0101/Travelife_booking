@@ -3,7 +3,7 @@ import { PLATFORM } from 'enums/common'
 import { toast } from 'react-toastify'
 import routes from 'routes'
 import { IHeader } from './constants'
-const API_URL = 'http://localhost:4001'
+const API_URL = 'http://localhost:4002'
 
 const api = axios.create({
   baseURL: API_URL

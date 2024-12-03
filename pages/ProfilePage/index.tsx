@@ -101,14 +101,14 @@ const ProfilePage = () => {
           <HStack
             width="full"
             border="2px solid #ccc"
-            borderBottomColor="transparent"
+            // borderBottomColor="transparent"
             padding="15px 12px"
             fontWeight="bold"
           >
             <FaUser />
             <Text>Profile</Text>
           </HStack>
-          <HStack
+          {/* <HStack
             width="full"
             border="2px solid #ccc"
             padding="15px 12px"
@@ -116,7 +116,7 @@ const ProfilePage = () => {
           >
             <IoMdNotifications />
             <Text>Notification</Text>
-          </HStack>
+          </HStack> */}
         </VStack>
         <form
           style={{
@@ -129,122 +129,118 @@ const ProfilePage = () => {
           }}
           onSubmit={handleSubmit(onSubmit)}
         >
-          <VStack width='full' align="flex-start">
-            <FormControl isInvalid={!!errors.name}>
-              <Title text='Profile detail' />
-              <SimpleGrid
-                width="full"
-                columns={{ base: 1, sm: 1, md: 2 }}
-                spacing={8}
-              >
-                <VStack align='flex-start'>
-                  <FormLabel htmlFor="fullname">Full name</FormLabel>
-                  <Input
-                    id='fullname'
-                    bg='#fff'
-                    placeholder='Full name'
-                    {...register('fullname', {
-                      required: 'This is required',
-                      minLength: { value: 4, message: 'Minimum length should be 4' },
-                    })}
-                  />
-                </VStack>
-                <VStack align='flex-start'>
-                  <FormLabel htmlFor="fullname">Phone number</FormLabel>
-                  <Input
-                    id='phone'
-                    bg='#fff'
-                    placeholder='Phone number'
-                    {...register('phone', {
-                      required: 'This is required',
-                      minLength: { value: 10, message: 'Minimum length should be 10' },
-                    })}
-                  />
-                </VStack>
-                <VStack align='flex-start'>
-                  <FormLabel htmlFor="email">Email</FormLabel>
-                  <Input
-                    id='email'
-                    bg='#fff'
-                    placeholder='Email'
-                    {...register('email', {
-                      required: 'This is required',
-                      minLength: { value: 10, message: 'Minimum length should be 10' },
-                    })}
-                  />
-                </VStack>
-                <VStack align='flex-start'>
-                  <FormLabel htmlFor="dateOfBirth">Date of birth</FormLabel>
-                  <Input
-                    id='dateOfBirth'
-                    bg='#fff'
-                    placeholder='Date of birth'
-                    {...register('dateOfBirth', {
-                      required: 'This is required',
-                      minLength: { value: 10, message: 'Minimum length should be 10' },
-                    })}
-                  />
-                </VStack>
-                <VStack align='flex-start'>
-                  <FormLabel htmlFor="gender">Gender</FormLabel>
-                  <Input
-                    id='gender'
-                    bg='#fff'
-                    placeholder='Gender'
-                    {...register('gender', {
-                      required: 'This is required',
-                      minLength: { value: 4, message: 'Minimum length should be 4' },
-                    })}
-                  />
-                </VStack>
-                <VStack align='flex-start'>
-                  <FormLabel htmlFor="address">Address</FormLabel>
-                  <Input
-                    id='address'
-                    bg='#fff'
-                    placeholder='Address'
-                    {...register('address', {
-                      required: 'This is required',
-                      minLength: { value: 10, message: 'Minimum length should be 10' },
-                    })}
-                  />
-                </VStack>
-
-                <VStack align='flex-start'>
-                  <FormLabel htmlFor="passport">Passport</FormLabel>
-                  <Input
-                    id='passport'
-                    bg='#fff'
-                    placeholder='Passport'
-                    {...register('passport', {
-                      required: 'This is required',
-                      minLength: { value: 10, message: 'Minimum length should be 10' },
-                    })}
-                  />
-                </VStack>
-                <VStack align='flex-start'>
-                  <FormLabel htmlFor="dateOfExpirationPassport">Date of expiration passport</FormLabel>
-                  <Input
-                    id='dateOfExpirationPassport'
-                    // value={user?.dateOfExpirationPassport?.slice(0, 10)}
-                    bg='#fff'
-                    placeholder='Date of expiration passport'
-                    {...register('dateOfExpirationPassport', {
-                      required: 'This is required',
-                      minLength: { value: 0, message: 'Minimum length should be 10' },
-                    })}
-                  />
-                </VStack>
-
-              </SimpleGrid>
-              <FormErrorMessage>
-                {errors.name && typeof errors.name.message === 'string' && errors.name.message}
-              </FormErrorMessage>
+          <SimpleGrid width="full" columns={{ base: 1, sm: 1, md: 2 }} spacing={8}>
+            <FormControl isInvalid={!!errors.fullname}>
+              <FormLabel htmlFor="fullname">Full name</FormLabel>
+              <Input
+                id="fullname"
+                bg="#fff"
+                placeholder="Full name"
+                {...register('fullname', {
+                  required: 'This is required',
+                })}
+              />
+              <FormErrorMessage>{errors.fullname?.message as string}</FormErrorMessage>
             </FormControl>
-            <Button mt={4} colorScheme='teal' type="submit" isLoading={isLoading}>
-              Save
-            </Button>
-          </VStack>
+
+            <FormControl isInvalid={!!errors.phone}>
+              <FormLabel htmlFor="phone">Phone number</FormLabel>
+              <Input
+                id="phone"
+                bg="#fff"
+                placeholder="Phone number"
+                {...register('phone', {
+                  required: 'This is required',
+                  minLength: { value: 10, message: 'Minimum length should be 10' },
+                })}
+              />
+              <FormErrorMessage>{errors.phone?.message as string}</FormErrorMessage>
+            </FormControl>
+
+            <FormControl isInvalid={!!errors.email}>
+              <FormLabel htmlFor="email">Email</FormLabel>
+              <Input
+                id="email"
+                bg="#fff"
+                placeholder="Email"
+                {...register('email', {
+                  required: 'This is required'
+                })}
+              />
+              <FormErrorMessage>{errors.email?.message as string}</FormErrorMessage>
+            </FormControl>
+
+            <FormControl isInvalid={!!errors.dateOfBirth}>
+              <FormLabel htmlFor="dateOfBirth">Date of birth</FormLabel>
+              <Input
+                id="dateOfBirth"
+                bg="#fff"
+                placeholder="Date of birth"
+                {...register('dateOfBirth', {
+                  required: 'This is required'
+                })}
+              />
+              <FormErrorMessage>{errors.dateOfBirth?.message as string}</FormErrorMessage>
+            </FormControl>
+
+            <FormControl isInvalid={!!errors.gender}>
+              <FormLabel htmlFor="gender">Gender</FormLabel>
+              <Input
+                id="gender"
+                bg="#fff"
+                placeholder="Gender"
+                {...register('gender', {
+                  required: 'This is required'
+                })}
+              />
+              <FormErrorMessage>{errors.gender?.message as string}</FormErrorMessage>
+            </FormControl>
+
+            <FormControl isInvalid={!!errors.address}>
+              <FormLabel htmlFor="address">Address</FormLabel>
+              <Input
+                id="address"
+                bg="#fff"
+                placeholder="Address"
+                {...register('address', {
+                  required: 'This is required',
+                  minLength: { value: 10, message: 'Minimum length should be 10' },
+                })}
+              />
+              <FormErrorMessage>{errors.address?.message as string}</FormErrorMessage>
+            </FormControl>
+
+            <FormControl isInvalid={!!errors.passport}>
+              <FormLabel htmlFor="passport">Passport</FormLabel>
+              <Input
+                id="passport"
+                bg="#fff"
+                placeholder="Passport"
+                {...register('passport', {
+                  required: 'This is required',
+                  minLength: { value: 10, message: 'Minimum length should be 10' },
+                })}
+              />
+              <FormErrorMessage>{errors.passport?.message as string}</FormErrorMessage>
+            </FormControl>
+
+            <FormControl isInvalid={!!errors.dateOfExpirationPassport}>
+              <FormLabel htmlFor="dateOfExpirationPassport">Date of expiration passport</FormLabel>
+              <Input
+                id="dateOfExpirationPassport"
+                bg="#fff"
+                placeholder="Date of expiration passport"
+                {...register('dateOfExpirationPassport', {
+                  required: 'This is required',
+                  minLength: { value: 10, message: 'Minimum length should be 10' },
+                })}
+              />
+              <FormErrorMessage>{errors.dateOfExpirationPassport?.message as string}</FormErrorMessage>
+            </FormControl>
+          </SimpleGrid>
+          <Button mt={4} colorScheme='teal' type="submit" isLoading={isLoading}>
+            Save
+          </Button>
         </form>
       </HStack>
     </PageLayout>

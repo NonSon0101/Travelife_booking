@@ -68,7 +68,7 @@ const InvoiceItem = (props: IInvoiceItem) => {
                 <Tr key={index}>
                   <Td>{participant.title}</Td>
                   <Td>{participant.quantity}</Td>
-                  <Td isNumeric>{formatCurrency(participant.price)}</Td>
+                  <Td isNumeric>{formatCurrency(participant.price, 'VND')}</Td>
                 </Tr>
               ))
             ) : (

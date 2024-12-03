@@ -45,7 +45,9 @@ class CartStrores {
   async getListCart(): Promise<void> {
     const { cart } = await getListCart()
     this.listCart = cart
-    this.currentCurrency = cart.tours[0].participants[0].currency ?? '';
+    if (cart) {
+      this.currentCurrency = cart.tours[0].participants[0].currency ?? '';
+    }
   }
 
   async updateCart(data: IUpdateToCart): Promise<void> {
