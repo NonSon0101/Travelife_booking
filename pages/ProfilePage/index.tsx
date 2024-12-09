@@ -17,8 +17,6 @@ import { useForm } from "react-hook-form";
 import dayjs from "dayjs";
 
 
-
-
 const ProfilePage = () => {
   const { handleSubmit, register, reset, formState: { errors, isSubmitting } } = useForm();
   const { authStore, userStore } = useStores();

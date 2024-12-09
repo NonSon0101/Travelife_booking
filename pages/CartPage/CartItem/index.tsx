@@ -36,6 +36,7 @@ import { PLATFORM } from "enums/common";
 import { ISelectedCart } from "interfaces/checkout";
 import { formatCurrency } from "utils/common";
 import PrivateOptions from "components/Layout/WebLayout/components/privateOptions";
+import { toast } from "react-toastify";
 
 interface ICartItem {
   tour: ITourCart;
@@ -147,6 +148,11 @@ const CartItem = (props: ICartItem) => {
 
   useEffect(() => {
     if (!selectedDate) return;
+    const today = new Date();
+    if (selectedDate < today) {
+      toast.warning('Cannot select date in the past')
+      return;
+    }
     var date = new Date(selectedDate.toString());
 
     var formattedDate =

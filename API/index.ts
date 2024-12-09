@@ -3,7 +3,7 @@ import { PLATFORM } from 'enums/common'
 import { toast } from 'react-toastify'
 import routes from 'routes'
 import { IHeader } from './constants'
-const API_URL = 'http://localhost:4002'
+const API_URL = 'http://localhost:4001'
 
 const api = axios.create({
   baseURL: API_URL
@@ -16,8 +16,8 @@ api.interceptors.response.use(
   function (error) {
     if (error?.response?.data?.code === 401) {
       handleUnauthorized()
+      toast.error(error?.response?.data?.message)
       return
-      // toast.error(error?.response?.data?.message)
     }
     console.error('API', 'error', error)
     const errorMessage = error.response.data.message
@@ -41,9 +41,7 @@ export function handleUnauthorized(): void {
   }else {
     localStorage.removeItem('websiteToken')
     localStorage.removeItem('websiteUserId')
-    setTimeout(() => {
-      window.location.href = '/'
-    }, 3000)
+    window.location.href = '/'
   }
 }
 

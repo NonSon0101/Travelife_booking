@@ -153,6 +153,11 @@ const TourDetailPage = () => {
 
   useEffect(() => {
     if (!selectedDate) return;
+    const today = new Date();
+    if (selectedDate < today) {
+      toast.warning('Cannot select date in the past')
+      return;
+    }
     var date = new Date(selectedDate.toString());
 
     var formattedDate =

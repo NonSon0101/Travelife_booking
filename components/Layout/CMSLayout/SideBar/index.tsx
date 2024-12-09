@@ -10,6 +10,11 @@ const SideBar = () => {
       </Center>
       <VStack width="full" align="unset" paddingY={6} paddingX={4} spacing={4}>
         <NavLink
+           label="Dashboard"
+           icon=""
+           route={routes.cms.dashBoardManagement.value}
+        />
+        <NavLink
           label="Booking Management"
           icon=""
           route={routes.cms.bookingManagement.value}

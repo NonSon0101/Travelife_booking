@@ -12,25 +12,36 @@ interface TimelineItemProps {
 
 const TimelineItem: React.FC<TimelineItemProps> = ({ icon, title, isFirst, isLast }) => {
   return (
-    <>
-      <Stack direction="row" align="center" spacing={4}>
-        <VStack align="center">
-          <Icon as={icon} color="red.500" boxSize={6} />
-          {!isFirst && !isLast && (
-            <Box width="1px" bg="gray.300" flex="1" />
-          )}
-        </VStack>
-        <Text fontSize="md" fontWeight="medium">{title}</Text>
-      </Stack>
-      <Divider />
-    </>
+    <Stack direction="row" align="center" spacing={4} position="relative" marginTop='16px' zIndex={1}
+      {...({
+        _before: {
+          content: '""',
+          zIndex: '-1',
+          position: "absolute",
+          background: "orange",
+          height: "calc(100% + 16px)",
+          left: "10.2px",
+          top: "25px",
+          width: "12px",
+          display: isLast ? "none" : "block"
+        },
+      })}
+    >
+      <VStack align="center">
+        <Icon as={icon} color="red.500" boxSize={6} background='teal' borderRadius='full' width='30px' height='30px'/>
+        {!isFirst && !isLast && (
+          <Box width="1px"  bg="gray.300" flex="1" />
+        )}
+      </VStack>
+      <Text fontSize="md" fontWeight="medium">{title}</Text>
+    </Stack >
   );
 };
 
 // Main Timeline component
 const Timeline: React.FC = () => {
   return (
-    <Box borderLeft="2px" borderColor="gray.300" pl={6}>
+    <Box pl={6}>
       <TimelineItem icon={MdLocationOn} title="Discovery Whale Watch" isFirst />
       <TimelineItem icon={MdLocationOn} title="Old Fisherman's Wharf" />
       <TimelineItem icon={MdLocationOn} title="Cannery Row" />

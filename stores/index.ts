@@ -11,6 +11,7 @@ import UserStore from './userStore'
 import CartStore from './cartStore'
 import CheckoutStore from './checkoutStore'
 import ReviewStore from './reviewStore'
+import StatisticsStore from './statisticStore'
 
 export default class RootStore {
   authStore: AuthStore
@@ -26,6 +27,7 @@ export default class RootStore {
   discountStore: DiscountStore
   locationStore: LocationStore
   transportationStore: TransportationStore
+  statisticsStore: StatisticsStore
 
   constructor() {
     this.authStore = new AuthStore(this)
@@ -41,6 +43,7 @@ export default class RootStore {
     this.discountStore = new DiscountStore(this)
     this.locationStore = new LocationStore(this)
     this.transportationStore = new TransportationStore(this)
+    this.statisticsStore = new StatisticsStore(this)
   }
 }
 

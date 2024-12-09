@@ -48,6 +48,9 @@ const cmsRoutes = {
     },
     generalSettings: {
       value: '/cms/general-settings',
+    },
+    dashBoardManagement: {
+      value: '/cms/dashboard-management'
     }
   }
 }

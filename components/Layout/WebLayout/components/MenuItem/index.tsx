@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { HStack, VStack, Text, Button } from "@chakra-ui/react";
-import { LuMinusCircle, LuPlusCircle } from "react-icons/lu";
+import { LuCirclePlus, LuCircleMinus } from "react-icons/lu";
 import { formatCurrency } from "utils/common";
 
 interface IMenuItem {
@@ -63,7 +63,7 @@ const MenuItem = (props: IMenuItem) => {
               onClick: decreaseQuantityHandler,
             })}
         >
-          <LuMinusCircle size="1.5rem" />
+          <LuCirclePlus size="1.5rem" />
         </Button>
         <Text
           width="32px"
@@ -79,7 +79,7 @@ const MenuItem = (props: IMenuItem) => {
           background="transparent"
           onClick={increaseQuantityHandler}
         >
-          <LuPlusCircle size="1.5rem" />
+          <LuCircleMinus size="1.5rem" />
         </Button>
       </HStack>
     </HStack>
