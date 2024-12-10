@@ -27,20 +27,23 @@ api.interceptors.response.use(
 )
 
 export function auth(platform: PLATFORM): IHeader {
-  const token = localStorage.getItem(`${platform}Token`) ?? sessionStorage.getItem(`${platform}Token`) ?? ''
-  return { Authorization: `Bearer ${token}` }
+  if (localStorage) {
+    const token = localStorage?.getItem(`${platform}Token`) ?? sessionStorage?.getItem(`${platform}Token`) ?? ''
+    return { Authorization: `Bearer ${token}` }
+  }
+  return { Authorization: `` }
 }
 
 export function handleUnauthorized(): void {
-  if (window.location.href.includes(PLATFORM.CMS)) {
-    localStorage.removeItem('cmsToken')
-    localStorage.removeItem('cmsUserId')
+  if (window.location.href.includes(PLATFORM.CMS) && localStorage) {
+    localStorage?.removeItem('cmsToken')
+    localStorage?.removeItem('cmsUserId')
     setTimeout(() => {
       window.location.href = routes.cms.login.value
     }, 3000)
-  }else {
-    localStorage.removeItem('websiteToken')
-    localStorage.removeItem('websiteUserId')
+  } else if (localStorage) {
+    localStorage?.removeItem('websiteToken')
+    localStorage?.removeItem('websiteUserId')
     window.location.href = '/'
   }
 }

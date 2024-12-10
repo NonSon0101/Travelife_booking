@@ -172,35 +172,42 @@ const CartItem = (props: ICartItem) => {
   }
 
   function handleCommand() {
-    const userId = localStorage.getItem(`${PLATFORM.WEBSITE}UserId`);
-    if (userId) {
-      if (editTour) {
-        const data: IUpdateToCart = {
-          user: userId,
-          tour: {
-            itemId: tour._id,
-            startDate: updateDate,
-            startTime: "7h00",
-            participants: guestInfo,
-          },
-        };
-        if (tour.isPrivate) {
-          data.tour = {
-            ...data.tour,
-            isPrivate: true,
-            transports: [transport.id],
-            hotels: [hotel.id]
+    if (localStorage) {
+      const userId = localStorage?.getItem(`${PLATFORM.WEBSITE}UserId`);
+      if (userId) {
+        if (editTour) {
+          if (guestInfo.length == 0) {
+            toast.warn("Please select at least 1 participant")
+            return
           }
+          const data: IUpdateToCart = {
+            user: userId,
+            tour: {
+              itemId: tour._id,
+              startDate: updateDate,
+              startTime: "7h00",
+              participants: guestInfo,
+            },
+          };
+          if (tour.isPrivate) {
+            data.tour = {
+              ...data.tour,
+              isPrivate: true,
+              transports: [transport.id],
+              hotels: [hotel.id]
+            }
+          }
+          cartStore.updateCart(data);
+          handleEditTour();
+          toast
+        } else {
+          const data: IDeleteCart = {
+            cart: listCart._id,
+            itemId: idCart,
+          };
+          cartStore.deleteCart(data);
+          route.refresh()
         }
-        cartStore.updateCart(data);
-        handleEditTour();
-      } else {
-        const data: IDeleteCart = {
-          cart: listCart._id,
-          itemId: idCart,
-        };
-        cartStore.deleteCart(data);
-        route.refresh()
       }
     }
   }

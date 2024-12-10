@@ -1,6 +1,7 @@
 import { Box, HStack } from "@chakra-ui/react";
 import { PiTicketBold } from "react-icons/pi";
 import { useRouter } from "next/navigation";
+import Link from 'next/link';
 import { LuShoppingCart } from "react-icons/lu";
 import routes from "routes";
 import UserProfile from "../UserProfile";
@@ -33,14 +34,6 @@ const Action = (props: IHeaderProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  function gotoCartPage() {
-    route.push(routes.cart.value);
-  }
-
-  function gotoBookingViewPage() {
-    route.push(routes.booking.view);
-  }
-
   const { openLoginModal, color, underLineHoverColor, hoverColor } = props;
   return (
     <HStack
@@ -49,14 +42,15 @@ const Action = (props: IHeaderProps) => {
       alignItems="center"
       marginTop="14px"
     >
-      <ActionItem
-        color={color}
-        underLineHoverColor={underLineHoverColor}
-        hoverColor={hoverColor}
-        actionIcon={<PiTicketBold />}
-        title="Booking"
-        to={gotoBookingViewPage}
-      />
+      <Link href={routes.booking.view}>
+        <ActionItem
+          color={color}
+          underLineHoverColor={underLineHoverColor}
+          hoverColor={hoverColor}
+          actionIcon={<PiTicketBold />}
+          title="Booking"
+        />
+      </Link>
       <Box
         {...(cartStore.cartCount !== 0 &&
           isLogin && {
@@ -76,14 +70,15 @@ const Action = (props: IHeaderProps) => {
           },
         })}
       >
-        <ActionItem
-          color={color}
-          underLineHoverColor={underLineHoverColor}
-          hoverColor={hoverColor}
-          actionIcon={<LuShoppingCart />}
-          title="Cart"
-          to={gotoCartPage}
-        />
+        <Link href={routes.cart.value}>
+          <ActionItem
+            color={color}
+            underLineHoverColor={underLineHoverColor}
+            hoverColor={hoverColor}
+            actionIcon={<LuShoppingCart />}
+            title="Cart"
+          />
+        </Link>
       </Box>
       <UserProfile
         underLineHoverColor={underLineHoverColor}

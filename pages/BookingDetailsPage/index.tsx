@@ -6,7 +6,8 @@ import dayjs from "dayjs"
 import { useStores } from "hooks"
 import routes from "routes";
 import { observer } from "mobx-react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useParams } from 'next/navigation';
 import { useEffect, useState } from "react"
 import { formatCurrency } from "utils/common";
 import RatingModal from "./RatingModal";
@@ -17,7 +18,11 @@ import { ITour } from "interfaces/tour";
 const BookingDetailsPage = () => {
   const { bookingStore } = useStores()
   const { bookingDetail } = bookingStore
-  const route = useRouter();
+  const router = useRouter();
+  const params = useParams();
+  const bookingId = Array.isArray(params?.bookingId) 
+        ? params.bookingId[0] 
+        : params?.bookingId;
   const [isOpenRatingModal, setIsOpenRatingModal] = useState<boolean>(false)
   const [tour, setTour] = useState<ITour>()
 
@@ -29,16 +34,13 @@ const BookingDetailsPage = () => {
   function handleGoToPayment() {
     if (bookingDetail?._id) {
       bookingStore.setBookingId(bookingDetail?._id)
-      route.push(routes.booking.payment)
+      router.push(routes.booking.payment)
     }
   }
 
   useEffect(() => {
-    const currentUrl = window.location.href;
-    const urlParts = currentUrl.split("/");
-    const bookingId = urlParts[urlParts.length - 1];
     bookingStore.fetchBookingDetail(bookingId)
-  }, [])
+  }, [bookingId])
 
   return (
     <PageLayout>

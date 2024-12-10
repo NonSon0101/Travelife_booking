@@ -110,8 +110,8 @@ const ListTourPage = () => {
           color='#1A2B49'
         >
           <VStack alignSelf='start'>
-            <Text textAlign='left' fontWeight='700' fontSize='xl' color='white'>Things to do in</Text>
-            <Text fontWeight='900' fontSize='6xl' color='white'>{locationDetail?.title}</Text>
+            <Text textAlign='left' fontWeight='700' fontSize='2xl' color='white'>Things to do in</Text>
+            <Text fontWeight='900' fontSize='7xl' color='white'>{locationDetail?.title}</Text>
           </VStack>
           <Box>
             <Maps coordinates={locationDetail?.loc?.coordinates} />

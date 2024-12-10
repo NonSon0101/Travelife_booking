@@ -90,7 +90,7 @@ const TourDetailPage = () => {
     autoplaySpeed: 2000,
     pauseOnHover: true
   };
-  const userId = localStorage.getItem(`${PLATFORM.WEBSITE}UserId`);
+  const userId = localStorage?.getItem(`${PLATFORM.WEBSITE}UserId`);
   const top = useBreakpointValue({ base: '90%', md: '50%' })
   const side = useBreakpointValue({ base: '30%', md: '10px' })
 

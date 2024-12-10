@@ -1,6 +1,6 @@
 "use client";
 import { useEffect } from "react";
-import { SimpleGrid, Box, Button, extendTheme, ThemeProvider } from "@chakra-ui/react";
+import { SimpleGrid, Box, Button, extendTheme, ThemeProvider, Link } from "@chakra-ui/react";
 import { usePathname, useSearchParams } from 'next/navigation'
 import { useRouter } from "next/navigation";
 import routes from "routes";
@@ -35,9 +35,9 @@ const HomePage = () => {
     const accessToken = searchParams?.get('accessToken')
     const platform = PLATFORM.WEBSITE
 
-    if (userId && accessToken) {
-      localStorage.setItem(`${platform}UserId`, userId);
-      localStorage.setItem(`${platform}Token`, accessToken);
+    if (userId && accessToken && localStorage) {
+      localStorage?.setItem(`${platform}UserId`, userId);
+      localStorage?.setItem(`${platform}Token`, accessToken);
     }
     if (userId) {
       authStore.getUserbyId(PLATFORM.WEBSITE)
@@ -50,10 +50,6 @@ const HomePage = () => {
     tourStore.fetchActiveTours();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  function handleGoToAllActivities() {
-    route.push(routes.allActivities.value)
-  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -111,15 +107,16 @@ const HomePage = () => {
             zIndex: -1,
           }}
         >
-          <Button
-            color='teal'
-            border='2px solid teal'
-            borderRadius='full'
-            bg='transparent'
-            onClick={handleGoToAllActivities}
-          >
-            Show more
-          </Button>
+          <Link href={routes.allActivities.value}>
+            <Button
+              color='teal'
+              border='2px solid teal'
+              borderRadius='full'
+              bg='transparent'
+            >
+              Show more
+            </Button>
+          </Link>
         </Box>
       </HomeLayout>
     </ThemeProvider>

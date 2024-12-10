@@ -20,37 +20,43 @@ export default class AuthStore {
   }
 
   async getMyUser(platform: PLATFORM): Promise<void> {
-    const userId = localStorage.getItem(`${platform}UserId`) ?? sessionStorage.getItem(`${platform}UserId`)
-    if (userId) {
-      const user = await getUserById(userId, platform)
-      this.user = user
-      this.isLogin = true
+    if (localStorage || sessionStorage) {
+      const userId = localStorage?.getItem(`${platform}UserId`) ?? sessionStorage?.getItem(`${platform}UserId`)
+      if (userId) {
+        const user = await getUserById(userId, platform)
+        this.user = user
+        this.isLogin = true
+      }
     }
   }
 
   async getUserbyId(platform: PLATFORM): Promise<void> {
-    const userId =
-      localStorage.getItem(`${platform}UserId`) ??
-      sessionStorage.getItem(`${platform}UserId`)
-    if (userId) {
-      const user = await getUserById(userId, platform)
-      this.isLogin = true
-      this.user = user
+    if (localStorage || sessionStorage) {
+      const userId =
+        localStorage?.getItem(`${platform}UserId`) ??
+        sessionStorage?.getItem(`${platform}UserId`)
+      if (userId) {
+        const user = await getUserById(userId, platform)
+        this.isLogin = true
+        this.user = user
+      }
     }
   }
 
   async login(data: ILoginForm, platform: PLATFORM): Promise<void> {
-    const { accessToken, user } = await login(omit(data, 'isRemember'))
-    if (accessToken && user?._id) {
-      if (data?.isRemember) {
-        localStorage.setItem(`${platform}UserId`, user?._id)
-        localStorage.setItem(`${platform}Token`, accessToken)
-      } else {
-        sessionStorage.setItem(`${platform}UserId`, user?._id)
-        sessionStorage.setItem(`${platform}Token`, accessToken)
+    if (localStorage || sessionStorage) {
+      const { accessToken, user } = await login(omit(data, 'isRemember'))
+      if (accessToken && user?._id) {
+        if (data?.isRemember) {
+          localStorage?.setItem(`${platform}UserId`, user?._id)
+          localStorage?.setItem(`${platform}Token`, accessToken)
+        } else {
+          sessionStorage?.setItem(`${platform}UserId`, user?._id)
+          sessionStorage?.setItem(`${platform}Token`, accessToken)
+        }
+        this.getMyUser(platform)
+        this.token = accessToken
       }
-      this.getMyUser(platform)
-      this.token = accessToken
     }
   }
 
@@ -72,12 +78,14 @@ export default class AuthStore {
 
 
   logout(platform: PLATFORM): void {
-    this.isLogin = false
-    this.token = ''
-    this.user = {} as IUser
-    localStorage.removeItem(`${platform}Token`)
-    localStorage.removeItem(`${platform}UserId`)
-    sessionStorage.removeItem(`${platform}Token`)
-    sessionStorage.removeItem(`${platform}UserId`)
+    if (localStorage || sessionStorage) {
+      this.isLogin = false
+      this.token = ''
+      this.user = {} as IUser
+      localStorage?.removeItem(`${platform}Token`)
+      localStorage?.removeItem(`${platform}UserId`)
+      sessionStorage?.removeItem(`${platform}Token`)
+      sessionStorage?.removeItem(`${platform}UserId`)
+    }
   }
 }

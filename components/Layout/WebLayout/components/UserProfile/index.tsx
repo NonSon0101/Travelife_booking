@@ -10,6 +10,7 @@ import {
   MenuItem,
   MenuList,
   VStack,
+  Link,
 } from "@chakra-ui/react"
 import { useEffect } from "react"
 import { useStores } from "hooks/useStores"
@@ -45,10 +46,6 @@ const UserProfile = (props: IUserProfileProps) => {
       console.log('error at get user', error)
     }
   }, [])
-
-  function gotoProfilePage(): void {
-    router.push(routes.myProfile.value)
-  }
 
   function handleLogout() {
     authStore.logout(PLATFORM.WEBSITE)
@@ -111,7 +108,6 @@ const UserProfile = (props: IUserProfileProps) => {
                 color={color}
                 actionIcon={<FaRegUser />}
                 title="Login"
-                to={() => { }}
               />
             </VStack>
           )}
@@ -126,12 +122,14 @@ const UserProfile = (props: IUserProfileProps) => {
       >
         {isLogin ? (
           <>
-            <MenuItem maxH="40px" color="gray.700" onClick={gotoProfilePage}>
-              <HStack spacing={3}>
-                <FaUserCircle fontSize="1.8rem" />
-                <Text fontWeight="600">My Profile</Text>
-              </HStack>
-            </MenuItem>
+            <Link href={routes.myProfile.value}>
+              <MenuItem maxH="40px" color="gray.700">
+                <HStack spacing={3}>
+                  <FaUserCircle fontSize="1.8rem" />
+                  <Text fontWeight="600">My Profile</Text>
+                </HStack>
+              </MenuItem>
+            </Link>
             <MenuItem
               fontWeight="600"
               maxH="40px"

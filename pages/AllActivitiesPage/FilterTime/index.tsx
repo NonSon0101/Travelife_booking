@@ -1,6 +1,7 @@
 import { Box, HStack, Menu, MenuButton, MenuList, Text, RadioGroup, Stack, Radio } from "@chakra-ui/react"
 import { TriangleDownIcon } from "@chakra-ui/icons"
-import { IApplyFilter } from ".."
+import { IApplyFilter } from "interfaces/common"
+
 
 
 interface IFilterTime {

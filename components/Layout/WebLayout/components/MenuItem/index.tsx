@@ -63,7 +63,7 @@ const MenuItem = (props: IMenuItem) => {
               onClick: decreaseQuantityHandler,
             })}
         >
-          <LuCirclePlus size="1.5rem" />
+          <LuCircleMinus size="1.5rem" />
         </Button>
         <Text
           width="32px"
@@ -79,7 +79,7 @@ const MenuItem = (props: IMenuItem) => {
           background="transparent"
           onClick={increaseQuantityHandler}
         >
-          <LuCircleMinus size="1.5rem" />
+          <LuCirclePlus size="1.5rem" />
         </Button>
       </HStack>
     </HStack>

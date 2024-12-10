@@ -29,17 +29,22 @@ const RatingModal = (props: IRatingModal) => {
   const handleCommentChange = (e: ChangeEvent<HTMLTextAreaElement>) => setComment(e.target.value);
 
   const handleSubmit = async () => {
-    const data: ICreateReview = {
-      user: localStorage.getItem(`${PLATFORM.WEBSITE}UserId`) ?? '',
-      tour: tour._id ?? '',
-      rating: rating,
-      content: comment
-    }
-    await reviewStore.createReview(data)
-    toast.success("Your feedback has been submitted! We appreciate your input and will use it to improve our services.");
-    // console.log('Rating:', rating);
-    // console.log('Comment:', comment);
-    onClose();
+    if (localStorage) {
+      const data: ICreateReview = {
+        user: localStorage?.getItem(`${PLATFORM.WEBSITE}UserId`) ?? '',
+        tour: tour._id ?? '',
+        rating: rating,
+        content: comment
+      }
+      try {
+        await reviewStore.createReview(data);
+        toast.success("Your feedback has been submitted!");
+        onClose();
+      } catch (error) {
+        console.error(error);
+        toast.error("Failed to submit feedback.");
+      }
+    }  
   };
 
   return (
@@ -52,9 +57,9 @@ const RatingModal = (props: IRatingModal) => {
           <VStack spacing={6} align="flex-start">
             <Text fontSize="lg" fontWeight="500">How was your experience?</Text>
             <HStack align="flex-start" spacing={6} width="full">
-              <Image width={120} borderRadius="10px" src={tour.thumbnail} alt="tourimg" />
+              <Image width={120} borderRadius="10px" src={tour.thumbnail || '/default-thumbnail.jpg'} alt="tourimg" />
               <VStack align="flex-start" spacing={2}>
-                <Text fontSize="lg" fontWeight="semibold">{tour.title}</Text>
+                <Text fontSize="lg" fontWeight="semibold">{tour.title || 'Tour Title'}</Text>
                 <RatingStart ratingAverage={tour?.ratingAverage} numOfRating={tour?.numOfRating} />
               </VStack>
             </HStack>

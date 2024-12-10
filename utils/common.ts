@@ -11,7 +11,10 @@ export function getValidArray<T>(array?: T[]): T[] {
 }
 
 export function getAccessToken(platform: PLATFORM): string {
-  return localStorage.getItem(`${platform}Token`) ?? sessionStorage.getItem(`${platform}Token`) ?? '';
+  if (localStorage || sessionStorage) {
+    return localStorage?.getItem(`${platform}Token`) ?? sessionStorage?.getItem(`${platform}Token`) ?? '';
+  }
+  return ''
 }
 
 export function getOptions<T>(array: T[], labelKey: string, valueKey: string): IOption[] {

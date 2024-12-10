@@ -1,5 +1,5 @@
 "use client";
-import { HStack, VStack, Text, Button, Box } from "@chakra-ui/react";
+import { HStack, VStack, Text, Button, Box, Link } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import PageLayout from "components/Layout/WebLayout/PageLayout";
 import routes from "routes";
@@ -20,6 +20,7 @@ const CartPage = () => {
   const { cartStore, authStore } = useStores();
   const { listCart, currentCurrency } = cartStore;
   const { isLogin } = authStore;
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const [totalPrice, setTotalPrice] = useState(0);
 
   const router = useRouter();
@@ -45,7 +46,9 @@ const CartPage = () => {
   }, [listCart]);
 
   const gotoCheckout = () => {
+    setIsLoading(true)
     router.push(routes.booking.activity);
+    setIsLoading(false)
   };
 
   return (
@@ -109,6 +112,7 @@ const CartPage = () => {
                 marginTop="12px"
                 padding="23px 18px"
                 borderRadius="full"
+                isLoading={isLoading}
                 colorScheme="teal"
                 color="white"
                 onClick={gotoCheckout}

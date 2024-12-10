@@ -26,6 +26,7 @@ const CheckoutPage = () => {
   const [coupon, setCoupon] = useState<string>("");
   const [checkCoupon, setCheckCoupon] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoadingContinue, setIsLoadingContinue] = useState<boolean>(false)
   const [dataCheckoutReview, setDataCheckoutReview] = useState<IRequsetCheckoutReview>({} as IRequsetCheckoutReview);
   const { listCart, selectedCart } = cartStore;
   const { checkout, order, itemPrice, currentCurrecy } = checkoutStore;
@@ -70,8 +71,10 @@ const CheckoutPage = () => {
   }, [dataCheckoutReview]);
 
   const handleGoToContactPage = () => {
+    setIsLoadingContinue(true)
     checkoutStore.setOrderSummary({ ...dataCheckoutReview, discountCode: coupon, currency: currentCurrecy })
     route.push(routes.booking.contact)
+    setIsLoadingContinue(false)
   }
   
   const handleChangeText = (event: ChangeEvent<HTMLInputElement>) => {
@@ -249,7 +252,7 @@ const CheckoutPage = () => {
                   Apply
                 </Button>
               </HStack>
-              <Button color="#fff" bg="#64CCC5" width="full" onClick={handleGoToContactPage}>
+              <Button color="#fff" bg="#64CCC5" isLoading={isLoadingContinue} width="full" onClick={handleGoToContactPage}>
                 Confirm and continue
               </Button>
             </VStack>

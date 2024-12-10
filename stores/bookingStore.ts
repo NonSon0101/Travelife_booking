@@ -43,7 +43,7 @@ class BookingStore {
   }
 
 
-  async fetchBookingDetail(bookingId: string): Promise<void> {
+  async fetchBookingDetail(bookingId = ''): Promise<void> {
     const booking = await getBookingDetail(bookingId)
     this.bookingDetail = booking
     this.currentCurrency = booking.bookingItems[0].participants[0].currency ?? ''

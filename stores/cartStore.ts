@@ -46,7 +46,7 @@ class CartStrores {
     const { cart } = await getListCart()
     this.listCart = cart
     if (cart) {
-      this.currentCurrency = cart.tours[0].participants[0].currency ?? '';
+      this.currentCurrency = cart.tours[0]?.participants[0]?.currency ?? '';
     }
   }
 

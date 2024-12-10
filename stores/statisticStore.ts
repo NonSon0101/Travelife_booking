@@ -1,6 +1,6 @@
 
-import { getRevenue} from 'API/statistic'
-import { IRevenue } from 'interfaces/statistics'
+import { getRevenue, getTopBookedTour} from 'API/statistic'
+import { IRevenue, ITopBookedTour } from 'interfaces/statistics'
 import { makeAutoObservable } from 'mobx'
 import RootStore from 'stores'
 
@@ -12,10 +12,16 @@ class StatisticsStore {
   }
 
   revenues: IRevenue[] = []
+  bookedTour: ITopBookedTour[] = []
 
   async fetchRevenue(filter = ''): Promise<void> {
     const {metadata} = await getRevenue(filter)
     this.revenues = metadata
+  }
+
+  async fetchBookedTour(numOfTours = 5): Promise<void> {
+    const {metadata} = await getTopBookedTour(numOfTours)
+    this.bookedTour = metadata
   }
 }
 
