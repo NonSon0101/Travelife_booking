@@ -34,7 +34,7 @@ const LoginPage = () => {
       await authStore.login(data, PLATFORM.CMS)
       setIsLoading(false)
       toast.success('Login successfully')
-      router.push(routes.cms.bookingManagement.value)
+      router.push(routes.cms.dashBoardManagement.value)
     } catch (error) {
       setIsLoading(false)
       toast.error('Login failed')

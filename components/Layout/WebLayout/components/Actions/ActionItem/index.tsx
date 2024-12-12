@@ -9,12 +9,8 @@ interface IActionItemProps {
   hoverColor?: string
 }
 
-
-
 const ActionItem = (props: IActionItemProps) => {
   const { actionIcon, title, color, underLineHoverColor, hoverColor } = props
-
-  
 
   return (
     <VStack

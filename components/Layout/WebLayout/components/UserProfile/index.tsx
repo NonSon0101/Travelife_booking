@@ -49,6 +49,7 @@ const UserProfile = (props: IUserProfileProps) => {
 
   function handleLogout() {
     authStore.logout(PLATFORM.WEBSITE)
+    window.location.href = '/'
   }
 
   return (

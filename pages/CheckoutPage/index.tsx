@@ -81,21 +81,25 @@ const CheckoutPage = () => {
     setCoupon(event.target.value);
   };
 
-  const handleApplyCoupon = async (): Promise<void> => {
+  const handleApplyCoupon = async (isCancel: boolean): Promise<void> => {
     try {
-      if (coupon.length == 0) {
+      if (coupon.length == 0 && !isCancel) {
         toast.info('Please enter discount code')
         return;
       }
+      if (isCancel) {
+        setCoupon('')
+        setCheckCoupon(false)
+      }
       setIsLoading(true)
-      const dataCoupon = { ...dataCheckoutReview, discountCode: coupon };
+      const dataCoupon = { ...dataCheckoutReview, discountCode: !isCancel ? coupon : '' };
       await checkoutStore.fetchCheckoutReview(dataCoupon);
       if (checkCoupon) {
         if (order.discount === 0)
           toast.error('Not found discount match with tour')
         else if (checkout.length > itemPrice.length)
           toast.warn("Some tours can't apply this discount")
-        else
+        else if (!isCancel)
           toast.success('Apply discount successfully')
       }
       setIsLoading(false)
@@ -228,6 +232,7 @@ const CheckoutPage = () => {
                     <Button
                       background="transparent"
                       _hover={{ background: "transparent", opacity: "0.5" }}
+                      onClick={() => handleApplyCoupon(true)}
                     >
                       X
                     </Button>{" "}
@@ -246,7 +251,7 @@ const CheckoutPage = () => {
                   bg="#64CCC5"
                   paddingY="12px"
                   flex={1}
-                  onClick={handleApplyCoupon}
+                  onClick={() => handleApplyCoupon(false)}
                   isLoading={isLoading}
                 >
                   Apply

@@ -15,6 +15,6 @@ export interface ITopBookedTours {
 
 export interface ITopBookedTour {
   _id: string
-  total: string
+  total: number
   tour: ITour
 }

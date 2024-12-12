@@ -1,85 +1,85 @@
-import { Box, Image, Text, Flex, VStack, HStack, Icon, useColorModeValue, Badge } from "@chakra-ui/react";
+import { Box, Flex, Text, Image, useColorModeValue, VStack, HStack, Icon } from "@chakra-ui/react";
+import { observer } from "mobx-react";
+import { useEffect, useState } from "react";
 import { FaUsers } from "react-icons/fa";
 
-const TourCard = ({ thumbnail, title, bookings }: { thumbnail: string; title: string; bookings: number }) => {
-  const bgCard = useColorModeValue("white", "gray.800");
-  const textColor = useColorModeValue("gray.700", "white");
-
-  return (
-    <Flex
-      bg={bgCard}
-      boxShadow="lg"
-      rounded="lg"
-      overflow="hidden"
-      direction={{ base: "column", sm: "row" }}
-      p={4}
-      alignItems="center"
-      w="full"
-      mb={4}
-    >
-      {/* Thumbnail */}
-      <Image
-        src={thumbnail}
-        alt={title}
-        boxSize={{ base: "full", sm: "120px" }}
-        objectFit="cover"
-        rounded="md"
-        flexShrink={0}
-      />
-
-      {/* Tour Info */}
-      <VStack align="start" spacing={2} ml={{ base: 0, sm: 4 }} mt={{ base: 4, sm: 0 }} flex="1">
-        {/* Tour Title */}
-        <Text fontWeight="bold" fontSize="lg" color={textColor} noOfLines={2}>
-          {title}
-        </Text>
-
-        {/* Booking Count */}
-        <HStack>
-          <Icon as={FaUsers} color="teal.500" />
-          <Text fontSize="sm" color="gray.500">
-            {bookings} bookings
-          </Text>
-        </HStack>
-      </VStack>
-    </Flex>
-  );
-};
+import { rootStore } from "stores";
 
 const TopToursList = () => {
-  const tours = [
-    {
-      thumbnail: "https://via.placeholder.com/120",
-      title: "Discover the Beauty of Bali",
-      bookings: 512,
-    },
-    {
-      thumbnail: "https://via.placeholder.com/120",
-      title: "Amazing Thailand Adventure",
-      bookings: 460,
-    },
-    {
-      thumbnail: "https://via.placeholder.com/120",
-      title: "European Dream Tour",
-      bookings: 399,
-    },
-    {
-      thumbnail: "https://via.placeholder.com/120",
-      title: "Magical Japan Journey",
-      bookings: 350,
-    },
-  ];
+  const { statisticsStore } = rootStore;
+  const { bookedTour } = statisticsStore;
+  const [numOfTours, setNumOfTours] = useState<number>(5);
+
+  useEffect(() => {
+    statisticsStore.fetchBookedTour(numOfTours);
+  }, []);
+
+  const TourCard = ({ thumbnail, title, bookings }: { thumbnail: string; title: string; bookings: number }) => {
+    const bgCard = useColorModeValue("white", "gray.800");
+    const textColor = useColorModeValue("gray.700", "white");
+  
+    return (
+      <Flex
+        bg={bgCard}
+        boxShadow="lg"
+        rounded="lg"
+        overflow="hidden"
+        direction={{ base: "column", sm: "row" }}
+        p={4}
+        alignItems="center"
+        w="full"
+        mb={4}
+      >
+        <Image
+          src={thumbnail}
+          alt={title}
+          boxSize={{ base: "full", sm: "120px" }}
+          objectFit="cover"
+          rounded="md"
+          flexShrink={0}
+        />
+        <VStack align="start" spacing={2} ml={{ base: 0, sm: 4 }} mt={{ base: 4, sm: 0 }} flex="1">
+          <Text fontWeight="bold" fontSize="lg" color={textColor} noOfLines={2}>
+            {title}
+          </Text>
+  
+          <HStack>
+            <Icon as={FaUsers} color="teal.500" />
+            <Text fontSize="sm" color="gray.500">
+              {bookings} bookings
+            </Text>
+          </HStack>
+        </VStack>
+      </Flex>
+    );
+  };
+  
 
   return (
     <Box maxW="800px" mx="auto" mt={8}>
-      <Text fontSize="lg" fontWeight="bold" mb={6} textAlign="center" color={useColorModeValue("gray.700", "white")}>
+      <Text fontSize="lg" fontWeight="bold" mb={4} textAlign="center" color={useColorModeValue("gray.700", "white")}>
         Top Booked Tours
       </Text>
-      {tours.map((tour, index) => (
-        <TourCard key={index} thumbnail={tour.thumbnail} title={tour.title} bookings={tour.bookings} />
-      ))}
+      <Box
+        maxH="500px" 
+        overflowY="auto"
+        p={4}
+        borderWidth="1px"
+        borderRadius="lg"
+        boxShadow="lg"
+        bg={useColorModeValue("white", "gray.800")}
+      >
+        {bookedTour.map((tour, index) => (
+          <TourCard
+            key={index}
+            thumbnail={tour.tour.thumbnail ?? ""}
+            title={tour.tour.title ?? ""}
+            bookings={tour.total ?? 0}
+          />
+        ))}
+      </Box>
     </Box>
   );
 };
 
-export default TopToursList;
+export default observer(TopToursList);
