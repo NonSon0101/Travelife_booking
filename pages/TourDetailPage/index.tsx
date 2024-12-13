@@ -59,6 +59,7 @@ type Value = ValuePiece | [ValuePiece, ValuePiece];
 const TourDetailPage = () => {
 
   const route = useRouter()
+  const [userId, setUserId] = useState<string>('')
   const [type, setType] = useState<string>("");
   const [quantity, setQuantity] = useState<number>(0);
   const [price, setPrice] = useState<number>(0);
@@ -90,9 +91,13 @@ const TourDetailPage = () => {
     autoplaySpeed: 2000,
     pauseOnHover: true
   };
-  const userId = localStorage?.getItem(`${PLATFORM.WEBSITE}UserId`);
-  const top = useBreakpointValue({ base: '90%', md: '50%' })
-  const side = useBreakpointValue({ base: '30%', md: '10px' })
+  const top = typeof window !== 'undefined' ? useBreakpointValue({ base: '90%', md: '50%' }) : ''
+  const side = typeof window !== 'undefined' ? useBreakpointValue({ base: '30%', md: '10px' }) : ''
+
+  useEffect(() => {
+    const id = localStorage?.getItem(`${PLATFORM.WEBSITE}UserId`) ?? ''
+    setUserId(id)
+  }, [])
 
   useEffect(() => {
     const currentUrl = window.location.href;
@@ -262,7 +267,7 @@ const TourDetailPage = () => {
         normalItem.price = privateItem.value ?? 0;
       }
     });
-    
+
   }
   function handleCheckAvailability() {
     guestInfo.length ? setIsMenuParticipant(true) : setIsMenuParticipant(false);
@@ -283,223 +288,167 @@ const TourDetailPage = () => {
   }
 
   return (
-    <PageLayout>
-      <VStack
-        maxWidth="1300px"
-        width="full"
-        align="flex-start"
-        spacing={4}
-        padding={8}
-      >
-        <Heading color="gray.800" fontWeight={700} lineHeight={10}>
-          {tourDetail?.title}
-        </Heading>
-        <RatingStart sizeStar={24} sizeText="md" ratingAverage={tourDetail?.ratingAverage} numOfRating={tourDetail?.numOfRating} />
-        <Box position={'relative'} height={{ base: '300px', lg: '600px' }} width={'full'} overflow={'hidden'}>
-          <IconButton
-            aria-label="left-arrow"
-            colorScheme="messenger"
-            borderRadius="full"
-            position="absolute"
-            left={side}
-            top={top}
-            transform={'translate(0%, -50%)'}
-            zIndex={2}
-            onClick={() => slider?.slickPrev()}
-          >
-            <BiLeftArrowAlt />
-          </IconButton>
-          {/* Right Icon */}
-          <IconButton
-            aria-label="right-arrow"
-            colorScheme="messenger"
-            borderRadius="full"
-            position="absolute"
-            right={side}
-            top={top}
-            transform={'translate(0%, -50%)'}
-            zIndex={2}
-            onClick={() => slider?.slickNext()}
-          >
-            <BiRightArrowAlt />
-          </IconButton>
-          <Slider {...settings} ref={(slider) => setSlider(slider)}>
-            {tourDetail?.images?.map((url, index) => (
-              <Image
-                key={index}
-                height={{ base: '300px', lg: '600px' }}
-                position="relative"
-                backgroundPosition="center"
-                backgroundRepeat="no-repeat"
-                backgroundSize="cover"
-                borderRadius='12px'
-                backgroundImage={`url(${url})`}
-                alt="tour img"
-              />
-            ))}
-          </Slider>
-        </Box>
-        <Stack width="full" flexDirection={{ base: 'column', lg: 'row' }} justify="space-between" paddingTop="32px" gap={10}>
-          <VStack
-            alignSelf="flex-start"
-            flex={2}
-            width="full"
-            align="flex-start"
-          >
-            <Text fontSize="lg" paddingRight="30px">
-              {tourDetail?.summary}
+    <VStack
+      maxWidth="1300px"
+      width="full"
+      align="flex-start"
+      spacing={4}
+      padding={8}
+    >
+      <Heading color="gray.800" fontWeight={700} lineHeight={10}>
+        {tourDetail?.title}
+      </Heading>
+      <RatingStart sizeStar={24} sizeText="md" ratingAverage={tourDetail?.ratingAverage} numOfRating={tourDetail?.numOfRating} />
+      <Box position={'relative'} height={{ base: '300px', lg: '600px' }} width={'full'} overflow={'hidden'}>
+        <IconButton
+          aria-label="left-arrow"
+          colorScheme="messenger"
+          borderRadius="full"
+          position="absolute"
+          left={side}
+          top={top}
+          transform={'translate(0%, -50%)'}
+          zIndex={2}
+          onClick={() => slider?.slickPrev()}
+        >
+          <BiLeftArrowAlt />
+        </IconButton>
+        {/* Right Icon */}
+        <IconButton
+          aria-label="right-arrow"
+          colorScheme="messenger"
+          borderRadius="full"
+          position="absolute"
+          right={side}
+          top={top}
+          transform={'translate(0%, -50%)'}
+          zIndex={2}
+          onClick={() => slider?.slickNext()}
+        >
+          <BiRightArrowAlt />
+        </IconButton>
+        <Slider {...settings} ref={(slider) => setSlider(slider)}>
+          {tourDetail?.images?.map((url, index) => (
+            <Image
+              key={index}
+              height={{ base: '300px', lg: '600px' }}
+              position="relative"
+              backgroundPosition="center"
+              backgroundRepeat="no-repeat"
+              backgroundSize="cover"
+              borderRadius='12px'
+              backgroundImage={`url(${url})`}
+              alt="tour img"
+            />
+          ))}
+        </Slider>
+      </Box>
+      <Stack width="full" flexDirection={{ base: 'column', lg: 'row' }} justify="space-between" paddingTop="32px" gap={10}>
+        <VStack
+          alignSelf="flex-start"
+          flex={2}
+          width="full"
+          align="flex-start"
+        >
+          <Text fontSize="lg" paddingRight="30px">
+            {tourDetail?.summary}
+          </Text>
+          <Stack width="full" flexDirection={{ base: 'column', lg: 'row' }} overflow="hidden" marginY='24px'>
+            <Box width={{ base: '100%', lg: '60%' }} >
+              <Timeline />
+            </Box>
+            {/* Column for Maps component */}
+            <Box width={{ base: '100%', lg: '70%' }}>
+              <Maps coordinates={startLocation?.coordinates} />
+            </Box>
+          </Stack>
+          <Title text='About this activity' />
+          <HStack align="flex-start" padding="16px">
+            <Text fontSize="3xl">
+              <FaRegCalendarCheck />
             </Text>
-            <Stack width="full" flexDirection={{ base: 'column', lg: 'row' }} overflow="hidden" marginY='24px'>
-              <Box width={{ base: '100%', lg: '60%' }} >
-                <Timeline />
-              </Box>
-              {/* Column for Maps component */}
-              <Box width={{ base: '100%', lg: '70%' }}>
-                <Maps coordinates={startLocation?.coordinates} />
-              </Box>
+            <VStack align="flex-start">
+              <Text fontSize="lg" fontWeight="bold">
+                Free cancellation
+              </Text>
+              <Text>Cancel up to 24 hours in advance for a full refund</Text>
+            </VStack>
+          </HStack>
+          <HStack align="flex-start" padding="16px">
+            <Text fontSize="3xl">
+              <FaCreditCard />
+            </Text>
+            <VStack align="flex-start">
+              <Text fontSize="lg" fontWeight="bold">
+                Reserve now & pay later
+              </Text>
+              <Text>
+                Keep your travel plans flexible — book your spot and pay
+                nothing today.
+              </Text>
+            </VStack>
+          </HStack>
+          <HStack align="flex-start" padding="16px">
+            <Text fontSize="3xl">
+              <PiClockCountdownBold />
+            </Text>
+            <VStack align="flex-start">
+              <Text fontSize="lg" fontWeight="bold">
+                Duration
+              </Text>
+              <Text>{tourDetail?.duration} hours</Text>
+            </VStack>
+          </HStack>
+          <HStack align="flex-start" padding="16px">
+            <Text fontSize="3xl">
+              <RiMapPinUserLine />
+            </Text>
+            <VStack align="flex-start">
+              <Text fontSize="lg" fontWeight="bold">
+                Live tour guide
+              </Text>
+              <Text>English</Text>
+            </VStack>
+          </HStack>
+          <Box
+            width="full"
+            height="fit-content"
+            padding="16px"
+            background="rgb(4, 54, 74)"
+            borderRadius="15px"
+          >
+            <Stack width='full' flexDirection={{ base: 'column', lg: 'row' }} justifyContent={{ lg: 'space-between' }}>
+              <Text fontSize="2xl" fontWeight="bold" color="#fff">
+                Select participant and date
+              </Text>
+              <FormControl display='flex' alignItems='center' width='unset'>
+                <FormLabel htmlFor='private-tour' mb='0' color='#fff'>
+                  Private tour?
+                </FormLabel>
+                <Switch id='private-tour' isChecked={privateTour} onChange={handleEnablePrivate} />
+              </FormControl>
             </Stack>
-            <Title text='About this activity' />
-            <HStack align="flex-start" padding="16px">
-              <Text fontSize="3xl">
-                <FaRegCalendarCheck />
-              </Text>
-              <VStack align="flex-start">
-                <Text fontSize="lg" fontWeight="bold">
-                  Free cancellation
-                </Text>
-                <Text>Cancel up to 24 hours in advance for a full refund</Text>
-              </VStack>
-            </HStack>
-            <HStack align="flex-start" padding="16px">
-              <Text fontSize="3xl">
-                <FaCreditCard />
-              </Text>
-              <VStack align="flex-start">
-                <Text fontSize="lg" fontWeight="bold">
-                  Reserve now & pay later
-                </Text>
-                <Text>
-                  Keep your travel plans flexible — book your spot and pay
-                  nothing today.
-                </Text>
-              </VStack>
-            </HStack>
-            <HStack align="flex-start" padding="16px">
-              <Text fontSize="3xl">
-                <PiClockCountdownBold />
-              </Text>
-              <VStack align="flex-start">
-                <Text fontSize="lg" fontWeight="bold">
-                  Duration
-                </Text>
-                <Text>{tourDetail?.duration} hours</Text>
-              </VStack>
-            </HStack>
-            <HStack align="flex-start" padding="16px">
-              <Text fontSize="3xl">
-                <RiMapPinUserLine />
-              </Text>
-              <VStack align="flex-start">
-                <Text fontSize="lg" fontWeight="bold">
-                  Live tour guide
-                </Text>
-                <Text>English</Text>
-              </VStack>
-            </HStack>
-            <Box
+            <Stack
               width="full"
-              height="fit-content"
-              padding="16px"
-              background="rgb(4, 54, 74)"
-              borderRadius="15px"
+              flexDirection={{ base: 'column', md: 'row' }}
+              alignItems='center'
+              justifyContent="space-between"
             >
-              <Stack width='full' flexDirection={{ base: 'column', lg: 'row' }} justifyContent={{ lg: 'space-between' }}>
-                <Text fontSize="2xl" fontWeight="bold" color="#fff">
-                  Select participant and date
-                </Text>
-                <FormControl display='flex' alignItems='center' width='unset'>
-                  <FormLabel htmlFor='private-tour' mb='0' color='#fff'>
-                    Private tour?
-                  </FormLabel>
-                  <Switch id='private-tour' isChecked={privateTour} onChange={handleEnablePrivate} />
-                </FormControl>
-              </Stack>
-              <Stack
-                width="full"
-                flexDirection={{ base: 'column', md: 'row' }}
-                alignItems='center'
+              <SimpleGrid
+                flex={{ base: 1, md: 2 }}
+                width='full'
+                columns={{ base: 1, md: 2 }}
+                gap={4}
                 justifyContent="space-between"
+                paddingTop="8px"
               >
-                <SimpleGrid
-                  flex={{ base: 1, md: 2 }}
-                  width='full'
-                  columns={{ base: 1, md: 2 }}
-                  gap={4}
-                  justifyContent="space-between"
-                  paddingTop="8px"
-                >
-                  <GridItem>
-                    <Menu
-                      autoSelect={false}
-                      computePositionOnMount
-                      placement="bottom-start"
-                    >
-                      <VStack>
-                        <MenuButton
-                          width="full"
-                          height="40px"
-                          background="#fff"
-                          borderRadius="999px"
-                          padding="8px 12px"
-                          fontWeight="bold"
-                        >
-                          <HStack justifyContent="space-between">
-                            <HStack fontSize="md" alignItems="center">
-                              <Text fontSize="2xl">
-                                <IoPeople />
-                              </Text>
-                              <Text>
-                                {guestInfo.length > 0
-                                  ? guestInfo.map(
-                                    (guest) =>
-                                      `${guest.title} x${guest.quantity} `
-                                  )
-                                  : "Select participant"}
-                              </Text>
-                            </HStack>
-                            <TriangleDownIcon />
-                          </HStack>
-                        </MenuButton>
-                      </VStack>
-                      <MenuList minWidth="320px" padding="4px 10px">
-                        {priceOptions &&
-                          priceOptions
-                            .filter((participant) => privateTour ? participant.participantsCategoryIdentifier === "Private" : !participant.participantsCategoryIdentifier)
-                            .map((participant, index) => (
-                              <MenuItem
-                                key={index}
-                                type={participant.title}
-                                price={participant.value}
-                                currency={tourDetail?.currency ?? ''}
-                                setPrice={setPrice}
-                                setType={setType}
-                                setQuantity={setQuantity}
-                              />
-                            )
-                            )
-                        }
-                      </MenuList>
-                    </Menu>
-                    <Text textAlign="center" color="red">
-                      {!isMenuParticipant && "Please choose participants"}
-                    </Text>
-                  </GridItem>
-                  <GridItem>
-                    <Menu
-                      autoSelect={false}
-                      computePositionOnMount
-                      placement="bottom-start"
-                    >
+                <GridItem>
+                  <Menu
+                    autoSelect={false}
+                    computePositionOnMount
+                    placement="bottom-start"
+                  >
+                    <VStack>
                       <MenuButton
                         width="full"
                         height="40px"
@@ -511,266 +460,320 @@ const TourDetailPage = () => {
                         <HStack justifyContent="space-between">
                           <HStack fontSize="md" alignItems="center">
                             <Text fontSize="2xl">
-                              <LuCalendarDays />
+                              <IoPeople />
                             </Text>
                             <Text>
-                              {!selectedDate ? "Select date" : `${showDate}`}
+                              {guestInfo.length > 0
+                                ? guestInfo.map(
+                                  (guest) =>
+                                    `${guest.title} x${guest.quantity} `
+                                )
+                                : "Select participant"}
                             </Text>
                           </HStack>
                           <TriangleDownIcon />
                         </HStack>
                       </MenuButton>
-
-                      <MenuList>
-                        <HStack spacing={8}>
-                          <CustomCalendar
-                            selectedDate={selectedDate}
-                            setSelectedDate={setSelectedDate}
-                          />
+                    </VStack>
+                    <MenuList minWidth="320px" padding="4px 10px">
+                      {priceOptions &&
+                        priceOptions
+                          .filter((participant) => privateTour ? participant.participantsCategoryIdentifier === "Private" : !participant.participantsCategoryIdentifier)
+                          .map((participant, index) => (
+                            <MenuItem
+                              key={index}
+                              type={participant.title}
+                              price={participant.value}
+                              currency={tourDetail?.currency ?? ''}
+                              setPrice={setPrice}
+                              setType={setType}
+                              setQuantity={setQuantity}
+                            />
+                          )
+                          )
+                      }
+                    </MenuList>
+                  </Menu>
+                  <Text textAlign="center" color="red">
+                    {!isMenuParticipant && "Please choose participants"}
+                  </Text>
+                </GridItem>
+                <GridItem>
+                  <Menu
+                    autoSelect={false}
+                    computePositionOnMount
+                    placement="bottom-start"
+                  >
+                    <MenuButton
+                      width="full"
+                      height="40px"
+                      background="#fff"
+                      borderRadius="999px"
+                      padding="8px 12px"
+                      fontWeight="bold"
+                    >
+                      <HStack justifyContent="space-between">
+                        <HStack fontSize="md" alignItems="center">
+                          <Text fontSize="2xl">
+                            <LuCalendarDays />
+                          </Text>
+                          <Text>
+                            {!selectedDate ? "Select date" : `${showDate}`}
+                          </Text>
                         </HStack>
-                      </MenuList>
-                    </Menu>
-                    <Text textAlign="center" color="red">
-                      {!isMenuDatePick && "Please select date"}
-                    </Text>
-                  </GridItem>
+                        <TriangleDownIcon />
+                      </HStack>
+                    </MenuButton>
 
-                  {privateTour &&
-                    <>
-                      <GridItem>
-                        <Menu
-                          autoSelect={false}
-                          computePositionOnMount
-                          placement="bottom-start"
+                    <MenuList>
+                      <HStack spacing={8}>
+                        <CustomCalendar
+                          selectedDate={selectedDate}
+                          setSelectedDate={setSelectedDate}
+                        />
+                      </HStack>
+                    </MenuList>
+                  </Menu>
+                  <Text textAlign="center" color="red">
+                    {!isMenuDatePick && "Please select date"}
+                  </Text>
+                </GridItem>
+
+                {privateTour &&
+                  <>
+                    <GridItem>
+                      <Menu
+                        autoSelect={false}
+                        computePositionOnMount
+                        placement="bottom-start"
+                      >
+                        <MenuButton
+                          width="full"
+                          height="40px"
+                          background="#fff"
+                          borderRadius="999px"
+                          padding="8px 12px"
+                          fontWeight="bold"
                         >
-                          <MenuButton
-                            width="full"
-                            height="40px"
-                            background="#fff"
-                            borderRadius="999px"
-                            padding="8px 12px"
-                            fontWeight="bold"
-                          >
-                            <HStack justifyContent="space-between">
-                              <HStack fontSize="md" alignItems="center">
-                                <Text fontSize="2xl">
-                                  <FaHotel />
-                                </Text>
-                                <Text>
-                                  {hotel?.name !== '' ? hotel.name : 'Select hotel'}
-                                </Text>
-                              </HStack>
-                              <TriangleDownIcon />
+                          <HStack justifyContent="space-between">
+                            <HStack fontSize="md" alignItems="center">
+                              <Text fontSize="2xl">
+                                <FaHotel />
+                              </Text>
+                              <Text>
+                                {hotel?.name !== '' ? hotel.name : 'Select hotel'}
+                              </Text>
                             </HStack>
-                          </MenuButton>
-                          <MenuList>
-                            <VStack spacing={2}>
-                              {tourDetail?.hotels && tourDetail?.hotels.map((hotel, index) => (
-                                <Button height={{ base: '70px' }} width={{ base: 'full' }} onClick={() => setPrivateOptions('hotel', hotel._id, hotel.name)}>
-                                  <PrivateOptions index={index} name={hotel.name} image={hotel.thumbnail} />
-                                </Button>
-                              ))}
-                            </VStack>
-                          </MenuList>
-                        </Menu>
-                        <Text textAlign="center" color="red">
-                          {!isMenuHotel && "Please select hotel"}
-                        </Text>
-                      </GridItem>
+                            <TriangleDownIcon />
+                          </HStack>
+                        </MenuButton>
+                        <MenuList>
+                          <VStack spacing={2}>
+                            {tourDetail?.hotels && tourDetail?.hotels.map((hotel, index) => (
+                              <Button height={{ base: '70px' }} width={{ base: 'full' }} onClick={() => setPrivateOptions('hotel', hotel._id, hotel.name)}>
+                                <PrivateOptions index={index} name={hotel.name} image={hotel.thumbnail} />
+                              </Button>
+                            ))}
+                          </VStack>
+                        </MenuList>
+                      </Menu>
+                      <Text textAlign="center" color="red">
+                        {!isMenuHotel && "Please select hotel"}
+                      </Text>
+                    </GridItem>
 
-                      <GridItem>
-                        <Menu
-                          autoSelect={false} computePositionOnMount placement="bottom-start" >
-                          <MenuButton
-                            width="full"
-                            height="40px"
-                            background="#fff"
-                            borderRadius="999px"
-                            padding="8px 12px"
-                            fontWeight="bold"
-                          >
-                            <HStack justifyContent="space-between">
-                              <HStack fontSize="md" alignItems="center">
-                                <Text fontSize="2xl">
-                                  <FaBus />
-                                </Text>
-                                <Text>
-                                  {transport?.name !== '' ? transport.name : 'Select transportation'}
-                                </Text>
-                              </HStack>
-                              <TriangleDownIcon />
+                    <GridItem>
+                      <Menu
+                        autoSelect={false} computePositionOnMount placement="bottom-start" >
+                        <MenuButton
+                          width="full"
+                          height="40px"
+                          background="#fff"
+                          borderRadius="999px"
+                          padding="8px 12px"
+                          fontWeight="bold"
+                        >
+                          <HStack justifyContent="space-between">
+                            <HStack fontSize="md" alignItems="center">
+                              <Text fontSize="2xl">
+                                <FaBus />
+                              </Text>
+                              <Text>
+                                {transport?.name !== '' ? transport.name : 'Select transportation'}
+                              </Text>
                             </HStack>
-                          </MenuButton>
-                          <MenuList>
-                            <VStack spacing={2}>
-                              {tourDetail?.transports && tourDetail?.transports.map((transport, index) => (
-                                <Button height={{ base: '70px' }} width={{ base: 'full' }} onClick={() => setPrivateOptions('transport', transport._id, transport.name)}>
-                                  <PrivateOptions index={index} name={transport.name} image={transport.image} />
-                                </Button>
-                              ))}
-                            </VStack>
-                          </MenuList>
-                        </Menu>
-                        <Text textAlign="center" color="red">
-                          {!isMenuTransport && "Please select transport"}
-                        </Text>
-                      </GridItem>
-                    </>
-                  }
-                </SimpleGrid>
-                <Button flex={{ base: 1 }} paddingY='10px' width='full' colorScheme="teal" borderRadius="80px" onClick={handleCheckAvailability} >
+                            <TriangleDownIcon />
+                          </HStack>
+                        </MenuButton>
+                        <MenuList>
+                          <VStack spacing={2}>
+                            {tourDetail?.transports && tourDetail?.transports.map((transport, index) => (
+                              <Button height={{ base: '70px' }} width={{ base: 'full' }} onClick={() => setPrivateOptions('transport', transport._id, transport.name)}>
+                                <PrivateOptions index={index} name={transport.name} image={transport.image} />
+                              </Button>
+                            ))}
+                          </VStack>
+                        </MenuList>
+                      </Menu>
+                      <Text textAlign="center" color="red">
+                        {!isMenuTransport && "Please select transport"}
+                      </Text>
+                    </GridItem>
+                  </>
+                }
+              </SimpleGrid>
+              <Button flex={{ base: 1 }} paddingY='10px' width='full' colorScheme="teal" borderRadius="80px" onClick={handleCheckAvailability} >
+                Check availability
+              </Button>
+            </Stack>
+          </Box>
+          <Box
+            width="full"
+            height="fit-content"
+            border="2px solid teal"
+            borderRadius="15px"
+            display={availability ? "block" : "none"}
+          >
+            <VStack align="flex-start">
+              <VStack
+                fontWeight='500'
+                align="flex-start"
+                width="full"
+                padding="24px 24px 0px"
+                _after={{
+                  content: "''",
+                  width: "full",
+                  height: "2px",
+                  marginTop: "10px",
+                  color: "#ccc",
+                  background: "#ccc",
+                }}
+              >
+                <Text fontSize="2xl" fontWeight="bold">
+                  {tourDetail?.title}{privateTour && ' (Private)'}
+                </Text>
+                <HStack>
+                  <PiClockCountdownBold size="1.5rem" />
+                  <Text fontSize="md">
+                    Duration: {tourDetail?.duration} hours
+                  </Text>
+                </HStack>
+                <HStack>
+                  <FaLocationDot size="1.5rem" />
+                  <Text fontSize="md">Meet at {startLocation?.address} </Text>
+                </HStack>
+                {privateTour &&
+                  <>
+                    {hotel.name !== '' &&
+                      <HStack>
+                        <FaHotel size="1.5rem" />
+                        <Text fontSize="md"> {hotel.name} </Text>
+                      </HStack>
+                    }
+                    {transport.name !== '' &&
+                      <HStack>
+                        <FaBus size="1.5rem" />
+                        <Text fontSize="md"> {transport.name} </Text>
+                      </HStack>
+                    }
+                  </>
+                }
+              </VStack>
+              <VStack width="50%" align="flex-start" margin="16px 24px 24px">
+                <Text fontSize="xl" fontWeight="bold">
+                  Price breakdown
+                </Text>
+                {guestInfo.map((guest) => (
+                  <HStack
+                    key={guest.title}
+                    width="100%"
+                    justifyContent="space-between"
+                  >
+                    <Text fontWeight='500' fontSize="lg">
+                      {guest.title} {guest.quantity} x{" "}
+                      {formatCurrency(guest.price, tourDetail?.currency ?? '')}
+                    </Text>
+                    <Text fontWeight='500' fontSize="lg">{guest.price && formatCurrency(guest.price * guest.quantity, tourDetail?.currency ?? '')}</Text>
+                  </HStack>
+                ))}
+              </VStack>
+              <Box
+                width="full"
+                height="fit-content"
+                background="#EBEEF1"
+                padding="24px 20px"
+                borderBottomRadius="15px"
+              >
+                <HStack justify="space-between" padding="4px 8px">
+                  <VStack align="flex-start">
+                    <Text fontSize="md" fontWeight="bold">
+                      Total price
+                    </Text>
+                    <Text fontSize="2xl" fontWeight="bold">
+                      {totalPrice !== 0 ? `${totalPrice && formatCurrency(totalPrice, tourDetail?.currency ?? '')}` : ""}
+                    </Text>
+                  </VStack>
+                  <HStack>
+                    <Button color='#fff' colorScheme="teal" onClick={handleAddToCart} isLoading={isLoading}>
+                      Add to cart
+                    </Button>
+                    <Button color='#fff' colorScheme="teal" onClick={handleBookNow} isLoading={isLoading}>
+                      Book now
+                    </Button>
+                  </HStack>
+                </HStack>
+              </Box>
+            </VStack>
+          </Box>
+        </VStack>
+        <VStack alignSelf="flex-start" width="full" flex={1}>
+          <VStack
+            width="100%"
+            align="flex-start"
+            padding={4}
+            border="3px solid #DCDFE4"
+            borderTopColor="teal"
+            borderRadius={2}
+            spacing={0}
+          >
+            <SimpleGrid columns={{ base: 1, xl: 2 }} alignItems='center' width='full'>
+              <GridItem>
+                <Text>From</Text>
+                <Text fontSize="2xl" fontWeight={700} flex={2}>
+                  {tourDetail?.regularPrice && formatCurrency(tourDetail?.regularPrice, tourDetail?.currency ?? '')}
+                </Text>
+                <Text>per person</Text>
+              </GridItem>
+              <GridItem width='full'>
+                <Button
+                  colorScheme="teal"
+                  borderRadius="80px"
+                  display={{ base: 'none', lg: 'block' }}
+                  textAlign='center'
+                  paddingX={8}
+                  width="full"
+                  flex={1}
+                  alignSelf='center'
+                  marginTop='24px'
+                >
                   Check availability
                 </Button>
-              </Stack>
-            </Box>
-            <Box
-              width="full"
-              height="fit-content"
-              border="2px solid teal"
-              borderRadius="15px"
-              display={availability ? "block" : "none"}
-            >
-              <VStack align="flex-start">
-                <VStack
-                  fontWeight='500'
-                  align="flex-start"
-                  width="full"
-                  padding="24px 24px 0px"
-                  _after={{
-                    content: "''",
-                    width: "full",
-                    height: "2px",
-                    marginTop: "10px",
-                    color: "#ccc",
-                    background: "#ccc",
-                  }}
-                >
-                  <Text fontSize="2xl" fontWeight="bold">
-                    {tourDetail?.title}{privateTour && ' (Private)'}
-                  </Text>
-                  <HStack>
-                    <PiClockCountdownBold size="1.5rem" />
-                    <Text fontSize="md">
-                      Duration: {tourDetail?.duration} hours
-                    </Text>
-                  </HStack>
-                  <HStack>
-                    <FaLocationDot size="1.5rem" />
-                    <Text fontSize="md">Meet at {startLocation?.address} </Text>
-                  </HStack>
-                  {privateTour &&
-                    <>
-                      {hotel.name !== '' &&
-                        <HStack>
-                          <FaHotel size="1.5rem" />
-                          <Text fontSize="md"> {hotel.name} </Text>
-                        </HStack>
-                      }
-                      {transport.name !== '' &&
-                        <HStack>
-                          <FaBus size="1.5rem" />
-                          <Text fontSize="md"> {transport.name} </Text>
-                        </HStack>
-                      }
-                    </>
-                  }
-                </VStack>
-                <VStack width="50%" align="flex-start" margin="16px 24px 24px">
-                  <Text fontSize="xl" fontWeight="bold">
-                    Price breakdown
-                  </Text>
-                  {guestInfo.map((guest) => (
-                    <HStack
-                      key={guest.title}
-                      width="100%"
-                      justifyContent="space-between"
-                    >
-                      <Text fontWeight='500' fontSize="lg">
-                        {guest.title} {guest.quantity} x{" "}
-                        {formatCurrency(guest.price, tourDetail?.currency ?? '')}
-                      </Text>
-                      <Text fontWeight='500' fontSize="lg">{guest.price && formatCurrency(guest.price * guest.quantity, tourDetail?.currency ?? '')}</Text>
-                    </HStack>
-                  ))}
-                </VStack>
-                <Box
-                  width="full"
-                  height="fit-content"
-                  background="#EBEEF1"
-                  padding="24px 20px"
-                  borderBottomRadius="15px"
-                >
-                  <HStack justify="space-between" padding="4px 8px">
-                    <VStack align="flex-start">
-                      <Text fontSize="md" fontWeight="bold">
-                        Total price
-                      </Text>
-                      <Text fontSize="2xl" fontWeight="bold">
-                        {totalPrice !== 0 ? `${totalPrice && formatCurrency(totalPrice, tourDetail?.currency ?? '')}` : ""}
-                      </Text>
-                    </VStack>
-                    <HStack>
-                      <Button color='#fff' colorScheme="teal" onClick={handleAddToCart} isLoading={isLoading}>
-                        Add to cart
-                      </Button>
-                      <Button color='#fff' colorScheme="teal" onClick={handleBookNow} isLoading={isLoading}>
-                        Book now
-                      </Button>
-                    </HStack>
-                  </HStack>
-                </Box>
-              </VStack>
-            </Box>
+              </GridItem>
+            </SimpleGrid>
+            <HStack marginTop="24px !important" spacing={6}>
+              <Icon iconName="card.svg" size={40} />
+              <Text fontSize="sm">
+                Reserve now & pay later to book your spot and pay nothing
+                today
+              </Text>
+            </HStack>
           </VStack>
-          <VStack alignSelf="flex-start" width="full" flex={1}>
-            <VStack
-              width="100%"
-              align="flex-start"
-              padding={4}
-              border="3px solid #DCDFE4"
-              borderTopColor="teal"
-              borderRadius={2}
-              spacing={0}
-            >
-              <SimpleGrid columns={{ base: 1, xl: 2 }} alignItems='center' width='full'>
-                <GridItem>
-                  <Text>From</Text>
-                  <Text fontSize="2xl" fontWeight={700} flex={2}>
-                    {tourDetail?.regularPrice && formatCurrency(tourDetail?.regularPrice, tourDetail?.currency ?? '')}
-                  </Text>
-                  <Text>per person</Text>
-                </GridItem>
-                <GridItem width='full'>
-                  <Button
-                    colorScheme="teal"
-                    borderRadius="80px"
-                    display={{ base: 'none', lg: 'block' }}
-                    textAlign='center'
-                    paddingX={8}
-                    width="full"
-                    flex={1}
-                    alignSelf='center'
-                    marginTop='24px'
-                  >
-                    Check availability
-                  </Button>
-                </GridItem>
-              </SimpleGrid>
-              <HStack marginTop="24px !important" spacing={6}>
-                <Icon iconName="card.svg" size={40} />
-                <Text fontSize="sm">
-                  Reserve now & pay later to book your spot and pay nothing
-                  today
-                </Text>
-              </HStack>
-            </VStack>
-          </VStack>
-        </Stack>
-        <Divider borderColor="#888" />
-        <Title text='Customer reviews' />
-        <TourReviews tourId={`${tourDetail?._id}`} ratingAverage={tourDetail?.ratingAverage ?? 0} numOfRating={tourDetail?.numOfRating ?? 0} />
-      </VStack>
-    </PageLayout>
+        </VStack>
+      </Stack>
+      <Divider borderColor="#888" />
+      <Title text='Customer reviews' />
+      <TourReviews tourId={`${tourDetail?._id}`} ratingAverage={tourDetail?.ratingAverage ?? 0} numOfRating={tourDetail?.numOfRating ?? 0} />
+    </VStack>
   );
 };
 

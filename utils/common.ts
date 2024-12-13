@@ -10,12 +10,20 @@ export function getValidArray<T>(array?: T[]): T[] {
   return checkValidArray<T>(array) ? array || [] : []
 }
 
-export function getAccessToken(platform: PLATFORM): string {
-  if (localStorage || sessionStorage) {
-    return localStorage?.getItem(`${platform}Token`) ?? sessionStorage?.getItem(`${platform}Token`) ?? '';
-  }
-  return ''
-}
+// export function getAccessToken(platform: PLATFORM): string {
+//   try {
+//     if (typeof window !== 'undefined') {
+//       const token =
+//         localStorage.getItem(`${platform}Token`) ||
+//         sessionStorage.getItem(`${platform}Token`);
+//       return token || '';
+//     }
+//   } catch (error) {
+//     console.error('Error accessing localStorage or sessionStorage:', error);
+//   }
+//   return '';
+// }
+
 
 export function getOptions<T>(array: T[], labelKey: string, valueKey: string): IOption[] {
   return getValidArray(array).map(option => ({

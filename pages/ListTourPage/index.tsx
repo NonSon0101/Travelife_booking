@@ -19,7 +19,7 @@ import { TbAdjustmentsHorizontal } from "react-icons/tb";
 const ListTourPage = () => {
 
   const { tourStore, locationStore } = useStores();
-  const { tours, totalCount} = tourStore;
+  const { tours, totalCount } = tourStore;
   const { locationDetail } = locationStore;
   const [pageIndex, setPageIndex] = useState<number>(1)
   const [filterOptions, setFliterOptions] = useState<IApplyFilter>({} as IApplyFilter)
@@ -66,7 +66,7 @@ const ListTourPage = () => {
 
   async function handleSort(sortOption: string) {
     let sortFilter = '';
-    
+
     switch (sortOption) {
       case 'recommeded':
         sortFilter = ''
@@ -91,7 +91,7 @@ const ListTourPage = () => {
   }
 
   return (
-    <PageLayout >
+    < >
       <Box
         width="full"
         boxShadow="md"
@@ -196,7 +196,7 @@ const ListTourPage = () => {
         setFliterOptions={setFliterOptions}
         filterOptions={filterOptions}
       />
-    </PageLayout>
+    </>
   )
 }
 

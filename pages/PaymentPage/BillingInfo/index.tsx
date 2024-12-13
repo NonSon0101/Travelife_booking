@@ -15,16 +15,16 @@ const BillingInfo = (props: IBillingInfo) => {
       <Title text='Your billing details' />
       <HStack fontSize='md' fontWeight='bold' width='full' justify='space-between'>
         <Text>Name: </Text>
-        <Text>{bookingDetail.personalInfo.name}</Text>
+        <Text>{bookingDetail?.personalInfo?.name ?? ''}</Text>
       </HStack>
       <HStack fontSize='md' fontWeight='bold' width='full' justify='space-between'>
         <Text>Phone Number: </Text>
-        <Text>{bookingDetail.personalInfo.phone}</Text>
+        <Text>{bookingDetail?.personalInfo?.phone ?? ''}</Text>
       </HStack>
-      {bookingDetail.checkoutOrder && bookingDetail.checkoutOrder.totalOrder && (
+      {bookingDetail?.checkoutOrder && bookingDetail?.checkoutOrder?.totalOrder && (
         <HStack fontSize='xl' fontWeight='bold' width='full' justify='space-between'>
           <Text>Total Order: </Text>
-          <Text>{formatCurrency(bookingDetail.checkoutOrder.totalPrice, currentCurrency)}</Text>
+          <Text>{formatCurrency(bookingDetail?.checkoutOrder?.totalPrice, currentCurrency)}</Text>
         </HStack>
       )}
     </VStack>

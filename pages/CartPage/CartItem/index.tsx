@@ -51,6 +51,7 @@ type Value = ValuePiece | [ValuePiece, ValuePiece];
 const CartItem = (props: ICartItem) => {
   const { tour, idCart, currentCurrency } = props;
   const route = useRouter()
+  const [userId, setUserId] = useState<string>('')
   const [convertDate, setConvertDate] = useState<string>();
   const [tourPrice, setTourPrice] = useState<number>(0);
   const [prevPrice, setPrevPrice] = useState<number>(0);
@@ -58,7 +59,7 @@ const CartItem = (props: ICartItem) => {
   const [guestInfo, setGuestInfo] = useState<IParticipants[]>([]);
   const [selectedDate, setSelectedDate] = useState<Value>(null);
   const [showDate, setShowDate] = useState<string[]>([]);
-  const [updateDate, setUpdateDate] = useState<string>(tour.startDate);
+  const [updateDate, setUpdateDate] = useState<string>(tour?.startDate ?? '');
 
   const [type, setType] = useState<string>("");
   const [quantity, setQuantity] = useState<number>(0);
@@ -66,13 +67,13 @@ const CartItem = (props: ICartItem) => {
   const [initialMount, setInitialMount] = useState(true);
   const [checked, setChecked] = useState<boolean>(false);
   const [hotel, setHotel] = useState<{ id: string, name: string }>(
-    tour.hotels && tour.hotels.length > 0
-      ? { id: tour.hotels[0]._id, name: tour.hotels[0].name }
+    tour?.hotels && tour?.hotels?.length > 0
+      ? { id: tour?.hotels[0]._id, name: tour?.hotels[0]?.name }
       : { id: '', name: '' }
   );
   const [transport, setTransport] = useState<{ id: string, name: string }>(
-    tour.transports && tour.transports.length > 0
-      ? { id: tour.transports[0]._id, name: tour.transports[0].name }
+    tour?.transports && tour?.transports?.length > 0
+      ? { id: tour?.transports[0]?._id, name: tour?.transports[0]?.name }
       : { id: '', name: '' }
   );
 
@@ -82,20 +83,25 @@ const CartItem = (props: ICartItem) => {
   const { tourDetail } = tourStore
 
   useEffect(() => {
-    tourStore.fetchTourDetail(tour.tour._id)
-  }, [tour.tour._id])
+    tourStore.fetchTourDetail(tour?.tour?._id)
+  }, [tour?.tour?._id])
 
   useEffect(() => {
-    const filteredTours = tour.participants.map((tour) => ({
-      title: tour.title,
-      quantity: tour.quantity,
-      price: tour.price,
+    const id = localStorage?.getItem(`${PLATFORM.WEBSITE}UserId`) ?? ''
+    setUserId(id)
+  }, [])
+
+  useEffect(() => {
+    const filteredTours = tour?.participants.map((tour) => ({
+      title: tour?.title,
+      quantity: tour?.quantity,
+      price: tour?.price,
     }));
     setGuestInfo(filteredTours);
-  }, [tour.participants]);
+  }, [tour?.participants]);
 
   useEffect(() => {
-    const timeStamp: string = tour.startDate;
+    const timeStamp: string = tour?.startDate ?? '';
     const date: Date = new Date(timeStamp);
     const formattedDate: string = date.toLocaleDateString("en-GB", {
       day: "2-digit",
@@ -103,17 +109,17 @@ const CartItem = (props: ICartItem) => {
       year: "numeric",
     });
     setConvertDate(formattedDate);
-  }, [tour.startDate]);
+  }, [tour?.startDate]);
 
   useEffect(() => {
     let totalPrice = 0;
 
-    tour.participants.forEach((tour) => {
-      totalPrice += tour.price * tour.quantity;
+    tour?.participants.forEach((tour) => {
+      totalPrice += tour?.price * tour?.quantity;
     });
 
     setTourPrice(totalPrice);
-  }, [tour.participants]);
+  }, [tour?.participants]);
 
   useEffect(() => {
     if (!initialMount) {
@@ -172,57 +178,54 @@ const CartItem = (props: ICartItem) => {
   }
 
   function handleCommand() {
-    if (localStorage) {
-      const userId = localStorage?.getItem(`${PLATFORM.WEBSITE}UserId`);
-      if (userId) {
-        if (editTour) {
-          if (guestInfo.length == 0) {
-            toast.warn("Please select at least 1 participant")
-            return
-          }
-          const data: IUpdateToCart = {
-            user: userId,
-            tour: {
-              itemId: tour._id,
-              startDate: updateDate,
-              startTime: "7h00",
-              participants: guestInfo,
-            },
-          };
-          if (tour.isPrivate) {
-            data.tour = {
-              ...data.tour,
-              isPrivate: true,
-              transports: [transport.id],
-              hotels: [hotel.id]
-            }
-          }
-          cartStore.updateCart(data);
-          handleEditTour();
-          toast
-        } else {
-          const data: IDeleteCart = {
-            cart: listCart._id,
-            itemId: idCart,
-          };
-          cartStore.deleteCart(data);
-          route.refresh()
+    if (userId) {
+      if (editTour) {
+        if (guestInfo.length == 0) {
+          toast.warn("Please select at least 1 participant")
+          return
         }
+        const data: IUpdateToCart = {
+          user: userId,
+          tour: {
+            itemId: tour?._id,
+            startDate: updateDate,
+            startTime: "7h00",
+            participants: guestInfo,
+          },
+        };
+        if (tour?.isPrivate) {
+          data.tour = {
+            ...data.tour,
+            isPrivate: true,
+            transports: [transport.id],
+            hotels: [hotel.id]
+          }
+        }
+        cartStore.updateCart(data);
+        handleEditTour();
+        toast
+      } else {
+        const data: IDeleteCart = {
+          cart: listCart._id,
+          itemId: idCart,
+        };
+        cartStore.deleteCart(data);
+        route.refresh()
       }
     }
   }
 
   const setSelected = (): void => {
     const data: ISelectedCart = {
-      tour: tour.tour._id,
-      startDate: tour.startDate,
+      tour: tour?.tour?._id,
+      startDate: tour?.startDate ?? '',
     };
 
     cartStore.setSelectedCart(data);
   };
 
   const notSetSelected = (): void => {
-    cartStore.unSetSelectedCart(tour._id);
+    cartStore.unSetSelectedCart(tour?._id);
   };
 
   const handleCheckboxChange = (
@@ -309,11 +312,11 @@ const CartItem = (props: ICartItem) => {
             fontWeight="600"
           >
             <Link
-              href={`/tour-detail/${tour.tour._id}`}
+              href={`/tour-detail/${tour?.tour?._id}`}
               _hover={{ textDecoration: "none" }}
             >
               <Text fontSize="xl" fontWeight="bold">
-                {tour.tour.title}{tour.isPrivate ? ' (Private)' : ''}
+                {tour?.tour?.title}{tour?.isPrivate ? ' (Private)' : ''}
               </Text>
             </Link>
             <HStack>
@@ -326,14 +329,14 @@ const CartItem = (props: ICartItem) => {
                   <HStack>
                     <IoTimerOutline />
                     <Text>
-                      {convertDate} {tour.startTime}
+                      {convertDate} {tour?.startTime}
                     </Text>
                   </HStack>
-                  {tour.isPrivate &&
+                  {tour?.isPrivate &&
                     <HStack>
                       <FaHotel />
                       <Text>
-                        {tour.hotels[0].name}
+                        {tour?.hotels[0]?.name}
                       </Text>
                     </HStack>
                   }
@@ -376,7 +379,7 @@ const CartItem = (props: ICartItem) => {
                       </HStack>
                     </MenuList>
                   </Menu>
-                  {tour.isPrivate &&
+                  {tour?.isPrivate &&
                     <Menu
                       autoSelect={false}
                       computePositionOnMount
@@ -421,17 +424,17 @@ const CartItem = (props: ICartItem) => {
                 <HStack width='full' justifyContent='space-between'>
                   <HStack>
                     <MdPeopleAlt />
-                    {tour.participants.map((participant) => (
+                    {tour?.participants.map((participant) => (
                       <Text key={participant.title}>
                         {participant.quantity} {participant.title}
                       </Text>
                     ))}
                   </HStack>
-                  {tour.isPrivate &&
+                  {tour?.isPrivate &&
                     <HStack>
                       <FaBus />
                       <Text>
-                        {tour.transports[0].name}
+                        {tour?.transports[0].name}
                       </Text>
                     </HStack>
                   }
@@ -471,9 +474,9 @@ const CartItem = (props: ICartItem) => {
                       </MenuButton>
                     </VStack>
                     <MenuList minWidth="320px" padding="4px 10px">
-                      {tourDetail?.priceOptions?.filter((participant) => tour.isPrivate ? participant.participantsCategoryIdentifier === "Private" : !participant.participantsCategoryIdentifier)
+                      {tourDetail?.priceOptions?.filter((participant) => tour?.isPrivate ? participant.participantsCategoryIdentifier === "Private" : !participant.participantsCategoryIdentifier)
                         .map((participant, index) => {
-                          const foundParticipant = tour.participants.filter(p => p.title === participant.title);
+                          const foundParticipant = tour?.participants.filter(p => p.title === participant.title);
                           const quantity = foundParticipant[0]?.quantity ?? 0
                           return (
                             <MenuItem
@@ -489,7 +492,7 @@ const CartItem = (props: ICartItem) => {
                         })}
                     </MenuList>
                   </Menu>
-                  {tour.isPrivate &&
+                  {tour?.isPrivate &&
                     <Menu
                       autoSelect={false} computePositionOnMount placement="bottom-start" >
                       <MenuButton

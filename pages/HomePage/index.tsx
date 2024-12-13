@@ -25,14 +25,13 @@ const theme = extendTheme({ breakpoints });
 const HomePage = () => {
   const pathname = usePathname()
   const searchParams = useSearchParams()
+  const userId = searchParams?.get('userId')
+  const accessToken = searchParams?.get('accessToken')
   const route = useRouter();
   const { tourStore, authStore } = useStores();
   const { tours } = tourStore;
 
   useEffect(() => {
-
-    const userId = searchParams?.get('userId')
-    const accessToken = searchParams?.get('accessToken')
     const platform = PLATFORM.WEBSITE
 
     if (userId && accessToken && localStorage) {
@@ -40,11 +39,11 @@ const HomePage = () => {
       localStorage?.setItem(`${platform}Token`, accessToken);
     }
     if (userId) {
-      authStore.getUserbyId(PLATFORM.WEBSITE)
+      authStore.getUserById(PLATFORM.WEBSITE)
       route.push('/')
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname, searchParams]);
+  }, [userId, accessToken]);
 
   useEffect(() => {
     tourStore.fetchActiveTours();

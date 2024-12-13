@@ -31,7 +31,7 @@ const ForgotPasswordModal = (props: IForgotPassModalProps) => {
   async function onSubmit(data: FieldValues): Promise<void> {
     try {
       setIsLoading(true)
-      await authStore.fogotPassword(data.email)
+      await authStore.forgotPassword(data.email)
       setIsLoading(false)
       onClose()
       toast.success('An email has been sent to you, please check your email to reset password')

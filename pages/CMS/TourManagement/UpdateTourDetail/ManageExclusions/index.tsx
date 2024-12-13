@@ -35,7 +35,11 @@ export const ManageText = chakra(Text, {
 
 const ManageExclusions = (props: IManageExclusionsProps) => {
   const { isOpen, onClose, methods } = props
-  const { control, register } = methods
+  const { control, register } = methods || {};
+  if (!control || !register) {
+    return <Text>Error: Missing form methods</Text>;
+  }
+
   const { fields, append, remove } = useFieldArray({ control, name: 'exclusions' })
 
   return (

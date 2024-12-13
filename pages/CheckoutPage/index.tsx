@@ -10,7 +10,6 @@ import { observer } from "mobx-react";
 import { useRouter } from "next/navigation";
 import routes from "routes";
 import { toast } from 'react-toastify'
-import PageLayout from "components/Layout/WebLayout/PageLayout";
 import BookingStatus from "../../components/BookingStatus";
 import TextField from "components/TextField";
 import OrderItem from "./OrderItem";
@@ -76,7 +75,7 @@ const CheckoutPage = () => {
     route.push(routes.booking.contact)
     setIsLoadingContinue(false)
   }
-  
+
   const handleChangeText = (event: ChangeEvent<HTMLInputElement>) => {
     setCoupon(event.target.value);
   };
@@ -110,161 +109,159 @@ const CheckoutPage = () => {
   };
 
   return (
-    <PageLayout>
-      <VStack
-        minHeight="700px"
-        height="full"
-        maxWidth="1300px"
+    <VStack
+      minHeight="700px"
+      height="full"
+      maxWidth="1300px"
+      width="full"
+      padding="24px"
+    >
+      <BookingStatus currentPage="booking" />
+      <HStack
         width="full"
-        padding="24px"
+        justify="space-between"
+        marginTop="48px"
+        align="flex-start"
       >
-        <BookingStatus currentPage="booking" />
-        <HStack
+        <VStack
           width="full"
-          justify="space-between"
-          marginTop="48px"
+          flex="2"
+          paddingRight="32px"
           align="flex-start"
+          spacing={7}
         >
-          <VStack
-            width="full"
-            flex="2"
-            paddingRight="32px"
-            align="flex-start"
-            spacing={7}
-          >
-            <Title text='Your order' />
+          <Title text='Your order' />
 
-            {checkout &&
-              checkout.map((tour) => (
-                <OrderItem
-                  key={tour.tour._id}
-                  tour={tour}
-                  currentCurrency={currentCurrecy}
-                  discountitem={itemPrice.filter(
-                    (item) => item.tour.tourId === tour.tour._id
-                  )}
-                />
-              ))}
-          </VStack>
+          {checkout &&
+            checkout.map((tour) => (
+              <OrderItem
+                key={tour.tour._id}
+                tour={tour}
+                currentCurrency={currentCurrecy}
+                discountitem={itemPrice.filter(
+                  (item) => item.tour.tourId === tour.tour._id
+                )}
+              />
+            ))}
+        </VStack>
+        <VStack
+          position="relative"
+          align="flex-start"
+          flex="1"
+          marginLeft="48px"
+        >
+          <Title text='Total order' />
+
           <VStack
             position="relative"
+            width="full"
+            border="2px solid #ccc"
+            padding="32px"
+            bg="#fff"
+            boxShadow="lg"
+            borderRadius="8px"
             align="flex-start"
-            flex="1"
-            marginLeft="48px"
+            fontSize="lg"
+            fontWeight="600"
+            spacing={10}
           >
-            <Title text='Total order' />
-
-            <VStack
-              position="relative"
+            <Box
               width="full"
-              border="2px solid #ccc"
-              padding="32px"
-              bg="#fff"
-              boxShadow="lg"
-              borderRadius="8px"
-              align="flex-start"
-              fontSize="lg"
-              fontWeight="600"
-              spacing={10}
+              _after={{
+                position: "absolute",
+                content: "''",
+                width: "84%",
+                height: "2px",
+
+                background: "#ccc",
+                overflow: "hidden",
+              }}
             >
-              <Box
-                width="full"
-                _after={{
-                  position: "absolute",
-                  content: "''",
-                  width: "84%",
-                  height: "2px",
-
-                  background: "#ccc",
-                  overflow: "hidden",
-                }}
-              >
-                <HStack fontSize="xl" width="full" justify="space-between">
-                  <Text>{checkout.length > 1 ? 'Total items' : "Total item"}</Text>
-                  <Text>{checkout.length}</Text>
-                </HStack>
-              </Box>
-
-              <Box
-                width="full"
-                _after={{
-                  position: "absolute",
-                  content: "''",
-                  width: "84%",
-                  height: "2px",
-
-                  background: "#ccc",
-                  overflow: "hidden",
-                }}
-              >
-                <HStack fontSize="xl" width="full" justify="space-between">
-                  <Text>Total price</Text>
-                  <VStack align='flex-end'>
-                    <Text fontSize="2xl" color="#396973">
-                      {itemPrice && itemPrice.length !== 0
-                        ? order.totalOrder && formatCurrency(order.totalOrder - order.discount, currentCurrecy) :
-                        order.totalOrder && formatCurrency(order.totalOrder, currentCurrecy)}
-                    </Text>
-                    <Text
-                      fontSize="sm"
-                      textDecoration="line-through"
-                      opacity="0.5"
-                    >
-                      {itemPrice && itemPrice.length !== 0
-                        ? order.totalOrder && formatCurrency(order.totalOrder, currentCurrecy)
-                        : ""}
-                    </Text>
-                  </VStack>
-                </HStack>
-              </Box>
-              {itemPrice.length > 0 && (
-                <>
-                  <HStack
-                    width="full"
-                    justify="space-between"
-                    padding="2px"
-                    border="2px dashed #ccc"
-                    fontSize="sm"
-                  // visible="false"
-                  >
-                    {" "}
-                    <Text>Applied coupon: {coupon}</Text>
-                    <Button
-                      background="transparent"
-                      _hover={{ background: "transparent", opacity: "0.5" }}
-                      onClick={() => handleApplyCoupon(true)}
-                    >
-                      X
-                    </Button>{" "}
-                  </HStack>
-                </>
-              )}
-              <HStack width="full" justify="space-between">
-                <TextField
-                  placeholder="Enter coupon"
-                  flex="2"
-                  value={coupon}
-                  onChange={handleChangeText}
-                />
-                <Button
-                  color="#fff"
-                  bg="#64CCC5"
-                  paddingY="12px"
-                  flex={1}
-                  onClick={() => handleApplyCoupon(false)}
-                  isLoading={isLoading}
-                >
-                  Apply
-                </Button>
+              <HStack fontSize="xl" width="full" justify="space-between">
+                <Text>{checkout.length > 1 ? 'Total items' : "Total item"}</Text>
+                <Text>{checkout.length}</Text>
               </HStack>
-              <Button color="#fff" bg="#64CCC5" isLoading={isLoadingContinue} width="full" onClick={handleGoToContactPage}>
-                Confirm and continue
+            </Box>
+
+            <Box
+              width="full"
+              _after={{
+                position: "absolute",
+                content: "''",
+                width: "84%",
+                height: "2px",
+
+                background: "#ccc",
+                overflow: "hidden",
+              }}
+            >
+              <HStack fontSize="xl" width="full" justify="space-between">
+                <Text>Total price</Text>
+                <VStack align='flex-end'>
+                  <Text fontSize="2xl" color="#396973">
+                    {itemPrice && itemPrice.length !== 0
+                      ? order.totalOrder && formatCurrency(order.totalOrder - order.discount, currentCurrecy) :
+                      order.totalOrder && formatCurrency(order.totalOrder, currentCurrecy)}
+                  </Text>
+                  <Text
+                    fontSize="sm"
+                    textDecoration="line-through"
+                    opacity="0.5"
+                  >
+                    {itemPrice && itemPrice.length !== 0
+                      ? order.totalOrder && formatCurrency(order.totalOrder, currentCurrecy)
+                      : ""}
+                  </Text>
+                </VStack>
+              </HStack>
+            </Box>
+            {itemPrice.length > 0 && (
+              <>
+                <HStack
+                  width="full"
+                  justify="space-between"
+                  padding="2px"
+                  border="2px dashed #ccc"
+                  fontSize="sm"
+                // visible="false"
+                >
+                  {" "}
+                  <Text>Applied coupon: {coupon}</Text>
+                  <Button
+                    background="transparent"
+                    _hover={{ background: "transparent", opacity: "0.5" }}
+                    onClick={() => handleApplyCoupon(true)}
+                  >
+                    X
+                  </Button>{" "}
+                </HStack>
+              </>
+            )}
+            <HStack width="full" justify="space-between">
+              <TextField
+                placeholder="Enter coupon"
+                flex="2"
+                value={coupon}
+                onChange={handleChangeText}
+              />
+              <Button
+                color="#fff"
+                bg="#64CCC5"
+                paddingY="12px"
+                flex={1}
+                onClick={() => handleApplyCoupon(false)}
+                isLoading={isLoading}
+              >
+                Apply
               </Button>
-            </VStack>
+            </HStack>
+            <Button color="#fff" bg="#64CCC5" isLoading={isLoadingContinue} width="full" onClick={handleGoToContactPage}>
+              Confirm and continue
+            </Button>
           </VStack>
-        </HStack>
-      </VStack>
-    </PageLayout>
+        </VStack>
+      </HStack>
+    </VStack>
   );
 };
 

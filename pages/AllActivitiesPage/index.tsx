@@ -22,6 +22,7 @@ import CustomMenuButton from "./CustomMenuButton"
 const AllActivitiesPage = () => {
   const pathname = usePathname()
   const searchParams = useSearchParams()
+  const search = searchParams?.get('search')
   const { tourStore } = useStores()
   const { tours, totalCount } = tourStore;
   const [searchResult, setSearchResult] = useState<string>("");
@@ -34,11 +35,10 @@ const AllActivitiesPage = () => {
   const pagination: IPagination = { pageIndex, tableLength: totalCount, gotoPage: setPageIndex }
 
   useEffect(() => {
-    const search = searchParams?.get('search')
     if (search) {
       setSearchResult(search)
     }
-  }, [pathname, searchParams])
+  }, [search])
 
   useEffect(() => {
     tourStore.fetchActiveTours(pageIndex);
@@ -66,7 +66,7 @@ const AllActivitiesPage = () => {
 
   async function handleSort(sortOption: string) {
     let sortFilter = '';
-    
+
     switch (sortOption) {
       case 'recommeded':
         sortFilter = ''
@@ -89,10 +89,10 @@ const AllActivitiesPage = () => {
     }
     await tourStore.fetchActiveTours(pageIndex, sortFilter);
   }
-  
+
 
   return (
-    <PageLayout>
+    <>
       <VStack
         minHeight="700px"
         height="full"
@@ -172,7 +172,7 @@ const AllActivitiesPage = () => {
         setFliterOptions={setFliterOptions}
         filterOptions={filterOptions}
       />
-    </PageLayout>
+    </>
   )
 }
 

@@ -72,7 +72,7 @@ const ContactPage = () => {
   }
 
   return (
-    <PageLayout>
+    <>
       <VStack
         minHeight="700px"
         height="full"
@@ -143,7 +143,7 @@ const ContactPage = () => {
           </VStack>
         </HStack>
       </VStack>
-    </PageLayout>
+    </>
   );
 };
 

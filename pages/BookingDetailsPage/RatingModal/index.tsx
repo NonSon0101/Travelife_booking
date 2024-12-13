@@ -1,5 +1,5 @@
 "use client";
-import { useState, ChangeEvent } from 'react';
+import { useState, ChangeEvent, useEffect } from 'react';
 import {
   Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton,
   Button, Textarea, VStack, HStack, IconButton, Text, Image
@@ -24,27 +24,34 @@ const RatingModal = (props: IRatingModal) => {
   const { reviewStore } = useStores()
   const [rating, setRating] = useState<number>(0);
   const [comment, setComment] = useState<string>('');
+  const [userId, setUserId] = useState<string>('')
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const id = localStorage?.getItem(`${PLATFORM.WEBSITE}UserId`) ?? '';
+      setUserId(id);
+    }
+  }, []);
+
 
   const handleRating = (rate: number) => setRating(rate);
   const handleCommentChange = (e: ChangeEvent<HTMLTextAreaElement>) => setComment(e.target.value);
 
   const handleSubmit = async () => {
-    if (localStorage) {
-      const data: ICreateReview = {
-        user: localStorage?.getItem(`${PLATFORM.WEBSITE}UserId`) ?? '',
-        tour: tour._id ?? '',
-        rating: rating,
-        content: comment
-      }
-      try {
-        await reviewStore.createReview(data);
-        toast.success("Your feedback has been submitted!");
-        onClose();
-      } catch (error) {
-        console.error(error);
-        toast.error("Failed to submit feedback.");
-      }
-    }  
+    const data: ICreateReview = {
+      user: userId,
+      tour: tour._id ?? '',
+      rating: rating,
+      content: comment
+    }
+    try {
+      await reviewStore.createReview(data);
+      toast.success("Your feedback has been submitted!");
+      onClose();
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to submit feedback.");
+    }
   };
 
   return (

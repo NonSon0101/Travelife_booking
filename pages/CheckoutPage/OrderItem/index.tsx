@@ -19,17 +19,17 @@ const OrderItem = (props: IOderItem) => {
   const [totalPrice, setTotalPrice] = useState(0)
 
   useEffect(() => {
-    if (tour.participants.length === 0) {
+    if (tour?.participants?.length === 0) {
       setTotalPrice(0)
       return
     }
     let totalPrice: number = 0
 
-    tour.participants.forEach((guest) => {
-      totalPrice += guest.price * guest.quantity;
+    tour?.participants.forEach((guest) => {
+      totalPrice += guest?.price * guest?.quantity;
     });
     setTotalPrice(totalPrice);
-  }, [tour.participants]);
+  }, [tour?.participants]);
 
   return (
     <HStack
@@ -45,18 +45,18 @@ const OrderItem = (props: IOderItem) => {
       <Image
         width="200px"
         borderRadius="8px"
-        src={`${tour.tour.thumbnail}`}
+        src={`${tour?.tour?.thumbnail}`}
         alt="img"
       />
       <VStack align="flex-start">
         <Text fontSize="xl" fontWeight="bold">
-          {`${tour.tour.title}${tour.isPrivate ? ' (Private)' : ''}`}
+          {`${tour?.tour?.title}${tour?.isPrivate ? ' (Private)' : ''}`}
         </Text>
         <HStack>
           <Text color="#396973" fontSize="2xl" fontWeight="500">
-            {discountitem && discountitem.length !== 0
-              ? formatCurrency(discountitem[0].tour.totalPrice -
-                discountitem[0].tour.discountPrice, currentCurrency)
+            {discountitem && discountitem?.length !== 0
+              ? formatCurrency(discountitem[0]?.tour?.totalPrice -
+                discountitem[0]?.tour?.discountPrice, currentCurrency)
               : formatCurrency(totalPrice, currentCurrency)}
           </Text>
           <Text
@@ -66,8 +66,8 @@ const OrderItem = (props: IOderItem) => {
             textDecoration="line-through"
             opacity="0.55"
           >
-            {discountitem && discountitem.length !== 0
-              ? formatCurrency(discountitem[0].tour.totalPrice, currentCurrency)
+            {discountitem && discountitem?.length !== 0
+              ? formatCurrency(discountitem[0]?.tour?.totalPrice, currentCurrency)
               : ""}
           </Text>
         </HStack>
@@ -75,14 +75,14 @@ const OrderItem = (props: IOderItem) => {
           <HStack>
             <IoTimerOutline />
             <Text fontSize="md" fontWeight="bold">
-              {`${tour.startDate.slice(0, 10)}`}
+              {`${tour?.startDate.slice(0, 10)}`}
             </Text>
           </HStack>
-          {tour.isPrivate &&
+          {tour?.isPrivate &&
             <HStack>
               <FaHotel />
               <Text fontSize="md" fontWeight="bold" >
-                {tour.hotels[0]?.name}
+                {tour?.hotels[0]?.name}
               </Text>
             </HStack>
           }
@@ -90,17 +90,17 @@ const OrderItem = (props: IOderItem) => {
         <HStack width='full' justifyContent='space-between'>
           <HStack>
             <MdPeopleAlt />
-            {tour.participants.map((participant) => (
-              <Text fontSize="md" fontWeight="bold" key={participant.title}>
-                {participant.quantity} {participant.title}
+            {tour?.participants.map((participant) => (
+              <Text fontSize="md" fontWeight="bold" key={participant?.title}>
+                {participant?.quantity} {participant?.title}
               </Text>
             ))}
           </HStack>
-          {tour.isPrivate &&
+          {tour?.isPrivate &&
             <HStack>
               <FaBus />
               <Text fontSize="md" fontWeight="bold" >
-                {tour.transports[0]?.name}
+                {tour?.transports[0]?.name}
               </Text>
             </HStack>
           }

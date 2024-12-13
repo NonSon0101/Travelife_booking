@@ -23,7 +23,7 @@ const BookingPage = () => {
 
 
   return (
-    <PageLayout>
+    <>
       <VStack
         position='relative'
         minHeight="700px"
@@ -44,7 +44,7 @@ const BookingPage = () => {
           <Pagination pagination={pagination} pageSize={4} setPageSize={setPageSize} />
         </Box>
       </VStack>
-    </PageLayout>
+    </>
   );
 }
 

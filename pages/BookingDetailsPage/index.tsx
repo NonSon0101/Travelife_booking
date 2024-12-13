@@ -20,9 +20,9 @@ const BookingDetailsPage = () => {
   const { bookingDetail } = bookingStore
   const router = useRouter();
   const params = useParams();
-  const bookingId = Array.isArray(params?.bookingId) 
-        ? params.bookingId[0] 
-        : params?.bookingId;
+  const bookingId = Array.isArray(params?.bookingId)
+    ? params.bookingId[0]
+    : params?.bookingId;
   const [isOpenRatingModal, setIsOpenRatingModal] = useState<boolean>(false)
   const [tour, setTour] = useState<ITour>()
 
@@ -43,7 +43,7 @@ const BookingDetailsPage = () => {
   }, [bookingId])
 
   return (
-    <PageLayout>
+    <>
       <VStack
         minHeight="700px"
         height="full"
@@ -110,7 +110,7 @@ const BookingDetailsPage = () => {
         </VStack>
         <RatingModal tour={tour} isOpen={isOpenRatingModal} onClose={() => setIsOpenRatingModal(false)} />
       </VStack>
-    </PageLayout>
+    </>
   )
 }
 

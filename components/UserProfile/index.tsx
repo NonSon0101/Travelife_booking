@@ -7,7 +7,6 @@ import truncate from 'lodash/truncate'
 import { observer } from 'mobx-react'
 import { useRouter } from 'next/navigation'
 import routes from 'routes'
-import { getAccessToken } from 'utils/common'
 
 interface IUserProfileProps {
   platform: PLATFORM

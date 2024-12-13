@@ -15,6 +15,7 @@ const ForgotPassword = () => {
   const { authStore } = useStores();
   const pathname = usePathname()
   const searchParams = useSearchParams()
+  const token = searchParams?.get('token')
   const route = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [resetToken, setResetToken] = useState<string>('');
@@ -23,13 +24,10 @@ const ForgotPassword = () => {
   const { handleSubmit } = methods
 
   useEffect(() => {
-
-    const token = searchParams?.get('token')
     if (token) {
       setResetToken(token)
     }
-
-  }, [pathname, searchParams]);
+  }, [token]);
 
   async function onSubmit(data: IResetPasswordRequest) {
     try {

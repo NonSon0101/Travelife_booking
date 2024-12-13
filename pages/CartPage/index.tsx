@@ -52,7 +52,7 @@ const CartPage = () => {
   };
 
   return (
-    <PageLayout>
+    <>
       <HStack
         maxWidth="1400px"
         minHeight="700px"
@@ -123,7 +123,7 @@ const CartPage = () => {
           </VStack>
         )}
       </HStack>
-    </PageLayout>
+    </>
   );
 };
 

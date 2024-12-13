@@ -27,7 +27,7 @@
     "lodash": "^4.17.21",
     "mobx": "^6.12.0",
     "mobx-react": "^9.1.0",
-    "next": "14.2.13",
+    "next": "^14.2.13",
     "react": "^18",
     "react-apexcharts": "^1.7.0",
     "react-calendar": "^4.8.0",

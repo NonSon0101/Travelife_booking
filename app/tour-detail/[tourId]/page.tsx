@@ -1,8 +1,11 @@
+import PageLayout from 'components/Layout/WebLayout/PageLayout'
 import TourDetailPage from 'pages/TourDetailPage'
 
 const TourDetail = () => {
   return (
-    <TourDetailPage />
+    <PageLayout title={'Tour Details'}>
+      <TourDetailPage />
+    </PageLayout>
   )
 }
 

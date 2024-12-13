@@ -6,86 +6,92 @@ import omit from 'lodash/omit'
 import RootStore from 'stores'
 import { getUserById } from 'API/user'
 import { PLATFORM } from 'enums/common'
-import { getAccessToken } from 'utils/common'
+
+// Utility functions for localStorage and sessionStorage
+const getStorageItem = (key: string): string | null => {
+  if (typeof window !== 'undefined') {
+    return localStorage?.getItem(key) || sessionStorage?.getItem(key);
+  }
+  return null;
+};
+
+const setStorageItem = (key: string, value: string, isRemember: boolean): void => {
+  if (typeof window !== 'undefined') {
+    if (isRemember) {
+      localStorage?.setItem(key, value);
+    } else {
+      sessionStorage?.setItem(key, value);
+    }
+  }
+};
+
+const removeStorageItem = (key: string): void => {
+  if (typeof window !== 'undefined') {
+    localStorage?.removeItem(key);
+    sessionStorage?.removeItem(key);
+  }
+};
 
 export default class AuthStore {
-  rootStore: RootStore
-  token: string = ''
-  user: IUser = {} as IUser
-  isLogin: boolean = !!getAccessToken(PLATFORM.WEBSITE)
+  rootStore: RootStore;
+  token: string = '';
+  user: IUser = {} as IUser;
+  isLogin: boolean = !!getStorageItem(`${PLATFORM.WEBSITE}Token`);
 
   constructor(rootStore: RootStore) {
-    makeAutoObservable(this, { rootStore: false, token: false })
-    this.rootStore = rootStore
+    makeAutoObservable(this, { rootStore: false, token: false });
+    this.rootStore = rootStore;
   }
 
   async getMyUser(platform: PLATFORM): Promise<void> {
-    if (localStorage || sessionStorage) {
-      const userId = localStorage?.getItem(`${platform}UserId`) ?? sessionStorage?.getItem(`${platform}UserId`)
-      if (userId) {
-        const user = await getUserById(userId, platform)
-        this.user = user
-        this.isLogin = true
-      }
+    const userId = getStorageItem(`${platform}UserId`);
+    if (userId) {
+      const user = await getUserById(userId, platform);
+      this.user = user;
+      this.isLogin = true;
     }
   }
 
-  async getUserbyId(platform: PLATFORM): Promise<void> {
-    if (localStorage || sessionStorage) {
-      const userId =
-        localStorage?.getItem(`${platform}UserId`) ??
-        sessionStorage?.getItem(`${platform}UserId`)
-      if (userId) {
-        const user = await getUserById(userId, platform)
-        this.isLogin = true
-        this.user = user
-      }
+  async getUserById(platform: PLATFORM): Promise<void> {
+    const userId = getStorageItem(`${platform}UserId`);
+    if (userId) {
+      const user = await getUserById(userId, platform);
+      this.user = user;
+      this.isLogin = true;
     }
   }
 
   async login(data: ILoginForm, platform: PLATFORM): Promise<void> {
-    if (localStorage || sessionStorage) {
-      const { accessToken, user } = await login(omit(data, 'isRemember'))
-      if (accessToken && user?._id) {
-        if (data?.isRemember) {
-          localStorage?.setItem(`${platform}UserId`, user?._id)
-          localStorage?.setItem(`${platform}Token`, accessToken)
-        } else {
-          sessionStorage?.setItem(`${platform}UserId`, user?._id)
-          sessionStorage?.setItem(`${platform}Token`, accessToken)
-        }
-        this.getMyUser(platform)
-        this.token = accessToken
-      }
+    const { accessToken, user } = await login(omit(data, 'isRemember'));
+    if (accessToken && user?._id) {
+      setStorageItem(`${platform}UserId`, user._id, data.isRemember);
+      setStorageItem(`${platform}Token`, accessToken, data.isRemember);
+      this.token = accessToken;
+      await this.getMyUser(platform);
     }
   }
 
   async signUp(data: ISignUpForm): Promise<void> {
-    const { accessToken } = await signUp(data)
+    const { accessToken } = await signUp(data);
     if (accessToken) {
-      const loginData = { email: data?.email, password: data?.password }
-      this.login({ ...loginData, isRemember: true }, PLATFORM.WEBSITE)
+      const loginData = { email: data.email, password: data.password, isRemember: true };
+      await this.login(loginData, PLATFORM.WEBSITE);
     }
   }
 
-  async fogotPassword(email: string) {
-    await forgotPassword(email)
+  async forgotPassword(email: string): Promise<void> {
+    await forgotPassword(email);
   }
 
-  async resetPassword(data: IResetPasswordRequest, token: string) {
-    await resetPassword(data, token)
+  async resetPassword(data: IResetPasswordRequest, token: string): Promise<void> {
+    await resetPassword(data, token);
   }
-
 
   logout(platform: PLATFORM): void {
-    if (localStorage || sessionStorage) {
-      this.isLogin = false
-      this.token = ''
-      this.user = {} as IUser
-      localStorage?.removeItem(`${platform}Token`)
-      localStorage?.removeItem(`${platform}UserId`)
-      sessionStorage?.removeItem(`${platform}Token`)
-      sessionStorage?.removeItem(`${platform}UserId`)
-    }
+    this.isLogin = false;
+    this.token = '';
+    this.user = {} as IUser;
+    removeStorageItem(`${platform}Token`);
+    removeStorageItem(`${platform}UserId`);
   }
 }
