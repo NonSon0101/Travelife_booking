@@ -1,5 +1,4 @@
-'use client'
-import { useState } from 'react'
+"use client";
 import {
   Box,
   Button,
@@ -7,60 +6,61 @@ import {
   Divider,
   Heading,
   HStack,
-  Link,
   Modal,
-  ModalOverlay,
   ModalContent,
+  ModalOverlay,
   Stack,
   Text,
-} from '@chakra-ui/react'
-import { toast } from 'react-toastify'
-import FormInput from 'components/FormInput'
-import PasswordField from 'components/PasswordField'
-import Icon from 'components/Icon'
-import { PLATFORM } from 'enums/common'
-import { useStores } from 'hooks/useStores'
-import { ILoginForm } from 'interfaces/auth'
-import get from 'lodash/get'
-import { useForm, FormProvider } from 'react-hook-form'
+} from "@chakra-ui/react";
+import { API_URL } from "API";
+import FormInput from "components/FormInput";
+import Icon from "components/Icon";
+import PasswordField from "components/PasswordField";
+import { PLATFORM } from "enums/common";
+import { useStores } from "hooks/useStores";
+import { ILoginForm } from "interfaces/auth";
+import get from "lodash/get";
+import { useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 
 interface ILoginModalProps {
-  openSignUpModal: () => void
-  openForgotPasswordModal: () => void
-  isOpen: boolean
-  onClose: () => void
+  openSignUpModal: () => void;
+  openForgotPasswordModal: () => void;
+  isOpen: boolean;
+  onClose: () => void;
 }
 
 const LoginModal = (props: ILoginModalProps) => {
-  const { isOpen, onClose, openSignUpModal, openForgotPasswordModal } = props
-  const { authStore } = useStores()
-  const methods = useForm<ILoginForm>()
-  const { handleSubmit } = methods
-  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const { isOpen, onClose, openSignUpModal, openForgotPasswordModal } = props;
+  const { authStore } = useStores();
+  const methods = useForm<ILoginForm>();
+  const { handleSubmit } = methods;
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   async function onSubmit(data: ILoginForm): Promise<void> {
     try {
-      setIsLoading(true)
-      await authStore.login({ ...data, isRemember: true }, PLATFORM.WEBSITE)
-      setIsLoading(false)
-      onClose()
-      toast.success('Login successfully')
+      setIsLoading(true);
+      await authStore.login({ ...data, isRemember: true }, PLATFORM.WEBSITE);
+      setIsLoading(false);
+      onClose();
+      toast.success("Login successfully");
     } catch (error) {
-      setIsLoading(false)
-      console.error('errorMessage', error)
-      const errorMessage: string = get(error, 'data.error.message', 'Email or password incorrect') || JSON.stringify(error)
+      setIsLoading(false);
+      console.error("errorMessage", error);
+      const errorMessage: string =
+        get(error, "data.error.message", "Email or password incorrect") ||
+        JSON.stringify(error);
       // toast.error(errorMessage)
     }
   }
 
   function handleOpenSigupModal() {
-    onClose()
-    openSignUpModal()
+    onClose();
+    openSignUpModal();
   }
 
-  function handleFogotPass() {
-
-  }
+  function handleFogotPass() {}
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -69,31 +69,46 @@ const LoginModal = (props: ILoginModalProps) => {
         <Stack spacing={8} py={{ base: 0, sm: 8 }} px={{ base: 4, sm: 10 }}>
           <Stack spacing={6}>
             <Stack spacing={{ base: 2, md: 3 }} textAlign="center">
-              <Heading size={{ base: 'xs', md: 'lg' }}>Log in to your account</Heading>
+              <Heading size={{ base: "xs", md: "lg" }}>
+                Log in to your account
+              </Heading>
               <Text color="fg.muted">
-                {`Don't have an account?`} <button onClick={handleOpenSigupModal}>Sign Up</button>
+                {`Don't have an account?`}{" "}
+                <button onClick={handleOpenSigupModal}>Sign Up</button>
               </Text>
-
             </Stack>
           </Stack>
           <FormProvider {...methods}>
             <form onSubmit={handleSubmit(onSubmit)}>
-              <Box bg={{ base: 'transparent', sm: 'bg.surface' }} borderRadius={{ base: 'none', sm: 'xl' }}>
+              <Box
+                bg={{ base: "transparent", sm: "bg.surface" }}
+                borderRadius={{ base: "none", sm: "xl" }}
+              >
                 <Stack spacing={6}>
                   <Stack spacing="5">
-                    <FormInput name="email" label="Email or username" autoComplete="off" />
+                    <FormInput
+                      name="email"
+                      label="Email or username"
+                      autoComplete="off"
+                    />
                     <PasswordField />
                   </Stack>
                   <HStack justify="space-between">
-                    <Checkbox defaultChecked>
-                      Remember me
-                    </Checkbox>
-                    <Button variant="text" size="sm" onClick={openForgotPasswordModal}>
+                    <Checkbox defaultChecked>Remember me</Checkbox>
+                    <Button
+                      variant="text"
+                      size="sm"
+                      onClick={openForgotPasswordModal}
+                    >
                       Forgot password?
                     </Button>
                   </HStack>
                   <Stack spacing={6}>
-                    <Button type="submit" colorScheme="teal" isLoading={isLoading}>
+                    <Button
+                      type="submit"
+                      colorScheme="teal"
+                      isLoading={isLoading}
+                    >
                       Login
                     </Button>
                     <HStack>
@@ -103,9 +118,12 @@ const LoginModal = (props: ILoginModalProps) => {
                       </Text>
                       <Divider borderColor="gray.300" />
                     </HStack>
-                    <a style={{ alignSelf: 'center', width: '100%' }} href="http://localhost:4001/api/v1/auth/google">
+                    <a
+                      style={{ alignSelf: "center", width: "100%" }}
+                      href={`${API_URL}/api/v1/auth/google`}
+                    >
                       <Button
-                        width='full'
+                        width="full"
                         fontSize="sm"
                         fontWeight={500}
                         background="none"
@@ -117,7 +135,6 @@ const LoginModal = (props: ILoginModalProps) => {
                         </Text>
                       </Button>
                     </a>
-
                   </Stack>
                 </Stack>
               </Box>
@@ -126,7 +143,7 @@ const LoginModal = (props: ILoginModalProps) => {
         </Stack>
       </ModalContent>
     </Modal>
-  )
-}
+  );
+};
 
-export default LoginModal
+export default LoginModal;
