@@ -98,6 +98,7 @@ const AllActivitiesPage = () => {
         height="full"
         mt='5'
         maxWidth="1300px"
+        marginX="auto"
         width="full"
         align='flex-start'
       >

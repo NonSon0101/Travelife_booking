@@ -1,16 +1,35 @@
-import {VStack, Text } from "@chakra-ui/react";
-import { ReactNode } from "react";
+import { Link, VStack, Text } from "@chakra-ui/react";
+import { toast } from 'react-toastify'
+import { PLATFORM } from "enums/common";
+import { color } from "framer-motion";
+import { ReactNode, useEffect, useState } from "react";
 
 interface IActionItemProps {
   actionIcon: ReactNode
   title: string
+  to: () => void
   color?: string
   underLineHoverColor?: string
   hoverColor?: string
 }
 
 const ActionItem = (props: IActionItemProps) => {
-  const { actionIcon, title, color, underLineHoverColor, hoverColor } = props
+  const { actionIcon, title, to, color, underLineHoverColor, hoverColor } = props
+  const [userId, setUserId] = useState<string>('')
+
+  useEffect(() => {
+    setUserId(localStorage.getItem(`${PLATFORM.WEBSITE}UserId`) ?? '')
+  },[userId])
+
+  function handleIsLogin() {
+    const userId = localStorage.getItem(`${PLATFORM.WEBSITE}UserId`)
+    if (userId) {
+      to()
+    } else {
+      toast.warn("Please login first")
+      return
+    }
+  }
 
   return (
     <VStack
@@ -33,6 +52,7 @@ const ActionItem = (props: IActionItemProps) => {
         },
         color: hoverColor ? hoverColor : "#fff",
       }}
+      onClick={handleIsLogin}
     >
       <Text userSelect="none" fontSize="2xl">{actionIcon}</Text>
       <Text userSelect="none">{title}</Text>

@@ -109,6 +109,7 @@ const UserProfile = (props: IUserProfileProps) => {
                 color={color}
                 actionIcon={<FaRegUser />}
                 title="Login"
+                to={() => {}}
               />
             </VStack>
           )}

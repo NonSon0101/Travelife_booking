@@ -48,6 +48,7 @@ const BookingDetailsPage = () => {
         minHeight="700px"
         height="full"
         maxWidth="1300px"
+        marginX="auto"
         width="full"
         padding="24px"
         spacing={8}

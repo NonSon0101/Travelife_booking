@@ -58,6 +58,7 @@ const CartPage = () => {
         minHeight="700px"
         marginTop="48px"
         width="full"
+        marginX="auto"
         height="full"
         align="flex-start"
         justifyContent="space-between"

@@ -29,6 +29,7 @@ const BookingPage = () => {
         minHeight="700px"
         height="full"
         maxWidth="1300px"
+        marginX="auto"
         width="full"
         padding="24px"
         align='flex-start'

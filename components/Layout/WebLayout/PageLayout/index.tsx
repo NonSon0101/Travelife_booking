@@ -41,9 +41,7 @@ const PageLayout = ({ title, children }: IPageLayoutProps) => {
             underLineHoverColor="#ff5533"
             hoverColor="#1a2b49"
           />
-          <Box flex="1" width="full" px={{ base: 4, md: 8 }} py={{ base: 6, md: 10 }}>
-            {children}
-          </Box>
+          {children}
           <Footer />
           <LoginModal
             openForgotPasswordModal={() => setIsOpenForgotPasswordModal(true)}

@@ -69,6 +69,7 @@ const ProfilePage = () => {
       width="full"
       minHeight="700px"
       height="full"
+      marginX="auto"
       align="flex-start"
       marginTop="40px"
       spacing={10}

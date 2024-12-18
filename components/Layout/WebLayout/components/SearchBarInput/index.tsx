@@ -96,6 +96,7 @@ const SearchBarInput = (props: ISearchInputProps) => {
           ))}
         </VStack>
       )}
+      zIndex={1000}
       onClickOutside={handleClickOutSide}
     >
       <HStack

@@ -122,6 +122,7 @@ const ListTourPage = () => {
         minHeight="700px"
         height="full"
         maxWidth="1300px"
+        marginX="auto"
         width="full"
         align='flex-start'
         mt='5'

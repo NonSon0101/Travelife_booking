@@ -291,6 +291,7 @@ const TourDetailPage = () => {
     <VStack
       maxWidth="1300px"
       width="full"
+      marginX="auto"
       align="flex-start"
       spacing={4}
       padding={8}

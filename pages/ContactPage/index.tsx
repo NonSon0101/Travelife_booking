@@ -76,6 +76,7 @@ const ContactPage = () => {
       <VStack
         minHeight="700px"
         height="full"
+        marginX="auto"
         maxWidth="1300px"
         width="full"
         padding="24px"

@@ -34,6 +34,14 @@ const Action = (props: IHeaderProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  function gotoCartPage() {
+    route.push(routes.cart.value);
+  }
+  function gotoBookingViewPage() {
+    route.push(routes.booking.view);
+  }
+
+
   const { openLoginModal, color, underLineHoverColor, hoverColor } = props;
   return (
     <HStack
@@ -42,48 +50,44 @@ const Action = (props: IHeaderProps) => {
       alignItems="center"
       marginTop="14px"
     >
-      {isLogin &&
-        <>
-          <Link href={routes.booking.view}>
-            <ActionItem
-              color={color}
-              underLineHoverColor={underLineHoverColor}
-              hoverColor={hoverColor}
-              actionIcon={<PiTicketBold />}
-              title="Booking"
-            />
-          </Link>
-          <Box
-            {...(cartStore.cartCount !== 0 &&
-              isLogin && {
-              _before: {
-                position: "absolute",
-                content: `"${cartCount}"`,
-                textAlign: "center",
-                fontSize: "13px",
-                top: "0",
-                marginLeft: "30px",
-                marginTop: "13px",
-                width: "20px",
-                height: "20px",
-                background: "#CB3F00",
-                color: "#fff",
-                borderRadius: "full",
-              },
-            })}
-          >
-            <Link href={routes.cart.value}>
-              <ActionItem
-                color={color}
-                underLineHoverColor={underLineHoverColor}
-                hoverColor={hoverColor}
-                actionIcon={<LuShoppingCart />}
-                title="Cart"
-              />
-            </Link>
-          </Box>
-        </>
-      }
+      <>
+        <ActionItem
+          color={color}
+          underLineHoverColor={underLineHoverColor}
+          hoverColor={hoverColor}
+          actionIcon={<PiTicketBold />}
+          title="Booking"
+          to={gotoBookingViewPage}
+        />
+        <Box
+          {...(cartStore.cartCount !== 0 &&
+            isLogin && {
+            _before: {
+              position: "absolute",
+              content: `"${cartCount}"`,
+              textAlign: "center",
+              fontSize: "13px",
+              top: "0",
+              marginLeft: "30px",
+              marginTop: "13px",
+              width: "20px",
+              height: "20px",
+              background: "#CB3F00",
+              color: "#fff",
+              borderRadius: "full",
+            },
+          })}
+        >
+          <ActionItem
+            color={color}
+            underLineHoverColor={underLineHoverColor}
+            hoverColor={hoverColor}
+            actionIcon={<LuShoppingCart />}
+            title="Cart"
+            to={gotoCartPage}
+          />
+        </Box>
+      </>
       <UserProfile
         underLineHoverColor={underLineHoverColor}
         hoverColor={hoverColor}
