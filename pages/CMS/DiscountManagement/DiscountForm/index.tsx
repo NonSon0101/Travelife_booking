@@ -167,7 +167,6 @@ const DiscountForm = (props: IDiscountFormProps) => {
                   <Dropdown
                     name="tourValue"
                     label="Applies To Tour"
-                    gridColumn="span 2"
                     options={tourOptions}
                     setValue={setValue}
                   />

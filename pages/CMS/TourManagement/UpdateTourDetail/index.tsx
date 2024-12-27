@@ -221,7 +221,7 @@ const UpdateTourDetail = () => {
                   <FormInput name="title" label="Title" />
                   <FormInput name="description" label="Description" gridColumn="span 2" />
                   <FormInput name="summary" label="Summary" />
-                  {/* <Dropdown
+                  <Dropdown
                     name="typeValue"
                     label="Type"
                     options={tourTypeOptions}
@@ -244,7 +244,7 @@ const UpdateTourDetail = () => {
                     label="Start Location"
                     options={locationOptions}
                     setValue={setValue}
-                  /> */}
+                  />
                   {/* <FormInput name="interest" label="Interest" /> */}
                   {/* <FormInput name="details" label="Details" /> */}
                   <FormInput name="regularPrice" label="Regular Price" type="number" min={1} />
