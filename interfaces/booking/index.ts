@@ -51,6 +51,7 @@ export interface IBookingItem{
       ratingAverage: 4
   },
   isPrivate: boolean,
+  isShowReview: boolean,
   startDate: string,
   startTime: string,
   participants: IParticipants[]

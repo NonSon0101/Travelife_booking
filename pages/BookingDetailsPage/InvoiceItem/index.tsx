@@ -35,21 +35,23 @@ const InvoiceItem = (props: IInvoiceItem) => {
               {bookingItems.tour.title || 'Tour title unavailable'}
             </Text>
             <RatingStart ratingAverage={bookingItems.tour.ratingAverage || 0} numOfRating={bookingItems.tour.numOfRating || 0} />
-            <Text
-              color="#ffd900"
-              textUnderlineOffset={2}
-              role="button"
-              tabIndex={0}
-              onClick={() => openRatingModal(bookingItems.tour)}
-              userSelect="none"
-              _hover={{
-                textDecoration: "underline",
-                color: "#ffb900",
-                transition: "color 0.2s ease-in-out, text-decoration 0.2s ease-in-out"
-              }}
-            >
-              Give us a rate
-            </Text>
+            {bookingItems.isShowReview && (
+              <Text
+                color="#ffd900"
+                textUnderlineOffset={2}
+                role="button"
+                tabIndex={0}
+                onClick={() => openRatingModal(bookingItems.tour)}
+                userSelect="none"
+                _hover={{
+                  textDecoration: "underline",
+                  color: "#ffb900",
+                  transition: "color 0.2s ease-in-out, text-decoration 0.2s ease-in-out"
+                }}
+              >
+                Give us a rate
+              </Text>
+            )}
           </VStack>
         </HStack>
       </Box>
