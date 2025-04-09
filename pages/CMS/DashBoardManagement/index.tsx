@@ -25,13 +25,13 @@ const DashBoardManagement = () => {
   },[filters])
 
   useEffect(() => {
-    if(revenues && (revenueStats.data.length == 0 || revenueStats.categories.length == 0)){
-      revenues.map(revenue => {
-        revenueStats.data.push(revenue.revenue)
-        revenueStats.categories.push(revenue.date)
-      })
+    if (revenues && revenues.length > 0) {
+      setRevenueStats({
+        data: revenues.map((revenue) => revenue.revenue),
+        categories: revenues.map((revenue) => revenue.date),
+      });
     }
-  },[revenues])
+  }, [revenues]);  
 
   return (
     <HStack width='full' alignItems='start'>

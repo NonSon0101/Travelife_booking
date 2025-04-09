@@ -13,6 +13,7 @@ import { formatCurrency } from "utils/common";
 import RatingModal from "./RatingModal";
 import InvoiceItem from "./InvoiceItem";
 import { ITour } from "interfaces/tour";
+import { PLATFORM } from "enums/common";
 
 
 const BookingDetailsPage = () => {
@@ -39,7 +40,7 @@ const BookingDetailsPage = () => {
   }
 
   useEffect(() => {
-    bookingStore.fetchBookingDetail(bookingId)
+    bookingStore.fetchBookingDetail(bookingId, PLATFORM.WEBSITE)
   }, [bookingId])
 
   return (

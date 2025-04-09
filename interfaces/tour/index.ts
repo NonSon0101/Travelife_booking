@@ -1,4 +1,6 @@
 import { File } from 'buffer'
+import { IOption } from 'components/Dropdown'
+import { ICategory } from 'interfaces/category'
 import { IPriceOption } from 'interfaces/common'
 import { IHotel } from 'interfaces/hotel'
 import { ITransportation } from 'interfaces/transportation'
@@ -112,3 +114,12 @@ export interface IVirtualTour {
   hotspots: IHotSpot[]
   processedImage?: string | null
 }
+export type IUpdateTour = Omit<ITour, 'category' | 'hotels' | 'transports'> & {
+  category?: string;
+  hotels?: string[];
+  transports?: string[];
+  typeValue: IOption
+  locationValue: IOption
+  categoryValue: IOption
+  currencyValue: IOption
+};

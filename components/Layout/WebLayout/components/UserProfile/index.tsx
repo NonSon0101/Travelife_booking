@@ -48,7 +48,7 @@ const UserProfile = (props: IUserProfileProps) => {
   }, [])
 
   function handleLogout() {
-    authStore.logout(PLATFORM.WEBSITE)
+    authStore.logout(PLATFORM.WEBSITE) 
     window.location.href = '/'
   }
 
@@ -86,6 +86,7 @@ const UserProfile = (props: IUserProfileProps) => {
                 flexDirection="column"
                 display={{ base: "none", lg: "flex" }}
                 alignItems="flex-start"
+                maxW="100px"
               >
                 <Text
                   fontSize="md"
@@ -97,7 +98,7 @@ const UserProfile = (props: IUserProfileProps) => {
                   {truncate(username)}
                 </Text>
                 <Text fontSize="md" lineHeight="4" color={color}>
-                  {email}
+                  {truncate(email)}
                 </Text>
               </Flex>
             </HStack>

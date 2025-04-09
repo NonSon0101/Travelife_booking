@@ -105,7 +105,7 @@ const CartPage = () => {
                 fontSize="lg"
                 fontWeight="bold"
               >
-                <Text>Subtotal ({listCart?.tours?.length} items): </Text>
+                <Text>Subtotal ({listCart?.tours?.length == 1 ? `${listCart?.tours?.length} item` : `${listCart?.tours?.length} items`}): </Text>
                 <Text>{formatCurrency(totalPrice, currentCurrency)}</Text>
               </HStack>
               <Button

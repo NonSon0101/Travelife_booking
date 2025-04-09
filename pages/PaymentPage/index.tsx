@@ -18,6 +18,7 @@ import { useStores } from "hooks";
 import { formatCurrency } from "utils/common";
 import { observer } from "mobx-react";
 import BillingInfo from "./BillingInfo";
+import { PLATFORM } from "enums/common";
 
 
 const PaymentPage = () => {
@@ -32,7 +33,7 @@ const PaymentPage = () => {
   };
 
   useEffect(() => {
-    bookingStore.fetchBookingDetail(bookingId);
+    bookingStore.fetchBookingDetail(bookingId, PLATFORM.WEBSITE);
   }, [bookingId]);
 
   useEffect(() => {

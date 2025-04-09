@@ -1,7 +1,7 @@
 /* eslint-disable max-lines */
 import React, { Fragment, ReactNode, useMemo } from 'react'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
-import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons'
+import { TriangleDownIcon, TriangleUpIcon, HamburgerIcon } from '@chakra-ui/icons'
 import { Table as CkTable, Thead, Tbody, Tr, Th, Td, Box, Stack, Link, Text, HStack } from '@chakra-ui/react'
 import { useStores } from 'hooks/useStores'
 import get from 'lodash/get'
@@ -152,7 +152,7 @@ const Table = (props: ITableProps) => {
                                 <TriangleUpIcon width={2} height={2} />
                               )
                             ) : column.Header ? (
-                              <Icon iconName="three-lines.svg" size={12} />
+                              <HamburgerIcon width={2} height={2} />
                             ) : null}
                           </span>
                         )}
