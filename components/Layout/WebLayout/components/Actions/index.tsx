@@ -1,7 +1,6 @@
 import { Box, HStack } from "@chakra-ui/react";
 import { PiTicketBold } from "react-icons/pi";
 import { useRouter } from "next/navigation";
-import Link from 'next/link';
 import { LuShoppingCart } from "react-icons/lu";
 import routes from "routes";
 import UserProfile from "../UserProfile";

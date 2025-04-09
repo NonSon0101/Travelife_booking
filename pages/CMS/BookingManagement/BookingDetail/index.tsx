@@ -10,6 +10,7 @@ import { observer } from 'mobx-react'
 import { usePathname, useRouter } from 'next/navigation'
 import routes from 'routes'
 import { getStatusColor } from '../../../../utils/CMS/BookingManagement/utils'
+import { PLATFORM } from 'enums/common'
 
 const BookingDetail = () => {
   const { bookingStore } = useStores()
@@ -25,7 +26,7 @@ const BookingDetail = () => {
 
   useEffect(() => {
     if (bookingId) {
-      bookingStore.fetchBookingDetail(bookingId)
+      bookingStore.fetchBookingDetail(bookingId, PLATFORM.CMS)
     }
   }, [bookingId])
 

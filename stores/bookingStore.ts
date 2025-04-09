@@ -1,4 +1,5 @@
 import { createBooking, getAllBookings, getBookingDetail, createBookNow, deleteBooking, getListBooking } from 'API/booking'
+import { PLATFORM } from 'enums/common'
 import { ICreateBooking, ICreateBookingForm, ICreateBookingRespone, IBookingInfoBody, IBookingDetail, IBooking } from 'interfaces/booking'
 import { IAddToCart } from 'interfaces/cart'
 import { IRequsetCheckoutReview } from 'interfaces/checkout'
@@ -43,8 +44,8 @@ class BookingStore {
   }
 
 
-  async fetchBookingDetail(bookingId = ''): Promise<void> {
-    const booking = await getBookingDetail(bookingId)
+  async fetchBookingDetail(bookingId = '', platform: PLATFORM): Promise<void> {
+    const booking = await getBookingDetail(bookingId, platform)
     this.bookingDetail = booking
     this.currentCurrency = booking.bookingItems[0].participants[0].currency ?? ''
   }

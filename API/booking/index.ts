@@ -44,10 +44,10 @@ export async function getListBooking(filter = ''): Promise<IBookingInfoPaginatio
   }
 }
 
-export async function getBookingDetail(bookingId: string): Promise<IBookingDetail> {
+export async function getBookingDetail(bookingId: string, platform: PLATFORM): Promise<IBookingDetail> {
   try {
     const response = await api.get(`${BOOKING_URL}/${bookingId}`, {
-      headers: auth(PLATFORM.WEBSITE)
+      headers: auth(platform)
     })
     return response.data.metadata
   } catch (error) {

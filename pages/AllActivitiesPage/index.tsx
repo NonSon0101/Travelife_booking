@@ -68,9 +68,10 @@ const AllActivitiesPage = () => {
     let sortFilter = '';
 
     switch (sortOption) {
-      case 'recommeded':
+      case 'recommended':
         sortFilter = ''
         setIsApplySort('Recommended')
+        break;
       case 'priceUp':
         sortFilter = 'sort=regularPrice';
         setIsApplySort('Price - Low To High')
@@ -114,7 +115,7 @@ const AllActivitiesPage = () => {
             height={50}
             border='2px solid #dcdfe4'
             {...(countFilter !== 0 && { borderColor: 'teal' })}
-            bg='transparent'
+            bg='white'
             onClick={() => setIsOpenFilterModal(true)}
           >
             {<TbAdjustmentsHorizontal size={24} />} Filters {countFilter !== 0 ? `applied: ${countFilter}` : ''}

@@ -339,7 +339,6 @@ const TourDetailPage = () => {
               backgroundSize="cover"
               borderRadius='12px'
               backgroundImage={`url(${url})`}
-              alt="tour img"
             />
           ))}
         </Slider>
@@ -737,10 +736,10 @@ const TourDetailPage = () => {
             borderRadius={2}
             spacing={0}
           >
-            <SimpleGrid columns={{ base: 1, xl: 2 }} alignItems='center' width='full'>
+            <SimpleGrid columns={{ base: 1, xl: 2 }} alignItems='center' width='full' spacing={2}>
               <GridItem>
                 <Text>From</Text>
-                <Text fontSize="2xl" fontWeight={700} flex={2}>
+                <Text fontSize="xl" fontWeight={700} flex={2}>
                   {tourDetail?.regularPrice && formatCurrency(tourDetail?.regularPrice, tourDetail?.currency ?? '')}
                 </Text>
                 <Text>per person</Text>
@@ -751,7 +750,6 @@ const TourDetailPage = () => {
                   borderRadius="80px"
                   display={{ base: 'none', lg: 'block' }}
                   textAlign='center'
-                  paddingX={8}
                   width="full"
                   flex={1}
                   alignSelf='center'

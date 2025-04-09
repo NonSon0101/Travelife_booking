@@ -110,6 +110,10 @@ const FilterModal = (props: IFilterModal) => {
       delete newFilter.duration;
     if (key === 'star')
       delete newFilter.star;
+    if (key === 'priceMin')
+      delete newFilter.priceMin;
+    if (key === 'priceMax')
+      delete newFilter.priceMax;
     setFliterOptions(newFilter)
     console.log('after cancel', newFilter)
     console.log('after cancel filter value', filterValue)
@@ -129,24 +133,28 @@ const FilterModal = (props: IFilterModal) => {
         <ModalHeader><Title text='Filters' /></ModalHeader>
         <ModalCloseButton />
         <ModalBody fontWeight='500'>
-          <Text>Applied filters</Text>
-          <HStack wrap="wrap" spacing={1}>
-            {Object.entries(filterValue).map(([key, value]) => (
-              <HStack
-                key={key}
-                padding={2}
-                background="#f5f5f5"
-                width="fit-content"
-                border="2px solid #888"
-                borderRadius={10}
-              >
-                <Text>{`${value.value} ${value.name}`}</Text>
-                <Button onClick={() => cancelFilter(key)}>
-                  <RxCross2 />
-                </Button>
+          {filterValue &&
+            <>
+              <Text>Applied filters</Text>
+              <HStack wrap="wrap" spacing={1}>
+                {Object.entries(filterValue).map(([key, value]) => (
+                  <HStack
+                    key={key}
+                    padding={2}
+                    background="#f5f5f5"
+                    width="fit-content"
+                    border="2px solid #888"
+                    borderRadius={10}
+                  >
+                    <Text>{`${value.value} ${value.name}`}</Text>
+                    <Button onClick={() => cancelFilter(key)}>
+                      <RxCross2 />
+                    </Button>
+                  </HStack>
+                ))}
               </HStack>
-            ))}
-          </HStack>
+            </>
+          }
           <Divider />
           <Text>Price</Text>
           <HStack width='full' justifyContent='space-evenly' margin={4}>
