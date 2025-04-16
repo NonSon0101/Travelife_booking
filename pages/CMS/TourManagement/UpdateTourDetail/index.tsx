@@ -25,6 +25,7 @@ import ManagePriceOptions from './ManagePriceOptions'
 import { currencyOptions, tourTypeOptions } from 'constants/common'
 import PrivateTour from './PrivateTour'
 import ManageHotels from './ManageHotels'
+import VirtualTour from './VirtualTour';
 
 export interface IUpdateTourForm extends ITour {
   typeValue: IOption
@@ -306,7 +307,7 @@ const UpdateTourDetail = () => {
                           >
                             <Icon iconName="trash.svg" size={32} />
                           </Button>
-                          <Img key={image} width="215px" height="130px" src={image} borderRadius={8} />
+                          <Img key={image} width="full" height="130px" src={image} borderRadius={8} />
                         </Center>
                       ))}
                     </SimpleGrid>
@@ -354,6 +355,15 @@ const UpdateTourDetail = () => {
               <input type="file" ref={thumbnailRef} onChange={uploadThumbnail} style={{ display: 'none' }} />
             </VStack>
           </HStack>
+          {isEditMode && (
+            <Box width="full" background="white" padding={8} borderRadius={8} borderWidth={1} boxShadow="sm" marginTop={8}>
+              <VStack width="full" align="flex-start" spacing={6}>
+                <VirtualTour
+                  methods={methods}
+                />
+              </VStack>
+            </Box>
+          )}
           <ManagePriceOptions
             tourId={tourId}
             methods={methods}
