@@ -1,3 +1,4 @@
+import { File } from 'buffer'
 import { IPriceOption } from 'interfaces/common'
 import { IHotel } from 'interfaces/hotel'
 import { ITransportation } from 'interfaces/transportation'
@@ -34,6 +35,7 @@ export interface ITour {
   hotels?: IHotel[]
   locations?: string[]
   transports?: ITransportation[]
+  virtualTours: IVirtualTour[]
 }
 
 export interface ITourPagination {
@@ -92,3 +94,20 @@ export interface IUploadTourImage {
   imagesURL: string[]
 }
 
+export interface IHotSpot {
+  _id?: string
+  id: string
+  pitch: string
+  yaw: string
+  name: string
+  action: string
+}
+
+export interface IVirtualTour {
+  _id?: string
+  id: string
+  name: string
+  images: string[]
+  files: any[]
+  hotspots: IHotSpot[]
+}

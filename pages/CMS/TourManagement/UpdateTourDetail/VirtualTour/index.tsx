@@ -1,14 +1,13 @@
 "use client";
 
-import { Button, Center, Icon, Img, SimpleGrid, Text, VStack, HStack, FormControl, FormLabel, Input, Select } from "@chakra-ui/react";
-import { ITour } from "interfaces/tour";
-import { useForm, useWatch } from "react-hook-form";
-import { getOptions, getValidArray } from 'utils/common';
-import { IUpdateTourForm } from "..";
-import TourStore from "stores/tourStore";
-import { useStores } from "hooks";
-import { ChangeEvent, useRef, useState } from "react";
-import { toast } from 'react-toastify'
+import { Button, Center, FormControl, FormLabel, HStack, Img, Input, Select, SimpleGrid, Text, VStack } from "@chakra-ui/react";
+import Icon from "components/Icon";
+import { ChangeEvent, useRef, useState, useEffect } from "react";
+import { useWatch } from "react-hook-form";
+import { toast } from 'react-toastify';
+import { getValidArray } from 'utils/common';
+import { IVirtualTour } from "interfaces/tour";
+import { m } from "framer-motion";
 
 interface IVirtualTourProps {
     methods: any;
@@ -17,50 +16,42 @@ interface IVirtualTourProps {
 const VirtualTour = (props: IVirtualTourProps) => {
     const { methods } = props;
     if (!methods) return null;
-    const { control, setValue } = methods;
-    const images = useWatch({ control, name: 'images' }) ?? []
+    const { control, setValue, getValues } = methods;
     const [isImageLoading, setIsImageLoading] = useState<boolean>(false)
     const imagesRef = useRef<any>(null)
-    const [virtualTours, setVirtualTours] = useState<Array<{
-        id: string;
-        name: string;
-        images: string[];
-        files: File[];
-        hotspots: Array<{
-            pitch: string;
-            yaw: string;
-            name: string;
-            action: string;
-        }>;
-    }>>([{
-        id: '1',
-        name: 'Page 1',
-        images: [],
-        files: [],
-        hotspots: []
-    }])
+    const [virtualTours, setVirtualTours] = useState<Array<IVirtualTour>>([])
+    useEffect(() => {
+        console.log(methods)
+        const initialTours = getValues('virtualTours') ?? []
+        setVirtualTours(initialTours);
+    }, [getValues]);
+
 
     function deleteImages(url: string, pageIndex: number) {
         const newVirtualTours = [...virtualTours]
         newVirtualTours[pageIndex].images = newVirtualTours[pageIndex].images.filter(image => image !== url)
         setVirtualTours(newVirtualTours)
+        setValue('virtualTours', newVirtualTours)
     }
 
     function deleteFile(fileIndex: number, pageIndex: number) {
         const newVirtualTours = [...virtualTours]
         newVirtualTours[pageIndex].files = newVirtualTours[pageIndex].files.filter((_, i) => i !== fileIndex)
         setVirtualTours(newVirtualTours)
+        setValue('virtualTours', newVirtualTours)
     }
 
     const handleAddHotspot = (pageIndex: number) => {
         const newVirtualTours = [...virtualTours]
         newVirtualTours[pageIndex].hotspots = [...newVirtualTours[pageIndex].hotspots, {
+            id: (newVirtualTours[pageIndex].hotspots.length + 1).toString(),
             pitch: '',
             yaw: '',
             name: '',
             action: ''
         }]
         setVirtualTours(newVirtualTours)
+        setValue('virtualTours', newVirtualTours)
     }
 
     const handleHotspotChange = (pageIndex: number, hotspotIndex: number, field: string, value: string) => {
@@ -70,32 +61,38 @@ const VirtualTour = (props: IVirtualTourProps) => {
             [field]: value
         }
         setVirtualTours(newVirtualTours)
+        setValue('virtualTours', newVirtualTours)
     }
 
     const handleDeleteHotspot = (pageIndex: number, hotspotIndex: number) => {
         const newVirtualTours = [...virtualTours]
         newVirtualTours[pageIndex].hotspots = newVirtualTours[pageIndex].hotspots.filter((_, i) => i !== hotspotIndex)
         setVirtualTours(newVirtualTours)
+        setValue('virtualTours', newVirtualTours)
     }
 
     const handleAddPage = () => {
-        setVirtualTours([...virtualTours, {
+        const data = [...virtualTours, {
             id: (virtualTours.length + 1).toString(),
             name: `Page ${virtualTours.length + 1}`,
             images: [],
             files: [],
             hotspots: []
-        }])
+        }];
+        setVirtualTours(data)
+        setValue('virtualTours', data)
     }
 
     const handleDeletePage = (pageIndex: number) => {
         setVirtualTours(virtualTours.filter((_, i) => i !== pageIndex))
+        setValue('virtualTours', virtualTours.filter((_, i) => i !== pageIndex))
     }
 
     const handlePageNameChange = (pageIndex: number, value: string) => {
         const newVirtualTours = [...virtualTours]
         newVirtualTours[pageIndex].name = value
         setVirtualTours(newVirtualTours)
+        setValue('virtualTours', newVirtualTours)
     }
 
     async function uploadImages(event: ChangeEvent<HTMLInputElement>, pageIndex: number) {
@@ -124,6 +121,7 @@ const VirtualTour = (props: IVirtualTourProps) => {
         const newVirtualTours = [...virtualTours]
         newVirtualTours[pageIndex].files = [...currentFiles, ...files]
         setVirtualTours(newVirtualTours)
+        setValue('virtualTours', newVirtualTours)
     }
 
     async function handleProcess(pageIndex: number) {
@@ -154,6 +152,7 @@ const VirtualTour = (props: IVirtualTourProps) => {
             newVirtualTours[pageIndex].images = [...currentPage.images, ...result.urls]
             newVirtualTours[pageIndex].files = [] // Clear uploaded files after successful upload
             setVirtualTours(newVirtualTours)
+            setValue('virtualTours', newVirtualTours)
 
             toast.success('Images processed successfully')
         } catch (error) {
@@ -185,14 +184,14 @@ const VirtualTour = (props: IVirtualTourProps) => {
                     <Button
                         boxSize={8}
                         padding={0}
-                        borderRadius="50%"
+                        borderRadius="30%"
                         position="absolute"
                         zIndex={9}
                         top={2}
                         right={2}
                         onClick={() => handleDeletePage(pageIndex)}
                     >
-                        <Icon iconName="trash.svg" size={24} />
+                        <Icon iconName="delete.svg" size={24} />
                     </Button>
                     <Text color="gray.700" fontSize="md" fontWeight={500}>
                         Page {pageIndex + 1}
@@ -204,6 +203,7 @@ const VirtualTour = (props: IVirtualTourProps) => {
                                     boxSize={10}
                                     padding={0}
                                     borderRadius="50%"
+                                    background="white"
                                     position="absolute"
                                     zIndex={9}
                                     top={2}
@@ -212,7 +212,7 @@ const VirtualTour = (props: IVirtualTourProps) => {
                                 >
                                     <Icon iconName="trash.svg" size={32} />
                                 </Button>
-                                <Img key={image} width="215px" height="130px" src={image} borderRadius={8} />
+                                <Img key={image} width="full" height="130px" src={image} borderRadius={8} />
                             </Center>
                         ))}
                         {virtualTour.files.map((file, fileIndex) => (
@@ -221,6 +221,7 @@ const VirtualTour = (props: IVirtualTourProps) => {
                                     boxSize={10}
                                     padding={0}
                                     borderRadius="50%"
+                                    background="white"
                                     position="absolute"
                                     zIndex={9}
                                     top={2}
@@ -230,7 +231,7 @@ const VirtualTour = (props: IVirtualTourProps) => {
                                     <Icon iconName="trash.svg" size={32} />
                                 </Button>
                                 <Img 
-                                    width="215px" 
+                                    width="full" 
                                     height="130px" 
                                     src={URL.createObjectURL(file)} 
                                     borderRadius={8} 
@@ -288,14 +289,15 @@ const VirtualTour = (props: IVirtualTourProps) => {
                                     <Button
                                         boxSize={8}
                                         padding={0}
-                                        borderRadius="50%"
+                                        borderRadius="30%"
+                                        background="white"
                                         position="absolute"
                                         zIndex={9}
                                         top={2}
                                         right={2}
                                         onClick={() => handleDeleteHotspot(pageIndex, hotspotIndex)}
                                     >
-                                        <Icon iconName="trash.svg" size={24} />
+                                        <Icon iconName="delete.svg" size={20} />
                                     </Button>
                                     <SimpleGrid width="full" columns={{ base: 1, md: 2 }} gap={6}>
                                         <FormControl>
