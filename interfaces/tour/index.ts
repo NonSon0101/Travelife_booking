@@ -97,11 +97,10 @@ export interface IUploadTourImage {
 export interface IHotSpot {
   _id?: string
   id: string
-  pitch: number
-  yaw: number
+  pitch: number | null
+  yaw: number | null
   name: string
   action: string
-  type: string
 }
 
 export interface IVirtualTour {
@@ -111,4 +110,5 @@ export interface IVirtualTour {
   images: string[]
   files: any[]
   hotspots: IHotSpot[]
+  processedImage?: string | null
 }

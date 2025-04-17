@@ -1,10 +1,11 @@
 'use client'
 
-import { Text, VStack } from "@chakra-ui/react";
+import { Text, VStack, HStack } from "@chakra-ui/react";
 import { Pannellum } from "pannellum-react";
 import { useEffect, useRef, useState } from "react";
 import { IHotSpot, IVirtualTour } from "interfaces/tour";
 import { useStores } from "hooks";
+import Clipboard from "components/Clipboard";
 
 interface IVirtualTourPageProps {
     tourId: string
@@ -40,18 +41,19 @@ const VirtualTourPage = (props: IVirtualTourPageProps) => {
                 borderRadius='md'
                 spacing={3}
             >
-                <Text
-                    fontSize='xl'
-                    color='white'
-                >
+                <HStack spacing={2}>
+                    <Text fontSize="xl" color="white">
                     Pitch: {pitch}
-                </Text>
-                <Text
-                    fontSize='xl'
-                    color='white'
-                >
+                    </Text>
+                    <Clipboard value={String(pitch)} ariaLabel="Copy pitch" />
+                </HStack>
+
+                <HStack spacing={2} mt={2}>
+                    <Text fontSize="xl" color="white">
                     Yaw: {yaw}
-                </Text>
+                    </Text>
+                    <Clipboard value={String(yaw)} ariaLabel="Copy yaw" />
+                </HStack>
             </VStack>
             <Pannellum
                 width='100%'
@@ -74,11 +76,10 @@ const VirtualTourPage = (props: IVirtualTourPageProps) => {
             >
                 {(virtualTour?.hotspots || []).map((hotspot: IHotSpot, index: number) => (
                     <Pannellum.Hotspot
-                        name={hotspot.name}
                         // @ts-ignore
                         type={hotspot.type}
-                        pitch={hotspot.pitch}
-                        yaw={hotspot.yaw}
+                        pitch={hotspot.pitch || 0}
+                        yaw={hotspot.yaw || 0}
                         text={hotspot.name}
                         handleClick={() => {}}
                         key={index}

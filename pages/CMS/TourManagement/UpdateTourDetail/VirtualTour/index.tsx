@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Center, FormControl, FormLabel, HStack, Img, Input, Select, SimpleGrid, Text, VStack } from "@chakra-ui/react";
+import { Button, Center, FormControl, FormLabel, HStack, Img, Input, Select, SimpleGrid, Text, VStack, } from "@chakra-ui/react";
 import Icon from "components/Icon";
 import { ChangeEvent, useRef, useState, useEffect } from "react";
 import { useWatch } from "react-hook-form";
@@ -8,6 +8,8 @@ import { toast } from 'react-toastify';
 import { getValidArray } from 'utils/common';
 import { IVirtualTour } from "interfaces/tour";
 import { m } from "framer-motion";
+import { LuInfo } from "react-icons/lu";
+import { Tooltip } from "react-tooltip";
 
 interface IVirtualTourProps {
     methods: any;
@@ -20,10 +22,11 @@ const VirtualTour = (props: IVirtualTourProps) => {
     const [isImageLoading, setIsImageLoading] = useState<boolean>(false)
     const imagesRef = useRef<any>(null)
     const [virtualTours, setVirtualTours] = useState<Array<IVirtualTour>>([])
+
     useEffect(() => {
-        console.log(methods)
         const initialTours = getValues('virtualTours') ?? []
         setVirtualTours(initialTours);
+        setValue('virtualTours', initialTours)
     }, [getValues]);
 
 
@@ -45,8 +48,8 @@ const VirtualTour = (props: IVirtualTourProps) => {
         const newVirtualTours = [...virtualTours]
         newVirtualTours[pageIndex].hotspots = [...newVirtualTours[pageIndex].hotspots, {
             id: (newVirtualTours[pageIndex].hotspots.length + 1).toString(),
-            pitch: '',
-            yaw: '',
+            pitch: null,
+            yaw: null,
             name: '',
             action: ''
         }]
@@ -77,7 +80,8 @@ const VirtualTour = (props: IVirtualTourProps) => {
             name: `Page ${virtualTours.length + 1}`,
             images: [],
             files: [],
-            hotspots: []
+            hotspots: [],
+            processedImage: null
         }];
         setVirtualTours(data)
         setValue('virtualTours', data)
@@ -185,6 +189,7 @@ const VirtualTour = (props: IVirtualTourProps) => {
                         boxSize={8}
                         padding={0}
                         borderRadius="30%"
+                        background="white"
                         position="absolute"
                         zIndex={9}
                         top={2}
@@ -259,21 +264,29 @@ const VirtualTour = (props: IVirtualTourProps) => {
                             colorScheme="teal"
                             isLoading={isImageLoading}
                             onClick={() => handleProcess(pageIndex)}
+                            isDisabled={virtualTour.files.length === 0 && virtualTour.images.length === 0}
                         >
                             Process
                         </Button>
                         <Button
                             colorScheme="blue"
                             onClick={() => {/* Handle preview */}}
+                            isDisabled={!virtualTour?.processedImage}
                         >
                             Preview
                         </Button>
                     </HStack>
                     
                     <VStack width="full" align="flex-start" spacing={4}>
+                    <HStack align="center" spacing={2}>
                         <Text color="teal.500" fontSize="lg" fontWeight={600} lineHeight={8}>
                             Hotspots
                         </Text>
+                        <a data-tooltip-id="hotspot-tooltip" data-tooltip-content="Hotspot must be added after processing images">
+                            <LuInfo size={16} color="gray.500" />
+                        </a>
+                        <Tooltip id="hotspot-tooltip" />
+                    </HStack>
                         <VStack width="full" align="flex-start" spacing={6}>
                             {virtualTour.hotspots.map((hotspot, hotspotIndex) => (
                                 <VStack 
@@ -305,7 +318,7 @@ const VirtualTour = (props: IVirtualTourProps) => {
                                             <Input 
                                                 type="number" 
                                                 placeholder="Enter pitch value"
-                                                value={hotspot.pitch}
+                                                value={hotspot.pitch ?? ''}
                                                 onChange={(e) => handleHotspotChange(pageIndex, hotspotIndex, 'pitch', e.target.value)}
                                             />
                                         </FormControl>
@@ -314,7 +327,7 @@ const VirtualTour = (props: IVirtualTourProps) => {
                                             <Input 
                                                 type="number" 
                                                 placeholder="Enter yaw value"
-                                                value={hotspot.yaw}
+                                                value={hotspot.yaw ?? ''}
                                                 onChange={(e) => handleHotspotChange(pageIndex, hotspotIndex, 'yaw', e.target.value)}
                                             />
                                         </FormControl>
@@ -329,13 +342,17 @@ const VirtualTour = (props: IVirtualTourProps) => {
                                         <FormControl>
                                             <FormLabel>Action</FormLabel>
                                             <Select 
-                                                placeholder="Select action"
+                                                placeholder="No Action"
                                                 value={hotspot.action}
                                                 onChange={(e) => handleHotspotChange(pageIndex, hotspotIndex, 'action', e.target.value)}
                                             >
-                                                <option value="1">Action 1</option>
-                                                <option value="2">Action 2</option>
-                                                <option value="3">Action 3</option>
+                                                {Array.from({ length: virtualTours.length }, (_, i) => i + 1)
+                                                    .filter((page) => page !== pageIndex + 1)
+                                                    .map((page) => (
+                                                        <option key={page} value={page}>
+                                                            Go to page {page}
+                                                        </option>
+                                                ))}
                                             </Select>
                                         </FormControl>
                                     </SimpleGrid>
@@ -346,6 +363,7 @@ const VirtualTour = (props: IVirtualTourProps) => {
                                 colorScheme="teal"
                                 variant="outline"
                                 onClick={() => handleAddHotspot(pageIndex)}
+                                isDisabled={!virtualTour?.processedImage}
                             >
                                 Add Hotspot
                             </Button>
