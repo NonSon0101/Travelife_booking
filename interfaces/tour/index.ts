@@ -97,10 +97,11 @@ export interface IUploadTourImage {
 export interface IHotSpot {
   _id?: string
   id: string
-  pitch: string
-  yaw: string
+  pitch: number
+  yaw: number
   name: string
   action: string
+  type: string
 }
 
 export interface IVirtualTour {

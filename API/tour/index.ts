@@ -1,6 +1,6 @@
 import api, { auth, handleError } from 'API'
 import { PLATFORM } from 'enums/common'
-import { ITourPagination, ISearch, ITour, IAllTourPagination } from 'interfaces/tour'
+import { ITourPagination, ISearch, ITour, IAllTourPagination, IVirtualTour } from 'interfaces/tour'
 import get from 'lodash/get'
 
 const TOUR_URL = '/api/v1/tours'
@@ -82,6 +82,17 @@ export async function deleteTour(tourId: string): Promise<void> {
     })
   } catch (error) {
     handleError(error as Error, 'API/tour', 'deleteTour')
+    const errorMessage: string = get(error, 'data.error.message', '') || JSON.stringify(error)
+    throw new Error(errorMessage)
+  }
+}
+
+export async function getVirtualTourPage(tourId: string, page: string): Promise<IVirtualTour> {
+  try {
+    const response = await api.get(`${TOUR_URL}/virtual-tour/${tourId}/${page}`)
+    return response.data.metadata
+  } catch (error) {
+    handleError(error as Error, 'API/tour', 'getVirtualTourPage')
     const errorMessage: string = get(error, 'data.error.message', '') || JSON.stringify(error)
     throw new Error(errorMessage)
   }
