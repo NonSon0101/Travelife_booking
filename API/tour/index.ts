@@ -90,7 +90,7 @@ export async function deleteTour(tourId: string): Promise<void> {
 
 export async function getVirtualTourPage(tourId: string, page: string): Promise<IVirtualTour> {
   try {
-    const response = await api.get(`${TOUR_URL}/virtual-tour/${tourId}/${page}`)
+    const response = await api.get(`${VIRTUAL_TOUR_URL}/${tourId}/${page}`)
     return response.data.metadata
   } catch (error) {
     handleError(error as Error, 'API/tour', 'getVirtualTourPage')

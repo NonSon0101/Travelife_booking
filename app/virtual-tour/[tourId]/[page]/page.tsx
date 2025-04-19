@@ -10,17 +10,15 @@ const VirtualTourPage = dynamic(() => import('pages/VirtualTourPage'), {
 const VirtualTour = ({
     params,
   }: {
-    params: { tourCode: string; page: string }
+    params: { tourId: string; page: string }
   }) => {
-    const {tourCode, page} = params
+    const {tourId, page} = params
     const searchParams = useSearchParams();
-    const url_image = searchParams ? searchParams.get('url_image') || null : null;
 
     return (
       <VirtualTourPage
-        tourCode={tourCode}
+        tourId={tourId}
         page={page}
-        processedImage={url_image}
       />
     );
 }

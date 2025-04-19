@@ -1,4 +1,4 @@
-import VirtualTour from 'app/virtual-tour/[tourCode]/[page]/page'
+import VirtualTour from 'app/virtual-tour/[tourId]/[page]/page'
 import cmsRoutes from './cms'
 
 const routes = {
@@ -34,7 +34,7 @@ const routes = {
     value: "/all-activities"
   },
   virtualTour: {
-    value: (tourCode: string, page: string) => `/virtual-tour/${tourCode}/${page}`,
+    value: (tourId: string, page: string) => `/virtual-tour/${tourId}/${page}`,
   },
   ...cmsRoutes
 }
