@@ -25,29 +25,22 @@ const VirtualTour = (props: IVirtualTourProps) => {
     const { control, setValue, getValues } = methods;
     const [isImageLoading, setIsImageLoading] = useState<boolean>(false)
     const imagesRef = useRef<any>(null)
-    const [virtualTours, setVirtualTours] = useState<Array<IVirtualTour>>([])
+    const virtualTours: IVirtualTour[] = useWatch({ control, name: 'virtualTours' }) || [];
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const [selectedHotspots, setSelectedHotspots] = useState<IHotSpot[]>([]);
-
-    useEffect(() => {
-        const initialTours = getValues('virtualTours') ?? []
-        setVirtualTours(initialTours);
-        setValue('virtualTours', initialTours)
-    }, [getValues]);
-
+    const tourCode = getValues('code');
 
     function deleteImages(url: string, pageIndex: number) {
         const newVirtualTours = [...virtualTours]
         newVirtualTours[pageIndex].images = newVirtualTours[pageIndex].images.filter(image => image !== url)
-        setVirtualTours(newVirtualTours)
+        console.log(newVirtualTours[pageIndex].images)
         setValue('virtualTours', newVirtualTours)
     }
 
     function deleteFile(fileIndex: number, pageIndex: number) {
         const newVirtualTours = [...virtualTours]
-        newVirtualTours[pageIndex].files = newVirtualTours[pageIndex].files.filter((_, i) => i !== fileIndex)
-        setVirtualTours(newVirtualTours)
+        newVirtualTours[pageIndex].files = (newVirtualTours[pageIndex]?.files || []).filter((_, i) => i !== fileIndex)
         setValue('virtualTours', newVirtualTours)
     }
 
@@ -60,7 +53,6 @@ const VirtualTour = (props: IVirtualTourProps) => {
             name: '',
             action: ''
         }]
-        setVirtualTours(newVirtualTours)
         setValue('virtualTours', newVirtualTours)
     }
 
@@ -70,14 +62,12 @@ const VirtualTour = (props: IVirtualTourProps) => {
             ...newVirtualTours[pageIndex].hotspots[hotspotIndex],
             [field]: value
         }
-        setVirtualTours(newVirtualTours)
         setValue('virtualTours', newVirtualTours)
     }
 
     const handleDeleteHotspot = (pageIndex: number, hotspotIndex: number) => {
         const newVirtualTours = [...virtualTours]
         newVirtualTours[pageIndex].hotspots = newVirtualTours[pageIndex].hotspots.filter((_, i) => i !== hotspotIndex)
-        setVirtualTours(newVirtualTours)
         setValue('virtualTours', newVirtualTours)
     }
 
@@ -90,19 +80,16 @@ const VirtualTour = (props: IVirtualTourProps) => {
             hotspots: [],
             processedImage: null
         }];
-        setVirtualTours(data)
         setValue('virtualTours', data)
     }
 
     const handleDeletePage = (pageIndex: number) => {
-        setVirtualTours(virtualTours.filter((_, i) => i !== pageIndex))
         setValue('virtualTours', virtualTours.filter((_, i) => i !== pageIndex))
     }
 
     const handlePageNameChange = (pageIndex: number, value: string) => {
         const newVirtualTours = [...virtualTours]
         newVirtualTours[pageIndex].name = value
-        setVirtualTours(newVirtualTours)
         setValue('virtualTours', newVirtualTours)
     }
 
@@ -122,7 +109,7 @@ const VirtualTour = (props: IVirtualTourProps) => {
         }
 
         // Check total number of files
-        const currentFiles = virtualTours[pageIndex].files
+        const currentFiles = virtualTours[pageIndex].files || []
         const totalFiles = currentFiles.length + files.length
         if (totalFiles > 5) {
             toast.error('Maximum 5 images allowed per page')
@@ -131,7 +118,6 @@ const VirtualTour = (props: IVirtualTourProps) => {
 
         const newVirtualTours = [...virtualTours]
         newVirtualTours[pageIndex].files = [...currentFiles, ...files]
-        setVirtualTours(newVirtualTours)
         setValue('virtualTours', newVirtualTours)
     }
 
@@ -141,10 +127,10 @@ const VirtualTour = (props: IVirtualTourProps) => {
             const currentPage = virtualTours[pageIndex]
             
             const response = await processVirtualTour(
-                'tour-05', // Replace with actual tour code
+                tourCode,
                 currentPage.id,
                 {
-                    files: currentPage.files,
+                    files: currentPage.files || [],
                     images: currentPage.images
                 }
             )
@@ -156,7 +142,6 @@ const VirtualTour = (props: IVirtualTourProps) => {
             newVirtualTours[pageIndex].images = [...response.images]
             newVirtualTours[pageIndex].files = [] 
             newVirtualTours[pageIndex].processedImage = response.processedImage
-            setVirtualTours(newVirtualTours)
             setValue('virtualTours', newVirtualTours)
 
             toast.success('Images processed successfully')
@@ -240,7 +225,7 @@ const VirtualTour = (props: IVirtualTourProps) => {
                                 <Img key={image} width="full" height="130px" src={image} borderRadius={8} />
                             </Center>
                         ))}
-                        {virtualTour.files.map((file, fileIndex) => (
+                        {virtualTour?.files && virtualTour?.files.map((file, fileIndex) => (
                             <Center key={fileIndex} position="relative">
                                 <Button
                                     boxSize={10}
@@ -287,7 +272,7 @@ const VirtualTour = (props: IVirtualTourProps) => {
                             colorScheme="teal"
                             isLoading={isImageLoading}
                             onClick={() => handleProcess(pageIndex)}
-                            isDisabled={virtualTour.files.length === 0 && virtualTour.images.length === 0}
+                            isDisabled={(!virtualTour.files || virtualTour.files.length === 0) && virtualTour.images.length === 0}
                         >
                             Process
                         </Button>
@@ -370,7 +355,7 @@ const VirtualTour = (props: IVirtualTourProps) => {
                                                 onChange={(e) => handleHotspotChange(pageIndex, hotspotIndex, 'action', e.target.value)}
                                             >
                                                 {Array.from({ length: virtualTours.length }, (_, i) => i + 1)
-                                                    .filter((page) => page !== pageIndex + 1)
+                                                    .filter((page) => page !== pageIndex + 1 && virtualTours[page - 1]?.processedImage)
                                                     .map((page) => (
                                                         <option key={page} value={page}>
                                                             Go to page {page}

@@ -6,9 +6,10 @@ import get from 'lodash/get'
 
 const UPLOAD_URL = '/api/v1/upload'
 
-export async function uploadImage(type: string, data: FormData): Promise<string> {
+export async function uploadImage(type: string, data: FormData, publicId?: string): Promise<string> {
   try {
-    const response = await api.post(`${UPLOAD_URL}/image/${type}`, data, {
+    const url = publicId ? `${UPLOAD_URL}/image/${type}?publicId=${publicId}` : `${UPLOAD_URL}/image/${type}`
+    const response = await api.post(url, data, {
       headers: { 
         ...auth(PLATFORM.CMS),
         'Content-Type': 'application/x-www-form-urlencoded'

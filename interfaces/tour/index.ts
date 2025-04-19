@@ -33,7 +33,7 @@ export interface ITour {
   currency?: string
   isActive?: boolean
   hotels?: IHotel[]
-  locations?: string[]
+  location?: string
   transports?: ITransportation[]
   virtualTours: IVirtualTour[]
 }
@@ -108,7 +108,7 @@ export interface IVirtualTour {
   id: string
   name: string
   images: string[]
-  files: any[]
+  files?: any[]
   hotspots: IHotSpot[]
   processedImage?: string | null
 }
