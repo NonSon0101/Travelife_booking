@@ -23,6 +23,7 @@ import get from "lodash/get";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 interface ILoginModalProps {
   openSignUpModal: () => void;
@@ -37,6 +38,7 @@ const LoginModal = (props: ILoginModalProps) => {
   const methods = useForm<ILoginForm>();
   const { handleSubmit } = methods;
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const router = useRouter();
 
   async function onSubmit(data: ILoginForm): Promise<void> {
     try {
@@ -44,6 +46,7 @@ const LoginModal = (props: ILoginModalProps) => {
       await authStore.login({ ...data, isRemember: true }, PLATFORM.WEBSITE);
       setIsLoading(false);
       onClose();
+      router.refresh();
       toast.success("Login successfully");
     } catch (error) {
       setIsLoading(false);
