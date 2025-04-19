@@ -8,26 +8,32 @@ import { useStores } from "hooks";
 import Clipboard from "components/Clipboard";
 
 interface IVirtualTourPageProps {
-    tourId: string
+    tourCode: string
     page: string
+    processedImage?: string | null
 }
 
 const VirtualTourPage = (props: IVirtualTourPageProps) => {
     const [yaw, setYaw] = useState<number>(0);
     const [pitch, setPitch] = useState<number>(0);
-    const [image, setImage] = useState<string>("https://pannellum.org/images/alma.jpg");
+    const [image, setImage] = useState<string>('');
+    // const [image, setImage] = useState<string>("https://res.cloudinary.com/dxrygyw5d/image/upload/v1745048116/test/virtual/test-1.jpg");
     const panImage = useRef<any>(null);
 
     const { tourStore } = useStores();
     const { virtualTour } = tourStore;
 
     useEffect(() => {
-        // tourStore.fetchVirtualTourPage(props.tourId, props.page)
-    }, [props.tourId, props.page]);
+        if (props.processedImage) {
+            setImage(props.processedImage);
+        } else {
+            
+        }
+    }, [props.tourCode, props.page, props.processedImage]);
 
-    // if (!virtualTour) {
-    //     return null
-    // }
+    if (!image) {
+        return null
+    }
 
     return (
         <VStack width='full' height='full' position='relative'>

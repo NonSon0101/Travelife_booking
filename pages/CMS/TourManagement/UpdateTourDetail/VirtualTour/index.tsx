@@ -6,10 +6,14 @@ import { ChangeEvent, useRef, useState, useEffect } from "react";
 import { useWatch } from "react-hook-form";
 import { toast } from 'react-toastify';
 import { getValidArray } from 'utils/common';
-import { IVirtualTour } from "interfaces/tour";
+import { IHotSpot, IVirtualTour } from "interfaces/tour";
 import { m } from "framer-motion";
 import { LuInfo } from "react-icons/lu";
 import { Tooltip } from "react-tooltip";
+import { processVirtualTour } from "API/tour";
+import routes from "routes";
+import { useDisclosure } from '@chakra-ui/react';
+import VirtualTourModal from "./VirtualTouModal";
 
 interface IVirtualTourProps {
     methods: any;
@@ -22,6 +26,9 @@ const VirtualTour = (props: IVirtualTourProps) => {
     const [isImageLoading, setIsImageLoading] = useState<boolean>(false)
     const imagesRef = useRef<any>(null)
     const [virtualTours, setVirtualTours] = useState<Array<IVirtualTour>>([])
+    const { isOpen, onOpen, onClose } = useDisclosure();
+    const [selectedImage, setSelectedImage] = useState<string | null>(null);
+    const [selectedHotspots, setSelectedHotspots] = useState<IHotSpot[]>([]);
 
     useEffect(() => {
         const initialTours = getValues('virtualTours') ?? []
@@ -133,36 +140,49 @@ const VirtualTour = (props: IVirtualTourProps) => {
             setIsImageLoading(true)
             const currentPage = virtualTours[pageIndex]
             
-            // Create FormData for new files
-            const formData = new FormData()
-            currentPage.files.forEach((file, index) => {
-                formData.append('files', file)
-            })
+            const response = await processVirtualTour(
+                'tour-05', // Replace with actual tour code
+                currentPage.id,
+                {
+                    files: currentPage.files,
+                    images: currentPage.images
+                }
+            )
 
-            // Send files to API
-            const response = await fetch('/api/upload', {
-                method: 'POST',
-                body: formData
-            })
-
-            if (!response.ok) {
-                throw new Error('Upload failed')
-            }
-
-            const result = await response.json()
+            console.log('Process response:', response)
             
             // Update state with new URLs
             const newVirtualTours = [...virtualTours]
-            newVirtualTours[pageIndex].images = [...currentPage.images, ...result.urls]
-            newVirtualTours[pageIndex].files = [] // Clear uploaded files after successful upload
+            newVirtualTours[pageIndex].images = [...response.images]
+            newVirtualTours[pageIndex].files = [] 
+            newVirtualTours[pageIndex].processedImage = response.processedImage
             setVirtualTours(newVirtualTours)
             setValue('virtualTours', newVirtualTours)
 
             toast.success('Images processed successfully')
         } catch (error) {
-            toast.error('Failed to process images')
+            console.error('Error processing images:', error)
         } finally {
             setIsImageLoading(false)
+        }
+    }
+
+    function handlePreview(pageIndex: number) {
+        const currentVirtualTour = virtualTours[pageIndex]
+        if (!currentVirtualTour?.processedImage) return;
+
+        setSelectedImage(currentVirtualTour.processedImage);
+        setSelectedHotspots(currentVirtualTour.hotspots);
+        onOpen();
+    }
+
+    function handleClickHotspot(hotspot: IHotSpot) {
+        if (hotspot.action) {
+            const pageIndex = parseInt(hotspot.action) - 1
+            const newVirtualTour = virtualTours[pageIndex]
+            if (!newVirtualTour?.processedImage) return;
+            setSelectedImage(newVirtualTour.processedImage);
+            setSelectedHotspots(newVirtualTour.hotspots);
         }
     }
 
@@ -248,13 +268,16 @@ const VirtualTour = (props: IVirtualTourProps) => {
                         <Button
                             background="gray.300"
                             isLoading={isImageLoading}
-                            onClick={() => imagesRef?.current?.click()}
+                            onClick={() => imagesRef?.current?.[pageIndex]?.click()}
                         >
-                            Upload Tour Images
+                            Upload Images
                         </Button>
                         <input 
                             type="file" 
-                            ref={imagesRef} 
+                            ref={(el) => {
+                                if (!imagesRef.current) imagesRef.current = [];
+                                imagesRef.current[pageIndex] = el;
+                            }} 
                             onChange={(e) => uploadImages(e, pageIndex)} 
                             style={{ display: 'none' }} 
                             multiple 
@@ -270,7 +293,7 @@ const VirtualTour = (props: IVirtualTourProps) => {
                         </Button>
                         <Button
                             colorScheme="blue"
-                            onClick={() => {/* Handle preview */}}
+                            onClick={() => { handlePreview(pageIndex) }}
                             isDisabled={!virtualTour?.processedImage}
                         >
                             Preview
@@ -379,6 +402,13 @@ const VirtualTour = (props: IVirtualTourProps) => {
             >
                 Add Page
             </Button>
+            <VirtualTourModal
+                isOpen={isOpen}
+                onClose={onClose}
+                image={selectedImage}
+                hotspots={selectedHotspots}
+                handleClickHotspot={handleClickHotspot}
+            />
         </VStack>
     )
 }
