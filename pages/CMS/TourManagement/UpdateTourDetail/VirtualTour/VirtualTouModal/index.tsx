@@ -89,9 +89,9 @@ const VirtualTourModal = ({
                             // @ts-ignore
                             authorURL="https://github.com/vmdt"
                             pitch={10}
-                            yaw={10}
+                            yaw={180}
                             hfov={110}
-                            // autoRotate={1}
+                            autoRotate={2}
                             autoLoad
                             compass
                             disableKeyboardCtrl
