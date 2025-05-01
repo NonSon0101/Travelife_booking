@@ -5,6 +5,7 @@ import { Providers } from './providers'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import 'react-datepicker/dist/react-datepicker.css'
+import 'pannellum-react/lib/pannellum/css/pannellum.css'
 
 const inter = Inter({ subsets: ['latin'] })
 

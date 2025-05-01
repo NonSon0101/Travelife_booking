@@ -1,6 +1,6 @@
-import { getActiveTours, getAllTours, getTourDetail, searchTour } from 'API/tour'
+import { getActiveTours, getAllTours, getTourDetail, getVirtualTourPage, searchTour } from 'API/tour'
 import { IPriceOption } from 'interfaces/common'
-import { ITour, ISuggesttion, IStartLocation } from 'interfaces/tour'
+import { ITour, ISuggesttion, IStartLocation, IVirtualTour } from 'interfaces/tour'
 import { makeAutoObservable } from 'mobx'
 import RootStore from 'stores'
 
@@ -20,6 +20,8 @@ class TourStore {
   tourDetail: ITour | null = null
   priceOptions: IPriceOption[] | null = null
   startLocation: IStartLocation | null = null
+
+  virtualTour: IVirtualTour | null = null
 
   async fetchTotalCount(): Promise<void> {
     const { total } = await getAllTours()
@@ -48,6 +50,11 @@ class TourStore {
     this.tourDetail = tour
     this.priceOptions = tour.priceOptions ?? []
     this.startLocation = tour.startLocation ?? null
+  }
+
+  async fetchVirtualTourPage(tourId: string, page: string): Promise<void> {
+    const virtualTour = await getVirtualTourPage(tourId, page)
+    this.virtualTour = virtualTour
   }
 }
 

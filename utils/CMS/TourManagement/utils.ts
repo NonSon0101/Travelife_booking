@@ -37,16 +37,16 @@ export function formatFormData(formData: IUpdateTourForm, priceOptions: IPriceOp
   return {
     //_id: formData?._id,
     highlights: formData?.highlights,
-    type: formData?.type,
+    type: formData?.typeValue?.value,
     interest: formData?.interest,
     startLocation: formData?.startLocation,
-    details: formData?.details, 
-    itinerary: formData?.itinerary, 
+    // details: formData?.details, 
+    // itinerary: formData?.itinerary, 
     ratingAverage: formData?.ratingAverage, 
-    numOfRating: formData?.numOfRating,
+    // numOfRating: formData?.numOfRating,
     //isActive: formData?.isActive, 
     hotels: formData?.hotels, 
-    locations: formData?.locations, 
+    location: formData?.locationValue?.value, 
     transports: formData?.transports,
     code: formData?.code,
     title: formData?.title,
@@ -65,5 +65,13 @@ export function formatFormData(formData: IUpdateTourForm, priceOptions: IPriceOp
     exclusions: formData?.exclusions,
     thumbnail: formData?.thumbnail,
     images: getValidArray(formData?.images),
+    virtualTours: formData?.virtualTours?.map((tour) => ({
+      id: tour?.id,
+      images: tour?.images || [],
+      hotspots: tour?.hotspots || [],
+      name: tour?.name,
+      processedImage: tour?.processedImage,
+    })) || [],
   }
 }
+

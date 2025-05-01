@@ -82,6 +82,7 @@ const TourDetailPage = () => {
   const [transport, setTransport] = useState<{ id: string, name: string }>({ id: '', name: '' })
   const { tourStore, cartStore, bookingStore } = useStores();
   const { tourDetail, priceOptions, startLocation } = tourStore;
+
   const settings = {
     dots: true,
     infinite: true,
@@ -729,45 +730,93 @@ const TourDetailPage = () => {
         </VStack>
         <VStack alignSelf="flex-start" width="full" flex={1}>
           <VStack
-            width="100%"
-            align="flex-start"
-            padding={4}
-            border="3px solid #DCDFE4"
-            borderTopColor="teal"
-            borderRadius={2}
-            spacing={0}
+            width="full"
+            height="fit-content"
+            spacing={4}
           >
-            <SimpleGrid columns={{ base: 1, xl: 2 }} alignItems='center' width='full'>
-              <GridItem>
-                <Text>From</Text>
-                <Text fontSize="2xl" fontWeight={700} flex={2}>
-                  {tourDetail?.regularPrice && formatCurrency(tourDetail?.regularPrice, tourDetail?.currency ?? '')}
+            <VStack
+              width="100%"
+              align="flex-start"
+              padding={4}
+              border="3px solid #DCDFE4"
+              borderTopColor="teal"
+              borderRadius={2}
+              spacing={0}
+            >
+              <SimpleGrid columns={{ base: 1, xl: 2 }} alignItems='center' width='full'>
+                <GridItem>
+                  <Text>From</Text>
+                  <Text fontSize="2xl" fontWeight={700} flex={2}>
+                    {tourDetail?.regularPrice && formatCurrency(tourDetail?.regularPrice, tourDetail?.currency ?? '')}
+                  </Text>
+                  <Text>per person</Text>
+                </GridItem>
+                <GridItem width='full'>
+                  <Button
+                    colorScheme="teal"
+                    borderRadius="80px"
+                    display={{ base: 'none', lg: 'block' }}
+                    textAlign='center'
+                    paddingX={8}
+                    width="full"
+                    flex={1}
+                    alignSelf='center'
+                    marginTop='24px'
+                  >
+                    Check availability
+                  </Button>
+                </GridItem>
+              </SimpleGrid>
+              <HStack marginTop="24px !important" spacing={6}>
+                <Icon iconName="card.svg" size={40} />
+                <Text fontSize="sm">
+                  Reserve now & pay later to book your spot and pay nothing
+                  today
                 </Text>
-                <Text>per person</Text>
-              </GridItem>
-              <GridItem width='full'>
-                <Button
-                  colorScheme="teal"
-                  borderRadius="80px"
-                  display={{ base: 'none', lg: 'block' }}
-                  textAlign='center'
-                  paddingX={8}
-                  width="full"
-                  flex={1}
-                  alignSelf='center'
-                  marginTop='24px'
-                >
-                  Check availability
-                </Button>
-              </GridItem>
-            </SimpleGrid>
-            <HStack marginTop="24px !important" spacing={6}>
-              <Icon iconName="card.svg" size={40} />
-              <Text fontSize="sm">
-                Reserve now & pay later to book your spot and pay nothing
-                today
-              </Text>
-            </HStack>
+              </HStack>
+            </VStack>
+            <VStack
+              width="100%"
+              padding={4}
+              border="3px solid #DCDFE4"
+              borderTopColor="teal"
+              borderRadius={2}
+              spacing={4}
+            >
+                {!userId ? (
+                <Text fontSize="md" textAlign="center">
+                  To view the 360 Tour, please login first, then click the button below.
+                </Text>
+                ) : (
+                <Text fontSize="md" textAlign="center">
+                  To view the 360 Tour, please click the button below.
+                </Text>
+                )}
+
+              <Button
+                colorScheme="teal"
+                borderRadius="80px"
+                padding={3}
+                width="content"
+                flex={1}
+                alignSelf="center"
+                isDisabled={!userId || !tourDetail?.virtualTours || tourDetail?.virtualTours.length === 0 }
+                onClick={() => {
+                  if (tourDetail?.virtualTours && tourDetail?.virtualTours.length > 0) {
+                    const previewUrl = window.open(routes.virtualTour.value(tourDetail?._id ?? '', '1'), '_blank')
+                    if (previewUrl) {
+                      previewUrl.focus()
+                    }
+                  }
+                }}
+              >
+                <HStack spacing={2} align="center">
+                  <Icon iconName="eye.svg" size={20} />
+                  <Text>View 360 Tour</Text>
+                </HStack>
+              </Button>
+
+            </VStack>
           </VStack>
         </VStack>
       </Stack>
