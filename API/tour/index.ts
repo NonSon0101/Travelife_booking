@@ -1,9 +1,10 @@
 import api, { auth, handleError } from 'API'
 import { PLATFORM } from 'enums/common'
-import { ITourPagination, ISearch, ITour, IAllTourPagination } from 'interfaces/tour'
+import { ITourPagination, ISearch, ITour, IAllTourPagination, IVirtualTour } from 'interfaces/tour'
 import get from 'lodash/get'
 
 const TOUR_URL = '/api/v1/tours'
+const VIRTUAL_TOUR_URL = '/api/v1/virtual-tours'
 
 export async function getAllTours(filter = ''): Promise<IAllTourPagination> {
   try {
@@ -83,6 +84,44 @@ export async function deleteTour(tourId: string): Promise<void> {
   } catch (error) {
     handleError(error as Error, 'API/tour', 'deleteTour')
     const errorMessage: string = get(error, 'data.error.message', '') || JSON.stringify(error)
+    throw new Error(errorMessage)
+  }
+}
+
+export async function getVirtualTourPage(tourId: string, page: string): Promise<IVirtualTour> {
+  try {
+    const response = await api.get(`${VIRTUAL_TOUR_URL}/${tourId}/${page}`)
+    return response.data.metadata
+  } catch (error) {
+    handleError(error as Error, 'API/tour', 'getVirtualTourPage')
+    const errorMessage: string = get(error, 'data.error.message', '') || JSON.stringify(error)
+    throw new Error(errorMessage)
+  }
+}
+
+export async function processVirtualTour(tourCode: string, page: string, data: {
+  files: any[],
+  images: string[]
+}) {
+  try {
+    const formData = new FormData()
+    data.files?.forEach((file: any) => {
+      formData.append('files', file)
+    });
+
+    data.images?.forEach((image: string) => {
+      formData.append('images', image)
+    });
+
+    const response = await api.post(`${VIRTUAL_TOUR_URL}/process/${tourCode}/${page}`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+    return response.data.metadata
+  } catch (error) {
+    // handleError(error as Error, 'API/tour', 'processVirtualTour')
+    const errorMessage: string = 'Data does not satify for process virtual tour'
     throw new Error(errorMessage)
   }
 }

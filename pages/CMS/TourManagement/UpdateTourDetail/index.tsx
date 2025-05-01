@@ -8,16 +8,16 @@ import Icon from 'components/Icon'
 import FormInput from 'components/FormInput'
 import { useStores } from 'hooks/useStores'
 import { IPriceOption } from 'interfaces/common'
-import { ITour } from 'interfaces/tour'
+import { ITour, IVirtualTour } from 'interfaces/tour'
 import get from 'lodash/get'
 import { observer } from 'mobx-react'
 import Image from 'next/image'
 import { usePathname, useRouter } from 'next/navigation'
 import NoImage from 'public/assets/images/no-image.png'
-import { FormProvider, useForm, useWatch } from 'react-hook-form'
+import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import routes from 'routes'
-import { getOptions, getValidArray } from 'utils/common'
+import { convertToBase64, getOptions, getValidArray } from 'utils/common'
 import { formatFormData } from 'utils/CMS/TourManagement/utils'
 import ManageExclusions from './ManageExclusions'
 import ManageInclusions from './ManageInclusions'
@@ -25,6 +25,7 @@ import ManagePriceOptions from './ManagePriceOptions'
 import { currencyOptions, tourTypeOptions } from 'constants/common'
 import PrivateTour from './PrivateTour'
 import ManageHotels from './ManageHotels'
+import VirtualTour from './VirtualTour';
 
 export interface IUpdateTourForm extends ITour {
   typeValue: IOption
@@ -119,6 +120,24 @@ const UpdateTourDetail = () => {
 
   async function onSubmit(formData: IUpdateTourForm) {
     setIsLoading(true)
+
+    // handle files in virtual tours
+    if (formData.virtualTours && formData?.virtualTours?.length > 0) {
+      await Promise.all(
+        formData.virtualTours.map(async (virtualTour: IVirtualTour) => {
+          if (virtualTour?.files && virtualTour?.files?.length > 0) {
+            const base64Images: string[] = await Promise.all(
+              virtualTour.files.map(async (file: File) => {
+                const base64 = await convertToBase64(file);
+                return base64;
+              })
+            )
+            virtualTour.images = [...(virtualTour.images || []), ...base64Images];
+            virtualTour.files = [];
+          }
+        })
+      ); 
+    }
     const data: ITour = formatFormData(formData, existingPriceOptions)
     console.log("data", data)
     try {
@@ -158,6 +177,7 @@ const UpdateTourDetail = () => {
 
   useEffect(() => {
     if (tourDetail?._id && isEditMode) {
+      console.log('tourDetail', tourDetail)
       reset({
         ...tourDetail,
         typeValue: {
@@ -173,8 +193,8 @@ const UpdateTourDetail = () => {
           value: get(tourDetail?.category, '_id') ?? ''
         },
         locationValue: {
-          label: get(tourDetail?.startLocation, 'title') ?? '',
-          value: get(tourDetail?.startLocation, '_id') ?? ''
+          label: get(tourDetail?.location, 'title') ?? '',
+          value: get(tourDetail?.location, '_id') ?? ''
         }
       })
       const priceOptionsData: IPriceOption[] = getValidArray(tourDetail?.priceOptions).map(option => {
@@ -221,29 +241,53 @@ const UpdateTourDetail = () => {
                   <FormInput name="title" label="Title" />
                   <FormInput name="description" label="Description" gridColumn="span 2" />
                   <FormInput name="summary" label="Summary" />
-                  <Dropdown
+                  <Controller
                     name="typeValue"
-                    label="Type"
-                    options={tourTypeOptions}
-                    setValue={setValue}
+                    control={control}
+                    defaultValue={undefined}
+                    render={({ field }) => (
+                      <Dropdown
+                        {...field}
+                        label="Type"
+                        options={tourTypeOptions}
+                        placeholder="Select a type"
+                        setValue={setValue}
+                      />
+                    )}
                   />
-                  <Dropdown
+                  {/* <Dropdown
                     name="currencyValue"
                     label="Currency"
                     options={currencyOptions}
-                    setValue={setValue}
-                  />
-                  <Dropdown
+                    onChange={(selectedOption) => setValue('currencyValue', selectedOption)}
+                  /> */}
+                  <Controller
                     name="categoryValue"
-                    label="Category"
-                    options={categoryOptions}
-                    setValue={setValue}
+                    control={control}
+                    defaultValue={undefined}
+                    render={({ field }) => (
+                      <Dropdown
+                        {...field}
+                        label="Category"
+                        options={categoryOptions}
+                        placeholder="Select a category"
+                        setValue={setValue}
+                      />
+                    )}
                   />
-                  <Dropdown
+                  <Controller
                     name="locationValue"
-                    label="Start Location"
-                    options={locationOptions}
-                    setValue={setValue}
+                    control={control}
+                    defaultValue={undefined}
+                    render={({ field }) => (
+                      <Dropdown
+                        {...field}
+                        label="Start Location"
+                        options={locationOptions}
+                        placeholder="Select a location"
+                        setValue={setValue}
+                      />
+                    )}
                   />
                   {/* <FormInput name="interest" label="Interest" /> */}
                   {/* <FormInput name="details" label="Details" /> */}
@@ -306,7 +350,7 @@ const UpdateTourDetail = () => {
                           >
                             <Icon iconName="trash.svg" size={32} />
                           </Button>
-                          <Img key={image} width="215px" height="130px" src={image} borderRadius={8} />
+                          <Img key={image} width="full" height="130px" src={image} borderRadius={8} />
                         </Center>
                       ))}
                     </SimpleGrid>
@@ -354,6 +398,15 @@ const UpdateTourDetail = () => {
               <input type="file" ref={thumbnailRef} onChange={uploadThumbnail} style={{ display: 'none' }} />
             </VStack>
           </HStack>
+          {isEditMode && (
+            <Box width="full" background="white" padding={8} borderRadius={8} borderWidth={1} boxShadow="sm" marginTop={8}>
+              <VStack width="full" align="flex-start" spacing={6}>
+                <VirtualTour
+                  methods={methods}
+                />
+              </VStack>
+            </Box>
+          )}
           <ManagePriceOptions
             tourId={tourId}
             methods={methods}
