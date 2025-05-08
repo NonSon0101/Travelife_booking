@@ -1,7 +1,7 @@
 // 'use client'
 
 import { Text, VStack, HStack } from "@chakra-ui/react";
-// import { Pannellum } from "pannellum-react";
+import { Pannellum } from "pannellum-react";
 import { useEffect, useRef, useState } from "react";
 import { IHotSpot, IVirtualTour } from "interfaces/tour";
 import { useStores } from "hooks";
@@ -9,28 +9,28 @@ import Clipboard from "components/Clipboard";
 import { observer } from 'mobx-react';
 
 
-import dynamic from 'next/dynamic';
+// import dynamic from 'next/dynamic';
 
-const Pannellum = dynamic(
-  () => import('pannellum-react').then((mod) => {
-    const Pannellum = mod.Pannellum;
-    Pannellum.Hotspot = mod.Pannellum.Hotspot;
-    return Pannellum;
-}),
-{ 
-    ssr: false,
-    loading: () => <div>Loading 360 viewer...</div>
-});
+// const Pannellum = dynamic(
+//   () => import('pannellum-react').then((mod) => {
+//     const Pannellum = mod.Pannellum;
+//     Pannellum.Hotspot = mod.Pannellum.Hotspot;
+//     return Pannellum;
+// }),
+// { 
+//     ssr: false,
+//     loading: () => <div>Loading 360 viewer...</div>
+// });
 
-const Hotspot = dynamic(
-    () => import('pannellum-react').then((mod) => {
-      const Pannellum = mod.Pannellum;
-      return Pannellum.Hotspot;
-}),
-{ 
-    ssr: false,
-    loading: () => <div>Loading 360 viewer...</div>
-});
+// const Hotspot = dynamic(
+//     () => import('pannellum-react').then((mod) => {
+//       const Pannellum = mod.Pannellum;
+//       return Pannellum.Hotspot;
+// }),
+// { 
+//     ssr: false,
+//     loading: () => <div>Loading 360 viewer...</div>
+// });
 
 interface IVirtualTourPageProps {
     tourId: string
@@ -121,7 +121,7 @@ const VirtualTourPage = (props: IVirtualTourPageProps) => {
                         const hotspotElements: JSX.Element[] = [];
                     
                         hotspotElements.push(
-                            <Hotspot
+                            <Pannellum.Hotspot
                                 // @ts-ignore
                                 type={!hotspot.action ? 'info' : 'custom'}
                                 pitch={hotspot.pitch || 0}
@@ -138,7 +138,7 @@ const VirtualTourPage = (props: IVirtualTourPageProps) => {
                     
                         if (hotspot.action && hotspot.name) {
                             hotspotElements.push(
-                                <Hotspot
+                                <Pannellum.Hotspot
                                     // @ts-ignore
                                     type="info"
                                     pitch={(hotspot.pitch || 0) - 5}
