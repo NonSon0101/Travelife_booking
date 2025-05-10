@@ -255,12 +255,12 @@ const UpdateTourDetail = () => {
                       />
                     )}
                   />
-                  {/* <Dropdown
+                  <Dropdown
                     name="currencyValue"
                     label="Currency"
                     options={currencyOptions}
-                    onChange={(selectedOption) => setValue('currencyValue', selectedOption)}
-                  /> */}
+                    setValue={setValue}
+                  />
                   <Controller
                     name="categoryValue"
                     control={control}

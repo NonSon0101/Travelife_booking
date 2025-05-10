@@ -1,4 +1,4 @@
-// 'use client'
+"use client";
 
 import { Text, VStack, HStack } from "@chakra-ui/react";
 import { Pannellum } from "pannellum-react";
@@ -7,6 +7,7 @@ import { IHotSpot, IVirtualTour } from "interfaces/tour";
 import { useStores } from "hooks";
 import Clipboard from "components/Clipboard";
 import { observer } from 'mobx-react';
+import PannellumStyleLoader from "app/PannellumStyleLoader";
 
 
 // import dynamic from 'next/dynamic';
@@ -38,6 +39,7 @@ interface IVirtualTourPageProps {
 }
 
 const VirtualTourPage = (props: IVirtualTourPageProps) => {
+
     const [yaw, setYaw] = useState<number>(0);
     const [pitch, setPitch] = useState<number>(0);
     const panImage = useRef<any>(null);
@@ -62,6 +64,7 @@ const VirtualTourPage = (props: IVirtualTourPageProps) => {
 
     return (
         <VStack width='full' height='full' position='relative'>
+            <PannellumStyleLoader />
             <VStack
                 position='absolute'
                 top={10}

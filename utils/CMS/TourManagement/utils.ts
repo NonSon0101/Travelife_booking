@@ -51,8 +51,6 @@ export function formatFormData(formData: IUpdateTourForm, priceOptions: IPriceOp
     code: formData?.code,
     title: formData?.title,
     summary: formData?.summary,
-    // interest: formData?.interest,
-    // type: formData?.typeValue?.value,
     description: formData?.description,
     category: formData?.categoryValue?.value,
     currency: formData?.currencyValue?.value,
