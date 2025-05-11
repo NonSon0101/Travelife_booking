@@ -62,7 +62,7 @@ const VirtualTourPage = (props: IVirtualTourPageProps) => {
 
     return (
         <VStack width='full' height='full' position='relative'>
-            <VStack
+            {/* <VStack
                 position='absolute'
                 top={10}
                 right={10}
@@ -85,7 +85,7 @@ const VirtualTourPage = (props: IVirtualTourPageProps) => {
                     </Text>
                     <Clipboard value={String(yaw)} ariaLabel="Copy yaw" />
                 </HStack>
-            </VStack>
+            </VStack> */}
             <Pannellum
                 width='100%'
                 height='100vh'
@@ -97,7 +97,7 @@ const VirtualTourPage = (props: IVirtualTourPageProps) => {
                 pitch={10}
                 yaw={180}
                 hfov={110}
-                autoRotate={2}
+                autoRotate={-2}
                 // @ts-ignore
                 authorURL="https://github.com/vmdt"
                 autoLoad
@@ -105,8 +105,8 @@ const VirtualTourPage = (props: IVirtualTourPageProps) => {
                 disableKeyboardCtrl
                 ref={panImage}
                 onMouseup = {(event: any) => {
-                    setPitch(panImage.current.getViewer().mouseEventToCoords(event)[0]);
-                    setYaw(panImage.current.getViewer().mouseEventToCoords(event)[1]);
+                    // setPitch(panImage.current.getViewer().mouseEventToCoords(event)[0]);
+                    // setYaw(panImage.current.getViewer().mouseEventToCoords(event)[1]);
                 }}
             >
                 {(virtualTour?.hotspots || [])
