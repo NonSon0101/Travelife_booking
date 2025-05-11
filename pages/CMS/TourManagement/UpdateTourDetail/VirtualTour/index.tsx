@@ -13,8 +13,11 @@ import { Tooltip } from "react-tooltip";
 import { processVirtualTour } from "API/tour";
 import routes from "routes";
 import { useDisclosure } from '@chakra-ui/react';
-import VirtualTourModal from "./VirtualTouModal";
+// import VirtualTourModal from "./VirtualTouModal";
 
+import dynamic from "next/dynamic";
+const VirtualTourModal = dynamic(
+    () => import('./VirtualTouModal'), { ssr: false });
 interface IVirtualTourProps {
     methods: any;
 }
@@ -29,6 +32,7 @@ const VirtualTour = (props: IVirtualTourProps) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const [selectedHotspots, setSelectedHotspots] = useState<IHotSpot[]>([]);
+    const [virtualIndex, setVirtualIndex] = useState<number>(0);
     const tourCode = getValues('code');
 
     function deleteImages(url: string, pageIndex: number) {
@@ -158,10 +162,12 @@ const VirtualTour = (props: IVirtualTourProps) => {
 
         setSelectedImage(currentVirtualTour.processedImage);
         setSelectedHotspots(currentVirtualTour.hotspots);
+        setVirtualIndex(pageIndex);
         onOpen();
     }
 
     function handleClickHotspot(hotspot: IHotSpot) {
+        console.log('Hotspot clicked:', hotspot);
         if (hotspot.action) {
             const pageIndex = parseInt(hotspot.action) - 1
             const newVirtualTour = virtualTours[pageIndex]
@@ -390,9 +396,11 @@ const VirtualTour = (props: IVirtualTourProps) => {
             <VirtualTourModal
                 isOpen={isOpen}
                 onClose={onClose}
-                image={selectedImage}
-                hotspots={selectedHotspots}
-                handleClickHotspot={handleClickHotspot}
+                // image={selectedImage}
+                index={virtualIndex}
+                // hotspots={selectedHotspots}
+                // handleClickHotspot={handleClickHotspot}
+                virtualTours={virtualTours}
             />
         </VStack>
     )
