@@ -1,3 +1,4 @@
+'use client';
 import CMSLayout from 'components/Layout/CMSLayout'
 import AccountManagement from 'pages/CMS/AccountManagement'
 

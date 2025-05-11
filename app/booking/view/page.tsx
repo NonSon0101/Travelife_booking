@@ -1,3 +1,4 @@
+'use client';
 import CartPageLayout from "app/cart/page";
 import PageLayout from "components/Layout/WebLayout/PageLayout";
 import BookingPage from "pages/BookingPage";

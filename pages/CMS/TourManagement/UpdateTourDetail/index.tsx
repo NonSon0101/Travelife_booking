@@ -1,9 +1,10 @@
 "use client";
 import { ChangeEvent, useEffect, useRef, useState } from 'react'
+import dynamic from 'next/dynamic'
 import { Box, Button, Center, FormControl, FormLabel, HStack, Img, SimpleGrid, Switch, Text, VStack, chakra } from '@chakra-ui/react'
 import { createTour, updateTourDetail } from 'API/tour'
 import { uploadImage, uploadTourImage } from 'API/upload'
-import Dropdown, { IOption } from 'components/Dropdown'
+import { IOption } from 'components/Dropdown'
 import Icon from 'components/Icon'
 import FormInput from 'components/FormInput'
 import { useStores } from 'hooks/useStores'
@@ -26,6 +27,10 @@ import { currencyOptions, tourTypeOptions } from 'constants/common'
 import PrivateTour from './PrivateTour'
 import ManageHotels from './ManageHotels'
 import VirtualTour from './VirtualTour';
+const Dropdown = dynamic(() => import('components/Dropdown'), {
+  ssr: false,
+})
+
 
 export interface IUpdateTourForm extends ITour {
   typeValue: IOption
@@ -255,12 +260,20 @@ const UpdateTourDetail = () => {
                       />
                     )}
                   />
-                  {/* <Dropdown
+                  <Controller
                     name="currencyValue"
-                    label="Currency"
-                    options={currencyOptions}
-                    onChange={(selectedOption) => setValue('currencyValue', selectedOption)}
-                  /> */}
+                    control={control}
+                    defaultValue={undefined}
+                    render={({ field }) => (
+                      <Dropdown
+                        {...field}
+                        label="Currency"
+                        options={currencyOptions}
+                        placeholder="Select Currency"
+                        setValue={setValue}
+                      />
+                    )}
+                  />
                   <Controller
                     name="categoryValue"
                     control={control}

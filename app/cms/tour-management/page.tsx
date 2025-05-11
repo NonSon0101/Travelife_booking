@@ -1,3 +1,4 @@
+'use client';
 import CMSLayout from 'components/Layout/CMSLayout'
 import TourManagement from 'pages/CMS/TourManagement'
 

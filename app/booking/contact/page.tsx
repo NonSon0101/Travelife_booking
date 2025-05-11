@@ -1,3 +1,4 @@
+'use client';
 import PageLayout from "components/Layout/WebLayout/PageLayout";
 import ContactPage from "pages/ContactPage";
 

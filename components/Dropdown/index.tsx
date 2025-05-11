@@ -1,3 +1,4 @@
+"use client";
 import { FormControl, FormLabel } from '@chakra-ui/react'
 import { GroupBase, MultiValue, Select } from 'chakra-react-select'
 import get from 'lodash/get'

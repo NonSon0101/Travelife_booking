@@ -1,3 +1,4 @@
+'use client';
 import LoginPage from 'pages/CMS/LoginPage'
 
 const LoginPageLayout = () => {

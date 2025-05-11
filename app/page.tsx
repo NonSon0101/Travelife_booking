@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import HomePage from 'pages/HomePage'
 import { Suspense } from 'react'

@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import { ChakraProvider, extendTheme } from '@chakra-ui/react'
 
 const theme = extendTheme({

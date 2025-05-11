@@ -1,3 +1,4 @@
+'use client';
 import PageLayout from "components/Layout/WebLayout/PageLayout";
 import ResetPasswordPage from "pages/ResetPasswordPage";
 import { Suspense } from "react";

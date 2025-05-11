@@ -1,3 +1,4 @@
+'use client';
 import CMSLayout from 'components/Layout/CMSLayout'
 import BookingManagement from 'pages/CMS/BookingManagement'
 

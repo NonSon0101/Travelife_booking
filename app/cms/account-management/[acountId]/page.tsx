@@ -1,3 +1,4 @@
+'use client';
 import CMSLayout from 'components/Layout/CMSLayout'
 import UpdateAccountDetail from 'pages/CMS/AccountManagement/UpdateAccountDetail'
 

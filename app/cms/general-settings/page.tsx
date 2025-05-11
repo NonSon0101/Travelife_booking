@@ -1,3 +1,4 @@
+'use client';
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
 import CMSLayout from 'components/Layout/CMSLayout'
 import CategoryManagement from 'pages/CMS/CategoryManagement'
