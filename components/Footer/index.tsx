@@ -5,52 +5,98 @@ import {
   Text,
   Link,
   IconButton,
-  Image
+  Image,
+  SimpleGrid,
 } from "@chakra-ui/react";
-import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from 'react-icons/fa';
+import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from "react-icons/fa";
 
 const Footer = () => {
   return (
-    <footer style={{ width: "100%", backgroundColor: "#04364A", color: "#fff", paddingTop: "20px", display: "flex", flexDirection: "column", alignItems: "center" }}>
-      <Box width="100%" padding="40px 20px" textAlign="center">
-        <HStack spacing="24px" justifyContent="space-evenly">
-          <VStack spacing={7} align='flex-start'>
-            <Text fontWeight="bold">About Us</Text>
-            <Link>Press</Link>
-            <Link>Careers</Link>
-            <Link>Contact</Link>
-          </VStack>
-          <VStack spacing={7} align='flex-start'>
-            <Text fontWeight="bold">Mobile</Text>
-            <VStack spacing={7}>
-              <Link href="https://play.google.com/store/apps/details?id=com.getyourguide.android&hl=en_US" isExternal>
-                <img src="https://cdn.getyourguide.com/tf/assets/static/badges/google-play-badge-en-us.svg" alt="Google Play" width="170px" />  {/* Adjusted width */}
-              </Link>
-              <Link href="https://apps.apple.com/us/app/getyourguide-tours-activities/id657070903" isExternal>
-                <img src="https://cdn.getyourguide.com/tf/assets/static/badges/app-store-badge-en-us.svg" alt="App Store" width="170px" />  {/* Adjusted width */}
-              </Link>
-            </VStack>
-          </VStack>
-          <VStack spacing={7} align='flex-start'>
-            <HStack>
-              <Text fontWeight="bold">Travel Life</Text>
-              <Image width='70px' src="/assets/images/logo.jpg" alt="logo" />
-            </HStack>
-            <Text fontSize="sm">Connect with Us:</Text>
-            <HStack spacing="8px">
-              <IconButton aria-label="Facebook" icon={<FaFacebook />} />
-              <IconButton aria-label="Twitter" icon={<FaTwitter />} />
-              <IconButton aria-label="Instagram" icon={<FaInstagram />} />
-              <IconButton aria-label="LinkedIn" icon={<FaLinkedin />} />
-            </HStack>
+    <Box as="footer" bg="#04364A" color="white" w="100%" pt={10}>
+      <Box px={5} py={10} maxW="1200px" mx="auto" alignItems="center">
+        <SimpleGrid columns={[1, 2, 3]} spacing={10} textAlign={["center", "left"]}>
+          {/* About Us */}
+          <VStack align={["center", "flex-start"]} spacing={4} alignItems="center">
+            <Text fontWeight="bold" fontSize="lg">About Us</Text>
+            <Link href="#">Press</Link>
+            <Link href="#">Careers</Link>
+            <Link href="#">Contact</Link>
           </VStack>
 
-        </HStack>
+          {/* Mobile */}
+          <VStack align={["center", "flex-start"]} spacing={4} alignItems="center">
+            <Text fontWeight="bold" fontSize="lg">Mobile</Text>
+            <Link
+              href="https://play.google.com/store/apps/details?id=com.getyourguide.android&hl=en_US"
+              isExternal
+            >
+              <Image
+                src="https://cdn.getyourguide.com/tf/assets/static/badges/google-play-badge-en-us.svg"
+                alt="Google Play"
+                width="170px"
+              />
+            </Link>
+            <Link
+              href="https://apps.apple.com/us/app/getyourguide-tours-activities/id657070903"
+              isExternal
+            >
+              <Image
+                src="https://cdn.getyourguide.com/tf/assets/static/badges/app-store-badge-en-us.svg"
+                alt="App Store"
+                width="170px"
+              />
+            </Link>
+          </VStack>
+
+          {/* Brand + Social */}
+          <VStack align={["center", "flex-start"]} spacing={4} alignItems="center">
+            <HStack>
+              <Text fontWeight="bold" fontSize="lg">Travel Life</Text>
+              <Image
+                src="/assets/images/logo.jpg"
+                alt="logo"
+                width="70px"
+                borderRadius="md"
+              />
+            </HStack>
+            <Text fontSize="sm">Connect with Us:</Text>
+            <HStack spacing={2}>
+              <IconButton
+                aria-label="Facebook"
+                icon={<FaFacebook />}
+                variant="ghost"
+                colorScheme="whiteAlpha"
+              />
+              <IconButton
+                aria-label="Twitter"
+                icon={<FaTwitter />}
+                variant="ghost"
+                colorScheme="whiteAlpha"
+              />
+              <IconButton
+                aria-label="Instagram"
+                icon={<FaInstagram />}
+                variant="ghost"
+                colorScheme="whiteAlpha"
+              />
+              <IconButton
+                aria-label="LinkedIn"
+                icon={<FaLinkedin />}
+                variant="ghost"
+                colorScheme="whiteAlpha"
+              />
+            </HStack>
+          </VStack>
+        </SimpleGrid>
       </Box>
-      <Box width="100%" padding="10px 20px" textAlign="center" backgroundColor="#01272B">
-        <Text fontSize="sm">&copy; {new Date().getFullYear()} Travel Life. All rights reserved.</Text>
+
+      {/* Bottom Bar */}
+      <Box bg="#01272B" py={3}>
+        <Text textAlign="center" fontSize="sm">
+          &copy; {new Date().getFullYear()} Travel Life. All rights reserved.
+        </Text>
       </Box>
-    </footer>
+    </Box>
   );
 };
 

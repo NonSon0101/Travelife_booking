@@ -1,11 +1,21 @@
 "use client";
-import { useEffect } from "react";
-import { SimpleGrid, Box, Button, extendTheme, ThemeProvider, Link } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+import {
+  SimpleGrid,
+  Box,
+  Button,
+  extendTheme,
+  ThemeProvider,
+  Link,
+  Skeleton,
+  SkeletonText
+} from "@chakra-ui/react";
 import { usePathname, useSearchParams } from 'next/navigation'
 import { useRouter } from "next/navigation";
 import routes from "routes";
 import TourCard from "components/TourCard";
 import HomeLayout from "components/Layout/WebLayout/HomeLayout";
+import TourCardSkeleton from "./TourCardSkeleton"
 import { useStores } from "hooks";
 import { observer } from "mobx-react";
 import Title from "components/Title";
@@ -31,6 +41,8 @@ const HomePage = () => {
   const { tourStore, authStore } = useStores();
   const { tours } = tourStore;
 
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     const platform = PLATFORM.WEBSITE
 
@@ -46,7 +58,12 @@ const HomePage = () => {
   }, [userId, accessToken]);
 
   useEffect(() => {
-    tourStore.fetchActiveTours();
+    const fetchData = async () => {
+      setIsLoading(true);
+      await tourStore.fetchActiveTours();
+      setIsLoading(false);
+    };
+    fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -67,6 +84,7 @@ const HomePage = () => {
             fontWeight="600"
             text='Unforgettable tours experiences' />
         </Box>
+
         <SimpleGrid
           maxWidth="1300px"
           paddingY={{ base: '24px' }}
@@ -75,10 +93,15 @@ const HomePage = () => {
           padding={1}
           mt="8px"
         >
-          {tours?.map((tour) => (
-            <TourCard key={tour?._id} tour={tour} />
-          ))}
+          {isLoading
+            ? [...Array(8)].map((_, i) => (
+               <TourCardSkeleton key={i} />
+              ))
+            : tours?.map((tour) => (
+                <TourCard key={tour?._id} tour={tour} />
+              ))}
         </SimpleGrid>
+
         <Box
           marginY={4}
           _before={{
@@ -99,7 +122,7 @@ const HomePage = () => {
             maxWidth: "600px",
             minWidth: "100px",
             marginTop: "18px",
-            marginright: '-120px',
+            marginRight: '-120px',
             width: "full",
             height: "2px",
             bg: 'teal',
@@ -112,6 +135,7 @@ const HomePage = () => {
               border='2px solid teal'
               borderRadius='full'
               bg='transparent'
+              isDisabled={isLoading}
             >
               Show more
             </Button>
