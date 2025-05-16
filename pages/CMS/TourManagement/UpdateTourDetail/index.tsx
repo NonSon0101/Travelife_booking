@@ -75,6 +75,7 @@ const UpdateTourDetail = () => {
   const images = useWatch({ control, name: 'images' }) ?? []
   const locationOptions = getOptions(locations, 'title', '_id')
   const categoryOptions = getOptions(categories, 'name', '_id')
+  const [imageFiles, setImageFiles] = useState<File[]>([])
 
   function backToTourList() {
     router.push(routes.cms.tourManagement.value)
@@ -89,8 +90,19 @@ const UpdateTourDetail = () => {
     if (!event.target.files || event.target.files.length === 0) {
       return
     }
+    const files = Array.from(event.target.files)
+    const imageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
+    const invalidFiles = files.filter(file => !imageTypes.includes(file.type))
+    if (invalidFiles.length > 0) {
+        toast.error('Only image files (JPEG, PNG, GIF, WEBP) are allowed')
+        return
+    }
+    if (!isEditMode) {
+      setImageFiles(files)
+      setIsImageLoading(false)
+      return;
+    }
     try {
-      const files = event.target.files
       const formData = new FormData()
       for (let i = 0; i < files?.length; i++) {
         formData.append('images', files[i])
@@ -103,6 +115,12 @@ const UpdateTourDetail = () => {
     } finally {
       setIsImageLoading(false)
     }
+  }
+
+  async function deleteFile(file: File) {
+    const newFiles = [...imageFiles]
+    newFiles.splice(newFiles.indexOf(file), 1)
+    setImageFiles(newFiles)
   }
 
   async function uploadThumbnail(event: ChangeEvent<HTMLInputElement>) {
@@ -143,6 +161,18 @@ const UpdateTourDetail = () => {
         })
       ); 
     }
+
+    if (!isEditMode && imageFiles.length > 0) {
+      const base64Images: string[] = await Promise.all(
+          imageFiles.map(async (file: File) => {
+            const base64 = await convertToBase64(file);
+            return base64;
+          })
+      )
+      setValue('images', [...images, ...base64Images]);
+      setImageFiles([]);
+    }
+
     const data: ITour = formatFormData(formData, existingPriceOptions)
     console.log("data", data)
     try {
@@ -343,7 +373,7 @@ const UpdateTourDetail = () => {
                     </>
                   }
                 </SimpleGrid>
-                {isEditMode && (
+                {(
                   <VStack width="full" align="flex-start" spacing={0}>
                     <Text color="gray.700" fontWeight={500} lineHeight={6} marginBottom={2}>
                       Tour Photo Gallery
@@ -364,6 +394,23 @@ const UpdateTourDetail = () => {
                             <Icon iconName="trash.svg" size={32} />
                           </Button>
                           <Img key={image} width="full" height="130px" src={image} borderRadius={8} />
+                        </Center>
+                      ))}
+                      {getValidArray(imageFiles).map((file: File) => (
+                        <Center key={file.name} position="relative">
+                          <Button
+                            boxSize={10}
+                            padding={0}
+                            borderRadius="50%"
+                            position="absolute"
+                            zIndex={9}
+                            top={2}
+                            right={2}
+                            onClick={() => deleteFile(file)}
+                          >
+                            <Icon iconName="trash.svg" size={32} />
+                          </Button>
+                          <Img key={file.name} width="full" height="130px" src={URL.createObjectURL(file)} borderRadius={8} />
                         </Center>
                       ))}
                     </SimpleGrid>
