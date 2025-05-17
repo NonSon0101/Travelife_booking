@@ -27,6 +27,7 @@ import { currencyOptions, tourTypeOptions } from 'constants/common'
 import PrivateTour from './PrivateTour'
 import ManageHotels from './ManageHotels'
 import VirtualTour from './VirtualTour';
+import ItinerarySetup from './ItinerarySetup';
 const Dropdown = dynamic(() => import('components/Dropdown'), {
   ssr: false,
 })
@@ -467,6 +468,11 @@ const UpdateTourDetail = () => {
               </VStack>
             </Box>
           )}
+          <Box width="full" background="white" padding={8} borderRadius={8} borderWidth={1} boxShadow="sm" marginTop={8}>
+              <VStack width="full" align="flex-start" spacing={6}>
+                <ItinerarySetup methods={methods} />
+              </VStack>
+          </Box>
           <ManagePriceOptions
             tourId={tourId}
             methods={methods}
