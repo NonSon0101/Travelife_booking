@@ -742,10 +742,10 @@ const TourDetailPage = () => {
               borderRadius={2}
               spacing={0}
             >
-              <SimpleGrid columns={{ base: 1, xl: 2 }} alignItems='center' width='full'>
+              <SimpleGrid columns={{ base: 1, xl: 2 }} alignItems='center' width='full' spacing={2}>
                 <GridItem>
                   <Text>From</Text>
-                  <Text fontSize="2xl" fontWeight={700} flex={2}>
+                  <Text fontSize="xl" fontWeight={700} flex={2}>
                     {tourDetail?.regularPrice && formatCurrency(tourDetail?.regularPrice, tourDetail?.currency ?? '')}
                   </Text>
                   <Text>per person</Text>
@@ -756,7 +756,6 @@ const TourDetailPage = () => {
                     borderRadius="80px"
                     display={{ base: 'none', lg: 'block' }}
                     textAlign='center'
-                    paddingX={8}
                     width="full"
                     flex={1}
                     alignSelf='center'
@@ -816,36 +815,6 @@ const TourDetailPage = () => {
               </Button>
 
             </VStack>
-            <SimpleGrid columns={{ base: 1, xl: 2 }} alignItems='center' width='full' spacing={2}>
-              <GridItem>
-                <Text>From</Text>
-                <Text fontSize="xl" fontWeight={700} flex={2}>
-                  {tourDetail?.regularPrice && formatCurrency(tourDetail?.regularPrice, tourDetail?.currency ?? '')}
-                </Text>
-                <Text>per person</Text>
-              </GridItem>
-              <GridItem width='full'>
-                <Button
-                  colorScheme="teal"
-                  borderRadius="80px"
-                  display={{ base: 'none', lg: 'block' }}
-                  textAlign='center'
-                  width="full"
-                  flex={1}
-                  alignSelf='center'
-                  marginTop='24px'
-                >
-                  Check availability
-                </Button>
-              </GridItem>
-            </SimpleGrid>
-            <HStack marginTop="24px !important" spacing={6}>
-              <Icon iconName="card.svg" size={40} />
-              <Text fontSize="sm">
-                Reserve now & pay later to book your spot and pay nothing
-                today
-              </Text>
-            </HStack>
           </VStack>
         </VStack>
       </Stack>
