@@ -143,6 +143,7 @@ const UpdateTourDetail = () => {
   }
 
   async function onSubmit(formData: IUpdateTourForm) {
+    console.log(formData);
     setIsLoading(true)
 
     // handle files in virtual tours

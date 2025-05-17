@@ -41,7 +41,7 @@ export function formatFormData(formData: IUpdateTourForm, priceOptions: IPriceOp
     interest: formData?.interest,
     startLocation: formData?.startLocation,
     // details: formData?.details, 
-    // itinerary: formData?.itinerary, 
+    itinerary: formData?.itinerary, 
     ratingAverage: formData?.ratingAverage, 
     // numOfRating: formData?.numOfRating,
     //isActive: formData?.isActive, 

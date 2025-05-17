@@ -1,5 +1,5 @@
 import { Box, Button, FormControl, FormLabel, HStack, Input, Text, VStack, SimpleGrid, List, ListItem, Center, Image, Img } from '@chakra-ui/react'
-import { useForm, Controller } from 'react-hook-form'
+import { useForm, Controller, useWatch } from 'react-hook-form'
 import { useState, useRef, useEffect } from 'react'
 import { toast } from 'react-toastify'
 import * as maplibregl from 'maplibre-gl'
@@ -45,9 +45,10 @@ const initialItem: IItineraryItem = {
 
 const ItinerarySetup = ({ methods }: IItinerarySetupProps) => {
   const { control, setValue, getValues } = methods
-  const [itineraryItems, setItineraryItems] = useState<IItineraryItem[]>(() => {
-    const existingItems = getValues('itinerary')
-    return Array.isArray(existingItems) ? existingItems : []
+  const itineraryItems = useWatch({
+    control,
+    name: 'itinerary',
+    defaultValue: []
   })
   const [selectedLocation, setSelectedLocation] = useState<{ lat: number; lng: number } | null>(null)
   const [searchResults, setSearchResults] = useState<ISearchResult[]>([])
@@ -194,18 +195,17 @@ const ItinerarySetup = ({ methods }: IItinerarySetupProps) => {
     }
 
     const newItems = [...itineraryItems, currentItem]
-    setItineraryItems(newItems)
     setValue('itinerary', newItems)
     setCurrentItem(initialItem)
     setSelectedLocation(null)
     cleanupMap()
     setIsAdding(false)
+    console.log(getValues('itinerary'))
     toast.success('Added itinerary item successfully')
   }
 
   const handleDeleteItem = (index: number) => {
     const newItems = itineraryItems.filter((_, i) => i !== index)
-    setItineraryItems(newItems)
     setValue('itinerary', newItems)
     toast.success('Deleted itinerary item successfully')
   }
@@ -250,7 +250,6 @@ const ItinerarySetup = ({ methods }: IItinerarySetupProps) => {
 
     const newItems = [...itineraryItems]
     newItems[editingIndex!] = currentItem
-    setItineraryItems(newItems)
     setValue('itinerary', newItems)
     setCurrentItem(initialItem)
     setSelectedLocation(null)
