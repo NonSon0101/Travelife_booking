@@ -1,18 +1,40 @@
-import { Box, VStack, Icon, Text, Stack, Divider } from '@chakra-ui/react';
+import { Box, VStack, Icon, Text, Stack, useDisclosure } from '@chakra-ui/react';
 import { IconType } from 'react-icons';
 import { MdLocationOn } from 'react-icons/md';
+import { IItineraryItem } from 'interfaces/tour';
+import { useState, useRef, useEffect } from 'react';
 
 // Define the props type for TimelineItem
 interface TimelineItemProps {
-  icon: IconType;
-  title: string;
+  item: IItineraryItem;
   isFirst?: boolean;
   isLast?: boolean;
+  onMarkerClick?: (item: IItineraryItem) => void;
 }
 
-const TimelineItem: React.FC<TimelineItemProps> = ({ icon, title, isFirst, isLast }) => {
+const TimelineItem: React.FC<TimelineItemProps> = ({ item, isFirst, isLast, onMarkerClick }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isOverflowing, setIsOverflowing] = useState(false);
+  const descriptionRef = useRef<HTMLParagraphElement>(null);
+
+  useEffect(() => {
+    if (descriptionRef.current) {
+      const lineHeight = parseInt(window.getComputedStyle(descriptionRef.current).lineHeight);
+      const height = descriptionRef.current.scrollHeight;
+      setIsOverflowing(height > lineHeight * 2);
+    }
+  }, [item.description]);
+
+  const toggleDescription = () => {
+    setIsExpanded(!isExpanded);
+  };
+
+  const handleMarkerClick = () => {
+    onMarkerClick?.(item);
+  };
+
   return (
-    <Stack direction="row" align="center" spacing={4} position="relative" marginTop='16px' zIndex={1}
+    <Stack direction="row" align="flex-start" spacing={4} position="relative" marginTop='16px' zIndex={1}
       {...({
         _before: {
           content: '""',
@@ -27,27 +49,79 @@ const TimelineItem: React.FC<TimelineItemProps> = ({ icon, title, isFirst, isLas
         },
       })}
     >
-      <VStack align="center">
-        <Icon as={icon} color="red.500" boxSize={6} background='teal' borderRadius='full' width='30px' height='30px'/>
+      <VStack align="center" spacing={0}>
+        <Icon 
+          as={MdLocationOn} 
+          color="red.500" 
+          boxSize={6} 
+          background='teal' 
+          borderRadius='full' 
+          width='30px' 
+          height='30px'
+          cursor="pointer"
+          onClick={handleMarkerClick}
+          _hover={{ transform: 'scale(1.1)' }}
+          transition="transform 0.2s"
+        />
         {!isFirst && !isLast && (
-          <Box width="1px"  bg="gray.300" flex="1" />
+          <Box width="1px" bg="gray.300" flex="1" />
         )}
       </VStack>
-      <Text fontSize="md" fontWeight="medium">{title}</Text>
-    </Stack >
+      <Box>
+        <Text fontSize="md" fontWeight="medium">{item.activity}</Text>
+        <Text fontSize="sm" color="gray.800">{item.address}</Text>
+        <Box position="relative">
+          <Text 
+            ref={descriptionRef}
+            fontSize="sm" 
+            color="gray.600"
+            noOfLines={isExpanded ? undefined : 2}
+            transition="all 0.3s"
+          >
+            {item.description}
+          </Text>
+          {isOverflowing && (
+            <Text
+              as="span"
+              fontSize="sm"
+              color="blue.500"
+              cursor="pointer"
+              textDecoration="underline"
+              onClick={toggleDescription}
+              ml={1}
+            >
+              {isExpanded ? 'See less' : 'See more'}
+            </Text>
+          )}
+        </Box>
+        <Text fontSize="sm" color="gray.500">{item.duration} minutes</Text>
+      </Box>
+    </Stack>
   );
 };
 
 // Main Timeline component
-const Timeline: React.FC = () => {
+interface TimelineProps {
+  itinerary: IItineraryItem[];
+  onMarkerClick?: (item: IItineraryItem) => void;
+}
+
+const Timeline: React.FC<TimelineProps> = ({ itinerary, onMarkerClick }) => {
+  if (!itinerary || itinerary.length === 0) {
+    return null;
+  }
+
   return (
     <Box pl={6}>
-      <TimelineItem icon={MdLocationOn} title="Discovery Whale Watch" isFirst />
-      <TimelineItem icon={MdLocationOn} title="Old Fisherman's Wharf" />
-      <TimelineItem icon={MdLocationOn} title="Cannery Row" />
-      <TimelineItem icon={MdLocationOn} title="Monterey Bay National Marine Sanctuary" />
-      <TimelineItem icon={MdLocationOn} title="Monterey Bay" />
-      <TimelineItem icon={MdLocationOn} title="Arrive back at: Discovery Whale Watch" isLast />
+      {itinerary.map((item, index) => (
+        <TimelineItem
+          key={index}
+          item={item}
+          isFirst={index === 0}
+          isLast={index === itinerary.length - 1}
+          onMarkerClick={onMarkerClick}
+        />
+      ))}
     </Box>
   );
 };
