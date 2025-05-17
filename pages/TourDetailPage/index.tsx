@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   Box,
   Button,
@@ -19,7 +19,17 @@ import {
   Stack,
   Switch,
   FormControl,
-  FormLabel
+  FormLabel,
+  Container,
+  useDisclosure,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalCloseButton,
+  ModalFooter,
+  useToast
 } from "@chakra-ui/react";
 import { toast } from 'react-toastify'
 import Slider from "react-slick";
@@ -51,6 +61,8 @@ import Title from "components/Title";
 import TourReviews from "./TourReviews";
 import Timeline from "./TimeLineItems";
 import PrivateOptions from "components/Layout/WebLayout/components/privateOptions";
+import ItineraryMap, { ItineraryMapRef } from "./ItineraryMap";
+import { IItineraryItem } from "interfaces/tour";
 
 type ValuePiece = Date | null;
 
@@ -58,7 +70,7 @@ type Value = ValuePiece | [ValuePiece, ValuePiece];
 
 const TourDetailPage = () => {
 
-  const route = useRouter()
+  const router = useRouter()
   const [userId, setUserId] = useState<string>('')
   const [type, setType] = useState<string>("");
   const [quantity, setQuantity] = useState<number>(0);
@@ -82,6 +94,8 @@ const TourDetailPage = () => {
   const [transport, setTransport] = useState<{ id: string, name: string }>({ id: '', name: '' })
   const { tourStore, cartStore, bookingStore } = useStores();
   const { tourDetail, priceOptions, startLocation } = tourStore;
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const mapRef = useRef<ItineraryMapRef>(null)
 
   const settings = {
     dots: true,
@@ -209,7 +223,7 @@ const TourDetailPage = () => {
         setIsLoading(false)
         toast.success('Add to cart successfully')
         window.scrollTo({ top: 0, behavior: 'smooth' });
-        route.refresh()
+        router.refresh()
       } else {
         toast.warning("Please login first")
         setIsLoading(false)
@@ -242,7 +256,7 @@ const TourDetailPage = () => {
         };
         await bookingStore.createBookNow(data)
         setIsLoading(false)
-        route.push(routes.booking.activity)
+        router.push(routes.booking.activity)
       } else {
         toast.warning("Please login first")
         setIsLoading(false)
@@ -286,6 +300,12 @@ const TourDetailPage = () => {
       setHotel({ id: id, name: value })
     else
       setTransport({ id: id, name: value })
+  }
+
+  const handleMarkerClick = (item: IItineraryItem) => {
+    if (mapRef.current) {
+      mapRef.current.flyToMarker(item.location.coordinates)
+    }
   }
 
   return (
@@ -356,11 +376,11 @@ const TourDetailPage = () => {
           </Text>
           <Stack width="full" flexDirection={{ base: 'column', lg: 'row' }} overflow="hidden" marginY='24px'>
             <Box width={{ base: '100%', lg: '60%' }} >
-              <Timeline />
+              <Timeline itinerary={tourDetail?.itinerary || []} onMarkerClick={handleMarkerClick} />
             </Box>
             {/* Column for Maps component */}
             <Box width={{ base: '100%', lg: '70%' }}>
-              <Maps coordinates={startLocation?.coordinates} />
+              <ItineraryMap ref={mapRef} itinerary={tourDetail?.itinerary || []} />
             </Box>
           </Stack>
           <Title text='About this activity' />

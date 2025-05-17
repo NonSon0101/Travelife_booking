@@ -1,5 +1,5 @@
 import { Box, Button, FormControl, FormLabel, HStack, Input, Text, VStack, SimpleGrid, List, ListItem, Center, Image, Img } from '@chakra-ui/react'
-import { useForm, Controller, useWatch } from 'react-hook-form'
+import { useForm, Controller, useWatch, Control, UseFormSetValue, UseFormGetValues } from 'react-hook-form'
 import { useState, useRef, useEffect } from 'react'
 import { toast } from 'react-toastify'
 import * as maplibregl from 'maplibre-gl'
@@ -44,6 +44,8 @@ const initialItem: IItineraryItem = {
 }
 
 const ItinerarySetup = ({ methods }: IItinerarySetupProps) => {
+  if (!methods) return null;
+
   const { control, setValue, getValues } = methods
   const itineraryItems = useWatch({
     control,
@@ -194,7 +196,7 @@ const ItinerarySetup = ({ methods }: IItinerarySetupProps) => {
       return
     }
 
-    const newItems = [...itineraryItems, currentItem]
+    const newItems = [...(itineraryItems || []), currentItem]
     setValue('itinerary', newItems)
     setCurrentItem(initialItem)
     setSelectedLocation(null)
@@ -205,13 +207,17 @@ const ItinerarySetup = ({ methods }: IItinerarySetupProps) => {
   }
 
   const handleDeleteItem = (index: number) => {
+    if (!itineraryItems) return;
     const newItems = itineraryItems.filter((_, i) => i !== index)
     setValue('itinerary', newItems)
     toast.success('Deleted itinerary item successfully')
   }
 
   const handleEditItem = (index: number) => {
+    if (!itineraryItems) return;
     const itemToEdit = itineraryItems[index]
+    if (!itemToEdit) return;
+    
     setCurrentItem(itemToEdit)
     setSelectedLocation({
       lat: itemToEdit.location.coordinates[1],
@@ -248,8 +254,9 @@ const ItinerarySetup = ({ methods }: IItinerarySetupProps) => {
       return
     }
 
+    if (!itineraryItems || editingIndex === null) return;
     const newItems = [...itineraryItems]
-    newItems[editingIndex!] = currentItem
+    newItems[editingIndex] = currentItem
     setValue('itinerary', newItems)
     setCurrentItem(initialItem)
     setSelectedLocation(null)
@@ -304,7 +311,7 @@ const ItinerarySetup = ({ methods }: IItinerarySetupProps) => {
       </Text>
 
       {/* Display existing items */}
-      {itineraryItems.length > 0 && (
+      {itineraryItems && itineraryItems.length > 0 && (
         <VStack width="full" spacing={4}>
           {itineraryItems.map((item, index) => (
             <ItineraryItem
