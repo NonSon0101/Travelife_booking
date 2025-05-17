@@ -69,7 +69,12 @@ const VirtualTourModal = ({
                     previewAuthor: "Vo Minh Dat",
                     panorama: tour.processedImage || tour.images[0],
                     hotSpots: tour.hotspots
-                        .filter(h => h?.pitch != null && !isNaN(h.pitch) && h?.yaw != null && !isNaN(h.yaw))
+                        .filter(hotspot => (
+                            hotspot?.pitch &&
+                            !isNaN(hotspot.pitch) &&
+                            hotspot?.yaw &&
+                            !isNaN(hotspot.yaw)
+                        ))
                         .map(hotspot => ({
                             pitch: hotspot.pitch || 0,
                             yaw: hotspot.yaw || 0,
@@ -96,13 +101,20 @@ const VirtualTourModal = ({
             previewTitle: "360 Virtual Tour",
             previewAuthor: "Vo Minh Dat",
             disableKeyboardCtrl: true,
-            hotSpots: virtualTours[index]?.hotspots.map(hotspot => ({
-                pitch: hotspot.pitch || 0,
-                yaw: hotspot.yaw || 0,
-                text: hotspot.name,
-                type: !hotspot.action ? 'info' : 'scene',
-                sceneId: `scene_${parseInt(hotspot.action) - 1}`,
-            })),
+            hotSpots: virtualTours[index]?.hotspots
+                .filter(hotspot => (
+                    hotspot?.pitch &&
+                    !isNaN(hotspot.pitch) &&
+                    hotspot?.yaw &&
+                    !isNaN(hotspot.yaw)
+                ))
+                .map(hotspot => ({
+                    pitch: hotspot.pitch || 0,
+                    yaw: hotspot.yaw || 0,
+                    text: hotspot.name,
+                    type: !hotspot.action ? 'info' : 'scene',
+                    sceneId: !hotspot.action ? undefined : `scene_${parseInt(hotspot.action) - 1}`,
+                }))
         });
     }, [isOpen, virtualTours, index]);
 

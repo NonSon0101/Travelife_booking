@@ -458,7 +458,7 @@ const UpdateTourDetail = () => {
               <input type="file" ref={thumbnailRef} onChange={uploadThumbnail} style={{ display: 'none' }} />
             </VStack>
           </HStack>
-          {isEditMode && (
+          {(
             <Box width="full" background="white" padding={8} borderRadius={8} borderWidth={1} boxShadow="sm" marginTop={8}>
               <VStack width="full" align="flex-start" spacing={6}>
                 <VirtualTour
