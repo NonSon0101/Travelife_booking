@@ -123,3 +123,16 @@ export type IUpdateTour = Omit<ITour, 'category' | 'hotels' | 'transports'> & {
   categoryValue: IOption
   currencyValue: IOption
 };
+
+export interface IItineraryItem {
+  activity: string
+  description: string
+  address: string
+  duration: number
+  timeline: string
+  location: {
+    type: string | null
+    coordinates: number[]
+  }
+  image: string | null
+}
