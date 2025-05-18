@@ -28,6 +28,7 @@ import PrivateTour from './PrivateTour'
 import ManageHotels from './ManageHotels'
 import VirtualTour from './VirtualTour';
 import ItinerarySetup from './ItinerarySetup';
+import MapSelector from 'components/MapSelector'
 const Dropdown = dynamic(() => import('components/Dropdown'), {
   ssr: false,
 })
@@ -72,6 +73,7 @@ const UpdateTourDetail = () => {
   const [isManagePriceOptions, setIsManagePriceOptions] = useState<boolean>(false)
   const [existingPriceOptions, setExistingPriceOptions] = useState<IPriceOption[]>([])
   const [privateTour, setPrivateTour] = useState<boolean>(false)
+  const [isMapReady, setIsMapReady] = useState<boolean>(false)
   const thumbnail = useWatch({ control, name: 'thumbnail' }) ?? ''
   const images = useWatch({ control, name: 'images' }) ?? []
   const locationOptions = getOptions(locations, 'title', '_id')
@@ -206,7 +208,13 @@ const UpdateTourDetail = () => {
 
   useEffect(() => {
     if (tourId && isEditMode) {
-      tourStore.fetchTourDetail(tourId)
+      setIsLoading(true)
+      tourStore.fetchTourDetail(tourId).finally(() => {
+        setIsLoading(false)
+        setIsMapReady(true)
+      })
+    } else {
+      setIsMapReady(true)
     }
     locationStore.fetchAllLocations()
     categoryStore.fetchAllCategories()
@@ -214,7 +222,8 @@ const UpdateTourDetail = () => {
 
   useEffect(() => {
     if (tourDetail?._id && isEditMode) {
-      console.log('tourDetail', tourDetail)
+      console.log('tourDetail in useEffect:', tourDetail);
+      console.log('startLocation in useEffect:', tourDetail?.startLocation);
       reset({
         ...tourDetail,
         typeValue: {
@@ -327,7 +336,7 @@ const UpdateTourDetail = () => {
                     render={({ field }) => (
                       <Dropdown
                         {...field}
-                        label="Start Location"
+                        label="Location"
                         options={locationOptions}
                         placeholder="Select a location"
                         setValue={setValue}
@@ -429,35 +438,69 @@ const UpdateTourDetail = () => {
                 )}
               </VStack>
             </Box>
-            <VStack
-              width="full"
-              maxWidth={300}
-              align="flex-start"
-              background="white"
-              padding={8}
-              borderRadius={8}
-              borderWidth={1}
-              boxShadow="sm"
-              spacing={4}
-            >
-              <Text color="gray.700" fontWeight={500} lineHeight={6}>
-                Thumbnail
-              </Text>
-              {thumbnail ? (
-                <Img width="full" height="180px" src={thumbnail} borderRadius={8} />
-              ) : (
-                <Image width={300} height={180} alt="thumbnail" src={NoImage} />
-              )}
-              <Button
+            <VStack width="full" maxWidth={300} spacing={8}>
+              <VStack
                 width="full"
-                borderWidth={1}
+                align="flex-start"
                 background="white"
-                isLoading={isImageLoading}
-                onClick={() => thumbnailRef?.current?.click()}
+                padding={8}
+                borderRadius={8}
+                borderWidth={1}
+                boxShadow="sm"
+                spacing={4}
               >
-                Choose Thumbnail
-              </Button>
-              <input type="file" ref={thumbnailRef} onChange={uploadThumbnail} style={{ display: 'none' }} />
+                <Text color="gray.700" fontWeight={500} lineHeight={6}>
+                  Thumbnail
+                </Text>
+                {thumbnail ? (
+                  <Img width="full" height="180px" src={thumbnail} borderRadius={8} />
+                ) : (
+                  <Image width={300} height={180} alt="thumbnail" src={NoImage} />
+                )}
+                <Button
+                  width="full"
+                  borderWidth={1}
+                  background="white"
+                  isLoading={isImageLoading}
+                  onClick={() => thumbnailRef?.current?.click()}
+                >
+                  Choose Thumbnail
+                </Button>
+                <input type="file" ref={thumbnailRef} onChange={uploadThumbnail} style={{ display: 'none' }} />
+              </VStack>
+              <VStack
+                width="full"
+                height={500}
+                align="flex-start"
+                background="white"
+                padding={8}
+                borderRadius={8}
+                borderWidth={1}
+                boxShadow="sm"
+                spacing={4}
+              >
+                <Text color="gray.700" fontWeight={500} lineHeight={6}>
+                  Start Location
+                </Text>
+                <Box flex={1} width="full">
+                  {isMapReady && (
+                    <MapSelector 
+                      onLocationSelect={(address, coordinates) => {
+                        setValue('startLocation', {
+                          type: 'Point',
+                          coordinates: coordinates,
+                          description: address,
+                          address: address
+                        });
+                      }}
+                      initialLocation={tourDetail?.startLocation ? {
+                        address: tourDetail.startLocation.address,
+                        coordinates: tourDetail.startLocation.coordinates as [number, number]
+                      } : undefined}
+                    />
+                  )}
+                </Box>
+              </VStack>
             </VStack>
           </HStack>
           {(
