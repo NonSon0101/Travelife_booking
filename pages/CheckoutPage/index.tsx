@@ -115,24 +115,27 @@ const CheckoutPage = () => {
       maxWidth="1300px"
       marginX="auto"
       width="full"
-      padding="24px"
+      padding={{ base: "16px", md: "24px" }}
     >
       <BookingStatus currentPage="booking" />
+
       <HStack
         width="full"
         justify="space-between"
-        marginTop="48px"
+        marginTop={{ base: "24px", md: "48px" }}
         align="flex-start"
+        flexDirection={{ base: "column", md: "row" }}
+        spacing={{ base: 8, md: 0 }}
       >
+        {/* Left side */}
         <VStack
           width="full"
-          flex="2"
-          paddingRight="32px"
+          flex={{ base: "unset", md: 2 }}
+          paddingRight={{ base: "0", md: "32px" }}
           align="flex-start"
           spacing={7}
         >
-          <Title text='Your order' />
-
+          <Title text="Your order" />
           {checkout &&
             checkout.map((tour) => (
               <OrderItem
@@ -145,13 +148,16 @@ const CheckoutPage = () => {
               />
             ))}
         </VStack>
+
+        {/* Right side */}
         <VStack
           position="relative"
           align="flex-start"
-          flex="1"
-          marginLeft="48px"
+          flex={{ base: "unset", md: 1 }}
+          marginLeft={{ base: 0, md: "48px" }}
+          width="full"
         >
-          <Title text='Total order' />
+          <Title text="Total order" />
 
           <VStack
             position="relative"
@@ -173,13 +179,14 @@ const CheckoutPage = () => {
                 content: "''",
                 width: "84%",
                 height: "2px",
-
                 background: "#ccc",
                 overflow: "hidden",
               }}
             >
               <HStack fontSize="xl" width="full" justify="space-between">
-                <Text>{checkout.length > 1 ? 'Total items' : "Total item"}</Text>
+                <Text>
+                  {checkout.length > 1 ? "Total items" : "Total item"}
+                </Text>
                 <Text>{checkout.length}</Text>
               </HStack>
             </Box>
@@ -191,18 +198,22 @@ const CheckoutPage = () => {
                 content: "''",
                 width: "84%",
                 height: "2px",
-
                 background: "#ccc",
                 overflow: "hidden",
               }}
             >
               <HStack fontSize="xl" width="full" justify="space-between">
                 <Text>Total price</Text>
-                <VStack align='flex-end'>
+                <VStack align="flex-end">
                   <Text fontSize="2xl" color="#396973">
                     {itemPrice && itemPrice.length !== 0
-                      ? order.totalOrder && formatCurrency(order.totalOrder - order.discount, currentCurrecy) :
-                      order.totalOrder && formatCurrency(order.totalOrder, currentCurrecy)}
+                      ? order.totalOrder &&
+                      formatCurrency(
+                        order.totalOrder - order.discount,
+                        currentCurrecy
+                      )
+                      : order.totalOrder &&
+                      formatCurrency(order.totalOrder, currentCurrecy)}
                   </Text>
                   <Text
                     fontSize="sm"
@@ -210,38 +221,48 @@ const CheckoutPage = () => {
                     opacity="0.5"
                   >
                     {itemPrice && itemPrice.length !== 0
-                      ? order.totalOrder && formatCurrency(order.totalOrder, currentCurrecy)
+                      ? order.totalOrder &&
+                      formatCurrency(order.totalOrder, currentCurrecy)
                       : ""}
                   </Text>
                 </VStack>
               </HStack>
             </Box>
+
             {itemPrice.length > 0 && (
-              <>
-                <HStack
-                  width="full"
-                  justify="space-between"
-                  padding="2px"
-                  border="2px dashed #ccc"
+              <HStack
+                width="full"
+                justify="space-between"
+                padding="2px"
+                border="2px dashed #ccc"
+                fontSize="sm"
+                flexWrap="wrap"
+              >
+                <Text>Applied coupon: {coupon}</Text>
+                <Button
+                  background="transparent"
+                  _hover={{ background: "transparent", opacity: "0.5" }}
+                  onClick={() => handleApplyCoupon(true)}
                   fontSize="sm"
-                // visible="false"
+                  padding="0"
+                  height="auto"
+                  minW="auto"
                 >
-                  {" "}
-                  <Text>Applied coupon: {coupon}</Text>
-                  <Button
-                    background="transparent"
-                    _hover={{ background: "transparent", opacity: "0.5" }}
-                    onClick={() => handleApplyCoupon(true)}
-                  >
-                    X
-                  </Button>{" "}
-                </HStack>
-              </>
+                  X
+                </Button>
+              </HStack>
             )}
-            <HStack width="full" justify="space-between">
+
+            <HStack
+              width="full"
+              justify="space-between"
+              spacing={4}
+              flexDirection={{ base: "column", sm: "row" }}
+            >
               <TextField
                 placeholder="Enter coupon"
-                flex="2"
+                flex={{ base: "unset", sm: 2 }}
+                width="full"
                 value={coupon}
                 onChange={handleChangeText}
               />
@@ -249,20 +270,29 @@ const CheckoutPage = () => {
                 color="#fff"
                 bg="#64CCC5"
                 paddingY="12px"
-                flex={1}
+                width={{ base: "full", sm: "auto" }}
+                flex={{ base: "unset", sm: 1 }}
                 onClick={() => handleApplyCoupon(false)}
                 isLoading={isLoading}
               >
                 Apply
               </Button>
             </HStack>
-            <Button color="#fff" bg="#64CCC5" isLoading={isLoadingContinue} width="full" onClick={handleGoToContactPage}>
+
+            <Button
+              color="#fff"
+              bg="#64CCC5"
+              isLoading={isLoadingContinue}
+              width="full"
+              onClick={handleGoToContactPage}
+            >
               Confirm and continue
             </Button>
           </VStack>
         </VStack>
       </HStack>
     </VStack>
+
   );
 };
 

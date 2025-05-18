@@ -98,22 +98,31 @@ const ListTourPage = () => {
         background={`linear-gradient(268deg, rgba(12, 24, 47, 0) 34.23%, rgba(12, 24, 47, .6) 97.86%), url(${locationDetail?.thumbnail}) no-repeat center/cover`}
         backgroundPosition="center"
         bgRepeat="no-repeat"
-        height="603px"
+        height={{ base: '300px', md: '603px' }}
+        px={{ base: 4, md: 0 }}
       >
         <HStack
           maxWidth="1300px"
-          width='full'
-          marginX='auto'
-          display='flex'
-          justifyContent='space-between'
-          marginY='20px'
-          color='#1A2B49'
+          width="full"
+          marginX="auto"
+          justifyContent="space-between"
+          marginY="20px"
+          color="#1A2B49"
+          align="center"
+          flexDir={{ base: 'column', md: 'row' }}
+          textAlign={{ base: 'center', md: 'left' }}
+          spacing={6}
+          pt={{ base: 8, md: 20 }}
         >
-          <VStack alignSelf='start'>
-            <Text textAlign='left' fontWeight='700' fontSize='2xl' color='white'>Things to do in</Text>
-            <Text fontWeight='900' fontSize='7xl' color='white'>{locationDetail?.title}</Text>
+          <VStack spacing={2}>
+            <Text fontWeight="700" fontSize={{ base: 'lg', md: '2xl' }} color="white">
+              Things to do in
+            </Text>
+            <Text fontWeight="900" fontSize={{ base: '4xl', md: '7xl' }} color="white">
+              {locationDetail?.title}
+            </Text>
           </VStack>
-          <Box>
+          <Box mt={{ base: 4, md: 0 }}>
             <Maps coordinates={locationDetail?.loc?.coordinates} />
           </Box>
         </HStack>
@@ -128,46 +137,49 @@ const ListTourPage = () => {
         mt='5'
       >
         <Title text='All activities' fontSize='3xl' />
-        <HStack width='full' justify='space-between'>
-          <HStack spacing={5}>
+        <Stack
+          direction={{ base: 'column', md: 'row' }}
+          width="full"
+          justify="space-between"
+          spacing={4}
+          mt={4}
+        >
+          <HStack spacing={4} wrap="wrap">
             <FilterPrice setFliterOptions={setFliterOptions} isAppliedfilter={!!filterOptions.priceMax && !!filterOptions.priceMin} />
             <FilterDuration setFliterOptions={setFliterOptions} isAppliedfilter={!!filterOptions.duration} />
             <FilterStar setFliterOptions={setFliterOptions} isAppliedfilter={!!filterOptions.star} />
-            {/* <FilterTime setFliterOptions={setFliterOptions}/> */}
           </HStack>
+
           <Button
             height={50}
-            border='2px solid #dcdfe4'
-            {...(countFilter !== 0 && { borderColor: 'teal' })}
-            bg='transparent'
+            border="2px solid"
+            borderColor={countFilter !== 0 ? 'teal' : '#dcdfe4'}
+            bg="transparent"
             onClick={() => setIsOpenFilterModal(true)}
+            leftIcon={<TbAdjustmentsHorizontal size={20} />}
           >
-            {<TbAdjustmentsHorizontal size={24} />} Filters {countFilter !== 0 ? `applied: ${countFilter}` : ''}
+            Filters {countFilter !== 0 ? `applied: ${countFilter}` : ''}
           </Button>
-        </HStack>
-        <HStack width='full' justify='space-between'>
+        </Stack>
+        <Stack
+          direction={{ base: 'column', md: 'row' }}
+          justify="space-between"
+          width="full"
+          spacing={4}
+          mt={4}
+        >
           <Text fontWeight="semibold">{totalCount} activities found</Text>
           <HStack>
-            <Text whiteSpace='nowrap' fontWeight="bold" fontSize='md'>Sort by: </Text>
-            <Menu
-              autoSelect={false}
-              computePositionOnMount
-              placement="bottom-start"
-            >
+            <Text whiteSpace="nowrap" fontWeight="bold" fontSize="md">
+              Sort by:
+            </Text>
+            <Menu>
               <CustomMenuButton
                 as={MenuButton}
                 text={isApplySort || 'Recommended'}
               />
-
               <MenuList>
-                <RadioGroup
-                  as="fieldset"
-                  borderColor="gray.300"
-                  p={6}
-                  rounded="md"
-                  colorScheme="teal"
-                  onChange={handleSort}
-                >
+                <RadioGroup onChange={handleSort} p={6} colorScheme="teal">
                   <Stack spacing={4}>
                     <Radio value="recommended">Recommended</Radio>
                     <Radio value="priceUp">Price - Low To High</Radio>
@@ -178,13 +190,12 @@ const ListTourPage = () => {
               </MenuList>
             </Menu>
           </HStack>
-        </HStack>
+        </Stack>
         <SimpleGrid
-          maxWidth="1300px"
-          columns={{ base: 1, sm: 2, md: 4 }}
-          gap={8}
-          padding={1}
-          mt="8px"
+          columns={{ base: 1, sm: 2, md: 3, lg: 4 }}
+          spacing={6}
+          width="full"
+          mt={4}
         >
           {tours?.map((tour) => (
             <TourCard key={tour?._id} tour={tour} />

@@ -1,10 +1,9 @@
 "use client";
 
-import { Box, Text } from "@chakra-ui/react";
+import { Box, Text, useColorModeValue } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 
-// Dynamic import react-apexcharts, chỉ chạy trên client
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 interface IRevenueChart {
@@ -12,71 +11,100 @@ interface IRevenueChart {
   revenueCategories: string[];
 }
 
-const RevenueChart = (props: IRevenueChart) => {
-  const {revenueData, revenueCategories} = props
+const RevenueChart = ({ revenueData, revenueCategories }: IRevenueChart) => {
+  const textColor = useColorModeValue("#2D3748", "#E2E8F0");
+  const gridColor = useColorModeValue("#E2E8F0", "#4A5568");
+  const lineColor = "#3182CE"; // Blue.500 của Chakra
+
   const [dataChart, setDataChart] = useState<{
     series: { name: string; data: number[] }[];
     options: ApexCharts.ApexOptions;
   }>({
-    series: [
-      {
-        name: "Revenue",
-        data: [],
-      },
-    ],
+    series: [{ name: "Revenue", data: [] }],
     options: {
       chart: {
         height: 350,
         type: "line",
-        zoom: {
-          enabled: true,
-        },
-      },
-      dataLabels: {
-        enabled: false,
+        zoom: { enabled: false },
+        toolbar: { show: false },
       },
       stroke: {
-        curve: "smooth",
+        curve: "straight", // hoặc "smooth" nếu muốn mềm mại
+        width: 3,
+        colors: [lineColor],
       },
+      colors: [lineColor],
+      markers: {
+        size: 5,
+        colors: ["white"],
+        strokeColors: lineColor,
+        strokeWidth: 2,
+        hover: {
+          size: 7,
+        },
+      },
+      dataLabels: { enabled: false },
       title: {
         text: "Revenue Overview",
         align: "left",
-      },
-      grid: {
-        row: {
-          colors: ["#f3f3f3", "transparent"], // alternating row colors
-          opacity: 0.5,
+        style: {
+          fontSize: "18px",
+          fontWeight: "bold",
+          color: textColor,
         },
       },
       xaxis: {
         categories: [],
+        labels: {
+          style: {
+            colors: textColor,
+          },
+        },
         title: {
           text: "Months",
+          style: { color: textColor },
         },
       },
       yaxis: {
         title: {
-          text: "Revenue",
+          text: "Revenue (VND)",
+          style: { color: textColor },
+        },
+        labels: {
+          style: {
+            colors: textColor,
+          },
+        },
+      },
+      grid: {
+        borderColor: gridColor,
+        row: {
+          colors: ["transparent", "transparent"],
+          opacity: 0.2,
+        },
+      },
+      tooltip: {
+        theme: "light",
+      },
+      legend: {
+        position: "top",
+        horizontalAlign: "right",
+        labels: {
+          colors: textColor,
         },
       },
     },
   });
 
-  // Update chart data on mount or when props change
   useEffect(() => {
-    if (revenueData && revenueCategories && revenueData?.length && revenueCategories?.length) {
-      setDataChart((prevState) => ({
-        ...prevState,
-        series: [
-          {
-            name: "Revenue",
-            data: revenueData,
-          },
-        ],
+    if (revenueData?.length && revenueCategories?.length) {
+      setDataChart((prev) => ({
+        ...prev,
+        series: [{ name: "Revenue", data: revenueData }],
         options: {
-          ...prevState.options,
+          ...prev.options,
           xaxis: {
-            ...prevState.options.xaxis,
+            ...prev.options.xaxis,
             categories: revenueCategories,
           },
         },
@@ -84,7 +112,6 @@ const RevenueChart = (props: IRevenueChart) => {
     }
   }, [revenueData, revenueCategories]);
 
-  // If there's no data to display, show a message
   if (!revenueData?.length || !revenueCategories?.length) {
     return (
       <Box textAlign="center" mt={8}>
@@ -94,7 +121,16 @@ const RevenueChart = (props: IRevenueChart) => {
   }
 
   return (
-    <Box width="full" mx="auto" mt={8}>
+    <Box
+      width="full"
+      maxW="100%"
+      mx="auto"
+      mt={8}
+      p={4}
+      bg={useColorModeValue("white", "gray.800")}
+      boxShadow="md"
+      borderRadius="md"
+    >
       <Chart
         options={dataChart.options}
         series={dataChart.series}
