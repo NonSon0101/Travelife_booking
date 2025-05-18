@@ -29,7 +29,8 @@ import {
   ModalBody,
   ModalCloseButton,
   ModalFooter,
-  useToast
+  useToast,
+  Skeleton
 } from "@chakra-ui/react";
 import { toast } from 'react-toastify'
 import Slider from "react-slick";
@@ -317,10 +318,15 @@ const TourDetailPage = () => {
       spacing={4}
       padding={8}
     >
-      <Heading color="gray.800" fontWeight={700} lineHeight={10}>
-        {tourDetail?.title}
-      </Heading>
-      <RatingStart sizeStar={24} sizeText="md" ratingAverage={tourDetail?.ratingAverage} numOfRating={tourDetail?.numOfRating} />
+      {tourDetail?.title ? (
+        <Heading color="gray.800" fontWeight={700} lineHeight={10}>
+          {tourDetail.title}
+        </Heading>
+      ) : (
+        <Skeleton height="40px" width="60%" />
+      )}
+
+      <RatingStart sizeStar={24} sizeText="md" ratingAverage={tourDetail?.ratingAverage} numOfRating={tourDetail?.numOfRating} isLoading={!tourDetail} />
       <Box position={'relative'} height={{ base: '300px', lg: '600px' }} width={'full'} overflow={'hidden'}>
         <IconButton
           aria-label="left-arrow"
@@ -372,8 +378,9 @@ const TourDetailPage = () => {
           align="flex-start"
         >
           <Text fontSize="lg" paddingRight="30px">
-            {tourDetail?.summary}
+            <Skeleton isLoaded={!!tourDetail?.summary}>{tourDetail?.summary}</Skeleton>
           </Text>
+
           <Stack width="full" flexDirection={{ base: 'column', lg: 'row' }} overflow="hidden" marginY='24px'>
             <Box width={{ base: '100%', lg: '60%' }} >
               <Timeline itinerary={tourDetail?.itinerary || []} onMarkerClick={handleMarkerClick} />
@@ -383,52 +390,84 @@ const TourDetailPage = () => {
               <ItineraryMap ref={mapRef} itinerary={tourDetail?.itinerary || []} />
             </Box>
           </Stack>
+
           <Title text='About this activity' />
+
+          {/* Free cancellation */}
           <HStack align="flex-start" padding="16px">
-            <Text fontSize="3xl">
-              <FaRegCalendarCheck />
-            </Text>
-            <VStack align="flex-start">
-              <Text fontSize="lg" fontWeight="bold">
-                Free cancellation
+            <Skeleton isLoaded={!!tourDetail}>
+              <Text fontSize="3xl">
+                <FaRegCalendarCheck />
               </Text>
-              <Text>Cancel up to 24 hours in advance for a full refund</Text>
+            </Skeleton>
+            <VStack align="flex-start">
+              <Skeleton isLoaded={!!tourDetail}>
+                <Text fontSize="lg" fontWeight="bold">
+                  Free cancellation
+                </Text>
+              </Skeleton>
+              <Skeleton isLoaded={!!tourDetail}>
+                <Text>Cancel up to 24 hours in advance for a full refund</Text>
+              </Skeleton>
             </VStack>
           </HStack>
+
+          {/* Reserve now & pay later */}
           <HStack align="flex-start" padding="16px">
-            <Text fontSize="3xl">
-              <FaCreditCard />
-            </Text>
+            <Skeleton isLoaded={!!tourDetail}>
+              <Text fontSize="3xl">
+                <FaCreditCard />
+              </Text>
+            </Skeleton>
             <VStack align="flex-start">
-              <Text fontSize="lg" fontWeight="bold">
-                Reserve now & pay later
-              </Text>
-              <Text>
-                Keep your travel plans flexible — book your spot and pay
-                nothing today.
-              </Text>
+              <Skeleton isLoaded={!!tourDetail}>
+                <Text fontSize="lg" fontWeight="bold">
+                  Reserve now & pay later
+                </Text>
+              </Skeleton>
+              <Skeleton isLoaded={!!tourDetail}>
+                <Text>
+                  Keep your travel plans flexible — book your spot and pay nothing today.
+                </Text>
+              </Skeleton>
             </VStack>
           </HStack>
+
+          {/* Duration */}
           <HStack align="flex-start" padding="16px">
-            <Text fontSize="3xl">
-              <PiClockCountdownBold />
-            </Text>
-            <VStack align="flex-start">
-              <Text fontSize="lg" fontWeight="bold">
-                Duration
+            <Skeleton isLoaded={!!tourDetail?.duration}>
+              <Text fontSize="3xl">
+                <PiClockCountdownBold />
               </Text>
-              <Text>{tourDetail?.duration} hours</Text>
+            </Skeleton>
+            <VStack align="flex-start">
+              <Skeleton isLoaded={!!tourDetail?.duration}>
+                <Text fontSize="lg" fontWeight="bold">
+                  Duration
+                </Text>
+              </Skeleton>
+              <Skeleton isLoaded={!!tourDetail?.duration}>
+                <Text>{tourDetail?.duration} hours</Text>
+              </Skeleton>
             </VStack>
           </HStack>
+
+          {/* Live tour guide */}
           <HStack align="flex-start" padding="16px">
-            <Text fontSize="3xl">
-              <RiMapPinUserLine />
-            </Text>
-            <VStack align="flex-start">
-              <Text fontSize="lg" fontWeight="bold">
-                Live tour guide
+            <Skeleton isLoaded={!!tourDetail}>
+              <Text fontSize="3xl">
+                <RiMapPinUserLine />
               </Text>
-              <Text>English</Text>
+            </Skeleton>
+            <VStack align="flex-start">
+              <Skeleton isLoaded={!!tourDetail}>
+                <Text fontSize="lg" fontWeight="bold">
+                  Live tour guide
+                </Text>
+              </Skeleton>
+              <Skeleton isLoaded={!!tourDetail}>
+                <Text>English</Text>
+              </Skeleton>
             </VStack>
           </HStack>
           <Box
@@ -785,12 +824,16 @@ const TourDetailPage = () => {
                   </Button>
                 </GridItem>
               </SimpleGrid>
+
               <HStack marginTop="24px !important" spacing={6}>
-                <Icon iconName="card.svg" size={40} />
-                <Text fontSize="sm">
-                  Reserve now & pay later to book your spot and pay nothing
-                  today
-                </Text>
+                <Skeleton isLoaded={!!tourDetail?.regularPrice}>
+                  <Icon iconName="card.svg" size={40} />
+                </Skeleton>
+                <Skeleton isLoaded={!!tourDetail?.regularPrice}>
+                  <Text fontSize="sm">
+                    Reserve now & pay later to book your spot and pay nothing today
+                  </Text>
+                </Skeleton>
               </HStack>
             </VStack>
             <VStack
@@ -801,15 +844,17 @@ const TourDetailPage = () => {
               borderRadius={2}
               spacing={4}
             >
+              <Skeleton isLoaded={!!tourDetail} height="20px">
                 {!userId ? (
-                <Text fontSize="md" textAlign="center">
-                  To view the 360 Tour, please login first, then click the button below.
-                </Text>
+                  <Text fontSize="md" textAlign="center">
+                    To view the 360 Tour, please login first, then click the button below.
+                  </Text>
                 ) : (
-                <Text fontSize="md" textAlign="center">
-                  To view the 360 Tour, please click the button below.
-                </Text>
+                  <Text fontSize="md" textAlign="center">
+                    To view the 360 Tour, please click the button below.
+                  </Text>
                 )}
+              </Skeleton>
 
               <Button
                 colorScheme="teal"

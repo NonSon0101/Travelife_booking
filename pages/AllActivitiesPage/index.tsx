@@ -1,13 +1,11 @@
-"use client"
-import { border, Button, HStack, SimpleGrid, VStack, Text, Box, Menu, MenuButton, MenuList, RadioGroup, Stack, Radio } from "@chakra-ui/react"
+"use client";
+import { Button, SimpleGrid, VStack, Text, Box, Menu, MenuButton, MenuList, RadioGroup, Stack, Radio, WrapItem, Wrap, Skeleton, SkeletonText } from "@chakra-ui/react"
 import { usePathname, useSearchParams } from 'next/navigation'
-import ListTourLayout from "components/Layout/WebLayout/ListTourLayout"
 import Title from "components/Title"
 import { useEffect, useState } from "react"
 import { useStores } from "hooks"
 import FilterPrice from "./FilterPrice"
 import FilterDuration from "./FilterDuration"
-import FilterTime from "./FilterTime"
 import { TbAdjustmentsHorizontal } from "react-icons/tb";
 import TourCard from "components/TourCard"
 import { observer } from "mobx-react"
@@ -15,24 +13,24 @@ import FilterStar from "./FilterStar"
 import Pagination from "components/Table/components/Pagination"
 import { IPagination } from "components/Table"
 import FilterModal from "./FilterModal"
-import PageLayout from "components/Layout/WebLayout/PageLayout"
 import { IApplyFilter } from "interfaces/common"
 import CustomMenuButton from "./CustomMenuButton"
 
 const AllActivitiesPage = () => {
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
-  const search = searchParams?.get('search')
-  const { tourStore } = useStores()
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const search = searchParams?.get('search');
+  const { tourStore } = useStores();
   const { tours, totalCount } = tourStore;
   const [searchResult, setSearchResult] = useState<string>("");
-  const [pageIndex, setPageIndex] = useState<number>(1)
-  const [pageSize, setPageSize] = useState<number>(10)
-  const [isOpenFilterModal, setIsOpenFilterModal] = useState<boolean>(false)
-  const [filterOptions, setFliterOptions] = useState<IApplyFilter>({} as IApplyFilter)
-  const [countFilter, setCountFilter] = useState<number>(0)
-  const [isApplySort, setIsApplySort] = useState<string>('')
-  const pagination: IPagination = { pageIndex, tableLength: totalCount, gotoPage: setPageIndex }
+  const [pageIndex, setPageIndex] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(10);
+  const [isOpenFilterModal, setIsOpenFilterModal] = useState<boolean>(false);
+  const [filterOptions, setFliterOptions] = useState<IApplyFilter>({} as IApplyFilter);
+  const [countFilter, setCountFilter] = useState<number>(0);
+  const [isApplySort, setIsApplySort] = useState<string>('');
+  const [isLoading, setIsLoading] = useState(true);
+  const pagination: IPagination = { pageIndex, tableLength: totalCount, gotoPage: setPageIndex };
 
   useEffect(() => {
     if (search) {
@@ -41,7 +39,12 @@ const AllActivitiesPage = () => {
   }, [search])
 
   useEffect(() => {
-    tourStore.fetchActiveTours(pageIndex);
+    const fetchData = async () => {
+      setIsLoading(true);
+      await tourStore.fetchActiveTours(pageIndex);
+      setIsLoading(false);
+    };
+    fetchData();
   }, [pageIndex]);
 
   useEffect(() => {
@@ -104,37 +107,52 @@ const AllActivitiesPage = () => {
         align='flex-start'
       >
         <Title text={searchResult === "" ? "All activities" : `Result for "${searchResult}"`} fontSize='3xl' />
-        <HStack width='full' justify='space-between'>
-          <HStack spacing={5}>
-            <FilterPrice setFliterOptions={setFliterOptions} isAppliedfilter={!!filterOptions.priceMax && !!filterOptions.priceMin} />
-            <FilterDuration setFliterOptions={setFliterOptions} isAppliedfilter={!!filterOptions.duration} />
-            <FilterStar setFliterOptions={setFliterOptions} isAppliedfilter={!!filterOptions.star} />
-            {/* <FilterTime setFliterOptions={setFliterOptions}/> */}
-          </HStack>
+        <Stack
+          direction={['column', 'row']}
+          width='full'
+          justify='space-between'
+          spacing={4}
+          align={['stretch', 'center']}
+        >
+          <Wrap spacing={3}>
+            <WrapItem>
+              <FilterPrice setFliterOptions={setFliterOptions} isAppliedfilter={!!filterOptions.priceMax && !!filterOptions.priceMin} />
+            </WrapItem>
+            <WrapItem>
+              <FilterDuration setFliterOptions={setFliterOptions} isAppliedfilter={!!filterOptions.duration} />
+            </WrapItem>
+            <WrapItem>
+              <FilterStar setFliterOptions={setFliterOptions} isAppliedfilter={!!filterOptions.star} />
+            </WrapItem>
+          </Wrap>
+
           <Button
             height={50}
             border='2px solid #dcdfe4'
             {...(countFilter !== 0 && { borderColor: 'teal' })}
             bg='white'
             onClick={() => setIsOpenFilterModal(true)}
+            width={['full', 'auto']}
           >
             {<TbAdjustmentsHorizontal size={24} />} Filters {countFilter !== 0 ? `applied: ${countFilter}` : ''}
           </Button>
-        </HStack>
-        <HStack width='full' justify='space-between'>
+        </Stack>
+        <Stack
+          direction={['column', 'row']}
+          width='full'
+          justify='space-between'
+          align={['flex-start', 'center']}
+          spacing={4}
+          mt={4}
+        >
           <Text fontWeight="semibold">{totalCount} activities found</Text>
-          <HStack>
+          <Stack direction='row' align="center" spacing={2}>
             <Text whiteSpace='nowrap' fontWeight="bold" fontSize='md'>Sort by: </Text>
-            <Menu
-              autoSelect={false}
-              computePositionOnMount
-              placement="bottom-start"
-            >
+            <Menu autoSelect={false} computePositionOnMount placement="bottom-start">
               <CustomMenuButton
                 as={MenuButton}
                 text={isApplySort || 'Recommended'}
               />
-
               <MenuList>
                 <RadioGroup
                   as="fieldset"
@@ -153,20 +171,30 @@ const AllActivitiesPage = () => {
                 </RadioGroup>
               </MenuList>
             </Menu>
-          </HStack>
-        </HStack>
+          </Stack>
+        </Stack>
         <SimpleGrid
           maxWidth="1300px"
-          columns={{ base: 1, sm: 2, md: 4 }}
+          columns={{ base: 1, sm: 2, md: 3, lg: 4 }}
           gap={8}
-          padding={1}
-          mt="8px"
+          p={1}
+          mt={2}
+          w="full"
         >
-          {tours?.map((tour) => (
-            <TourCard key={tour?._id} tour={tour} />
-          ))}
+          {isLoading
+            ? Array.from({ length: 8 }).map((_, idx) => (
+                <VStack key={idx} spacing={3} align="flex-start">
+                  <Skeleton height="200px" width="full" borderRadius="md" />
+                  {/* just a workaround solution and need improve further */}
+                  {typeof window !== 'undefined' && <SkeletonText noOfLines={3} spacing={2} skeletonHeight={3} width="full" />}
+                  <Skeleton height="20px" width="40%" />
+                </VStack>
+              ))
+            : tours?.map((tour) => <TourCard key={tour?._id} tour={tour} />)}
         </SimpleGrid>
-        <Pagination pagination={pagination} pageSize={4} setPageSize={setPageSize} />
+        <Box alignSelf="center" marginY="8px">
+          <Pagination pagination={pagination} pageSize={4} setPageSize={setPageSize}/>
+        </Box>
       </VStack>
       <FilterModal
         isOpen={isOpenFilterModal}

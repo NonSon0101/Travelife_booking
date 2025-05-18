@@ -1,5 +1,4 @@
-import { HStack, VStack, Text, Image, Button } from "@chakra-ui/react";
-import TextField from "components/TextField";
+import { HStack, VStack, Text, Image, Flex } from "@chakra-ui/react";
 import { ITourCart } from "interfaces/cart";
 import { IDiscountItem } from "interfaces/checkout";
 import { useState, useEffect } from "react";
@@ -18,6 +17,7 @@ const OrderItem = (props: IOderItem) => {
   const { tour, discountitem, currentCurrency } = props
   const [totalPrice, setTotalPrice] = useState(0)
 
+
   useEffect(() => {
     if (tour?.participants?.length === 0) {
       setTotalPrice(0)
@@ -32,63 +32,84 @@ const OrderItem = (props: IOderItem) => {
   }, [tour?.participants]);
 
   return (
-    <HStack
+    <Flex
+      direction={{ base: "column", md: "row" }}
       width="full"
-      align="self-start"
+      align="flex-start"
       border="2px solid #ccc"
       boxShadow="lg"
       background="#fff"
       padding="32px"
       borderRadius="8px"
-      spacing={10}
+      gap={6}
     >
       <Image
-        width="200px"
+        width={{ base: "100%", md: "200px" }}
         borderRadius="8px"
         src={`${tour?.tour?.thumbnail}`}
         alt="img"
+        objectFit="cover"
       />
-      <VStack align="flex-start">
+      <VStack align="flex-start" spacing={3} width="full">
         <Text fontSize="xl" fontWeight="bold">
-          {`${tour?.tour?.title}${tour?.isPrivate ? ' (Private)' : ''}`}
+          {`${tour?.tour?.title}${tour?.isPrivate ? " (Private)" : ""}`}
         </Text>
-        <HStack>
+
+        <HStack justify="space-between" width="full" wrap="wrap">
           <Text color="#396973" fontSize="2xl" fontWeight="500">
             {discountitem && discountitem?.length !== 0
-              ? formatCurrency(discountitem[0]?.tour?.totalPrice -
-                discountitem[0]?.tour?.discountPrice, currentCurrency)
+              ? formatCurrency(
+                discountitem[0]?.tour?.totalPrice -
+                discountitem[0]?.tour?.discountPrice,
+                currentCurrency
+              )
               : formatCurrency(totalPrice, currentCurrency)}
           </Text>
-          <Text
-            textAlign="inherit"
-            fontSize="md"
-            fontWeight="500"
-            textDecoration="line-through"
-            opacity="0.55"
-          >
-            {discountitem && discountitem?.length !== 0
-              ? formatCurrency(discountitem[0]?.tour?.totalPrice, currentCurrency)
-              : ""}
-          </Text>
+          {discountitem && discountitem?.length !== 0 && (
+            <Text
+              fontSize="md"
+              fontWeight="500"
+              textDecoration="line-through"
+              opacity="0.55"
+            >
+              {formatCurrency(
+                discountitem[0]?.tour?.totalPrice,
+                currentCurrency
+              )}
+            </Text>
+          )}
         </HStack>
-        <HStack width='full' justifyContent='space-between'>
+
+        <HStack
+          width="full"
+          justifyContent="space-between"
+          flexWrap="wrap"
+          rowGap={2}
+        >
           <HStack>
             <IoTimerOutline />
             <Text fontSize="md" fontWeight="bold">
               {`${tour?.startDate.slice(0, 10)}`}
             </Text>
           </HStack>
-          {tour?.isPrivate &&
+
+          {tour?.isPrivate && (
             <HStack>
               <FaHotel />
-              <Text fontSize="md" fontWeight="bold" >
+              <Text fontSize="md" fontWeight="bold">
                 {tour?.hotels[0]?.name}
               </Text>
             </HStack>
-          }
+          )}
         </HStack>
-        <HStack width='full' justifyContent='space-between'>
-          <HStack>
+
+        <HStack
+          width="full"
+          justifyContent="space-between"
+          flexWrap="wrap"
+          rowGap={2}
+        >
+          <HStack wrap="wrap" rowGap={1}>
             <MdPeopleAlt />
             {tour?.participants.map((participant) => (
               <Text fontSize="md" fontWeight="bold" key={participant?.title}>
@@ -96,17 +117,19 @@ const OrderItem = (props: IOderItem) => {
               </Text>
             ))}
           </HStack>
-          {tour?.isPrivate &&
+
+          {tour?.isPrivate && (
             <HStack>
               <FaBus />
-              <Text fontSize="md" fontWeight="bold" >
+              <Text fontSize="md" fontWeight="bold">
                 {tour?.transports[0]?.name}
               </Text>
             </HStack>
-          }
+          )}
         </HStack>
       </VStack>
-    </HStack>
+    </Flex>
+
   )
 }
 

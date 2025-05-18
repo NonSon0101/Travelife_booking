@@ -11,7 +11,7 @@ import {
   VStack,
   Input,
 } from "@chakra-ui/react";
-import { extendTheme, StackProps } from '@chakra-ui/react'
+import { StackProps } from '@chakra-ui/react'
 
 import { useRouter } from 'next/navigation'
 import routes from 'routes'
@@ -19,7 +19,6 @@ import SearchItem from "./SearchItem";
 import { useDebounce } from "hooks";
 import { useStores } from "hooks";
 import { observer } from "mobx-react";
-import { ISearch, ITour } from "interfaces/tour";
 
 interface ISearchInputProps extends StackProps {
   name?: string
@@ -29,15 +28,6 @@ interface ISearchInputProps extends StackProps {
   minHeight?: string
   minWidth?: string
 }
-const breakpoints = {
-  base: '0px',
-  sm: '320px',
-  md: '768px',
-  lg: '960px',
-  xl: '1200px',
-  '2xl': '1536px',
-}
-const theme = extendTheme({ breakpoints })
 
 const SearchBarInput = (props: ISearchInputProps) => {
 
@@ -75,9 +65,10 @@ const SearchBarInput = (props: ISearchInputProps) => {
       visible={isShow && searchResult}
       render={() => (
         <VStack
-          alignItems="center"
-          justifyContent="center"
-          width={{ base: '400px', xl: '515px' }}
+          alignItems="left"
+          justifyContent="left"
+          minWidth={{ base: '400px', xl: '515px' }}
+          width='full'
           minHeight="100px"
           height='full'
           borderRadius="8px"
@@ -107,7 +98,7 @@ const SearchBarInput = (props: ISearchInputProps) => {
         borderRadius="44px"
         border="2px solid #dcdfe4"
         justifyContent="space-between"
-        padding="0px 8px"
+        padding={{base: "0", md: "0px 8px"}}
         _focusWithin={{
           borderColor: "#64CCC5",
         }}
