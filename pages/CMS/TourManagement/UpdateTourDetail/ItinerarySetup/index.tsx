@@ -7,6 +7,8 @@ import 'maplibre-gl/dist/maplibre-gl.css'
 import { debounce } from 'lodash'
 import Icon from 'components/Icon'
 import ItineraryItem from './ItineraryItem'
+import { exportItinerary } from 'API/export'
+import { usePathname } from 'next/navigation'
 
 export interface IItineraryItem {
   activity: string
@@ -57,12 +59,15 @@ const ItinerarySetup = ({ methods }: IItinerarySetupProps) => {
   const [isSearching, setIsSearching] = useState(false)
   const [isAdding, setIsAdding] = useState(false)
   const [editingIndex, setEditingIndex] = useState<number | null>(null)
+  const [isExporting, setIsExporting] = useState(false)
   const mapContainer = useRef<HTMLDivElement>(null)
   const map = useRef<maplibregl.Map | null>(null)
   const marker = useRef<maplibregl.Marker | null>(null)
   const searchInputRef = useRef<HTMLInputElement>(null)
   const [currentItem, setCurrentItem] = useState<IItineraryItem>(initialItem)
   const imagesRef = useRef<any>(null)
+  const pathname = usePathname()
+  const tourId = pathname?.split('/').pop() ?? ''
 
   const center = {
     lat: 10.762622,
@@ -304,11 +309,36 @@ const ItinerarySetup = ({ methods }: IItinerarySetupProps) => {
     reader.readAsDataURL(file)
   }
 
+  const handleExportPDF = async () => {
+    try {
+      setIsExporting(true)
+      await exportItinerary(tourId)
+      toast.success('PDF exported successfully')
+    } catch (error) {
+      toast.error('Failed to export PDF')
+    } finally {
+      setIsExporting(false)
+    }
+  }
+
   return (
     <VStack width="full" align="flex-start" spacing={8}>
-      <Text color="teal.500" fontSize="lg" fontWeight={600} lineHeight={8}>
-        Set Up Itinerary
-      </Text>
+      <HStack width="full" justify="space-between">
+        <Text color="teal.500" fontSize="lg" fontWeight={600} lineHeight={8}>
+          Set Up Itinerary
+        </Text>
+        <Button
+          leftIcon={<Icon iconName="pdf.svg" size={20} />}
+          colorScheme="teal"
+          variant="outline"
+          isDisabled={!itineraryItems || itineraryItems.length === 0 || isExporting}
+          isLoading={isExporting}
+          loadingText="Exporting..."
+          onClick={handleExportPDF}
+        >
+          Export PDF
+        </Button>
+      </HStack>
 
       {/* Display existing items */}
       {itineraryItems && itineraryItems.length > 0 && (
