@@ -128,12 +128,12 @@ const UpdateAccountDetail = () => {
           <HStack width="full" align="flex-start" spacing={8}>
             <Box width="full" background="white" padding={8} borderRadius={8} borderWidth={1} boxShadow="sm">
               <SimpleGrid maxWidth="1200px" columns={{ base: 1, md: 2 }} gap={6}>
-                <FormInput name="fullname" label="Full Name" disabled={true}/>
-                <FormInput name="phone" label="Phone Number" disabled={true}/>
-                <FormInput name="username" label="Username" disabled={true}/>
-                <FormInput name="email" label="Email" disabled={true}/>
-                <FormInput name="nationality" label="Nationality" disabled={true}/>
-                <FormInput name="address" label="Address" disabled={true}/>
+                <FormInput name="fullname" label="Full Name" disabled={true} isRequired={false}/>
+                <FormInput name="phone" label="Phone Number" disabled={true} isRequired={false}/>
+                <FormInput name="username" label="Username" disabled={true} isRequired={false}/>
+                <FormInput name="email" label="Email" disabled={true} isRequired={false}/>
+                <FormInput name="nationality" label="Nationality" disabled={true} isRequired={false}/>
+                <FormInput name="address" label="Address" disabled={true} isRequired={false}/>
                 <FormInput name="dateOfBirth" label="Date Of Birth">
                   <DatePicker
                     {...register('dateOfBirth')}
@@ -143,7 +143,7 @@ const UpdateAccountDetail = () => {
                     customInput={<DateInput />}
                   />
                 </FormInput>
-                <FormInput name="passport" label="Passport" disabled={true}/>
+                <FormInput name="passport" label="Passport" disabled={true} isRequired={false}/>
                 <FormInput name="dateOfIssuePassport" label="Date Of Issue Passport">
                   <DatePicker
                     {...register('dateOfIssuePassport')}

@@ -14,18 +14,18 @@ import {
 } from '@chakra-ui/react'
 import Dropdown from 'components/Dropdown'
 import { useStores } from 'hooks/useStores'
-import { IHotel } from 'interfaces/hotel'
 import { useEffect } from 'react'
 import Icon from 'components/Icon';
 import { getOptions, getValidArray } from 'utils/common'
+import { ITransportation } from 'interfaces/transportation'
 
 
-interface IManageHotelsProps {
+interface IManageTransportationProps {
   isOpen: boolean
   onClose: () => void
   methods: any
-  existingOptions: IHotel[]
-  setExistingOptions: (options: IHotel[]) => void
+  existingOptions: ITransportation[]
+  setExistingOptions: (options: ITransportation[]) => void
 }
 
 export const ManageText = chakra(Text, {
@@ -38,30 +38,30 @@ export const ManageText = chakra(Text, {
   })
 })
 
-const ManageHotels = (props: IManageHotelsProps) => {
+const ManageHotels = (props: IManageTransportationProps) => {
   const { isOpen, onClose, methods, existingOptions, setExistingOptions } = props;
   const { getValues, setValue } = methods || { getValues: () => { }, setValue: () => { } };
-  const { hotelStore } = useStores()
-  const { hotels } = hotelStore
+  const { transportationStore } = useStores()
+  const { transportations } = transportationStore
   if (!methods) return null
-  const hotelsOptions = getOptions(hotels, 'name', '_id')
-  console.log('hotelsOptions', hotelsOptions)
+  const TransportationsOptions = getOptions(transportations, 'name', '_id')
+  console.log('TransportationsOptions', TransportationsOptions)
 
   function handleAddNewHotel(): void {
-    const newHotelId = getValues('newHotelsTitle.value');
-    const newHotelName = getValues('newHotelsTitle.label');
-    const newHotel = { _id: newHotelId, name: newHotelName }
+    const newTransportId = getValues('newTransportationTitle.value');
+    const newTransportName = getValues('newTransportationTitle.label');
+    const newHotel = { _id: newTransportId, name: newTransportName }
 
     setExistingOptions([...existingOptions, newHotel]);
   }
 
-  function handleDeleteHotelOption(index: number): void {
+  function handleDeleteTransportOption(index: number): void {
     const newOptions = existingOptions.filter((_, i) => i !== index)
     setExistingOptions(newOptions);
   }
 
   useEffect(() => {
-    hotelStore.fetchAllHotels();
+    transportationStore.fetchAllTransportations();
   }, [])
 
   console.log('existingOptions', existingOptions);
@@ -70,7 +70,7 @@ const ManageHotels = (props: IManageHotelsProps) => {
       <ModalOverlay />
       <ModalContent top={10} borderRadius="xl" overflow="hidden" boxShadow="lg">
         <ModalHeader color="gray.800" fontSize="20px" fontWeight="bold" px={6} pt={6}>
-          Manage Hotels
+          Manage Transportation
         </ModalHeader>
         <ModalCloseButton top={4} right={4} />
         <ModalBody px={6} pb={6}>
@@ -78,9 +78,9 @@ const ManageHotels = (props: IManageHotelsProps) => {
             {/* Dropdown Select */}
             <Box>
               <Dropdown
-                name="newHotelsTitle"
-                label="Select Hotel"
-                options={hotelsOptions}
+                name="newTransportationTitle"
+                label="Select Transportation"
+                options={TransportationsOptions}
                 setValue={setValue}
               />
             </Box>
@@ -107,7 +107,7 @@ const ManageHotels = (props: IManageHotelsProps) => {
                     </Text>
                     <Center
                       cursor="pointer"
-                      onClick={() => handleDeleteHotelOption(index)}
+                      onClick={() => handleDeleteTransportOption(index)}
                       _hover={{ color: "red.500", transform: "scale(1.05)" }}
                       transition="all 0.2s"
                     >
@@ -127,7 +127,7 @@ const ManageHotels = (props: IManageHotelsProps) => {
               cursor="pointer"
               _hover={{ textDecoration: "underline" }}
             >
-              + Add New Hotel
+              + Add New Transportation
             </ManageText>
           </VStack>
         </ModalBody>
@@ -136,5 +136,4 @@ const ManageHotels = (props: IManageHotelsProps) => {
 
   )
 }
-
 export default ManageHotels

@@ -1,7 +1,7 @@
 "use client";
 import { ChangeEvent, useEffect, useRef, useState } from 'react'
 import dynamic from 'next/dynamic'
-import { Box, Button, Center, FormControl, FormLabel, HStack, Img, SimpleGrid, Switch, Text, VStack, chakra } from '@chakra-ui/react'
+import { Box, Button, Center, HStack, Img, SimpleGrid, Switch, Text, VStack, chakra } from '@chakra-ui/react'
 import { createTour, updateTourDetail } from 'API/tour'
 import { uploadImage, uploadTourImage } from 'API/upload'
 import { IOption } from 'components/Dropdown'
@@ -24,15 +24,16 @@ import ManageExclusions from './ManageExclusions'
 import ManageInclusions from './ManageInclusions'
 import ManagePriceOptions from './ManagePriceOptions'
 import { currencyOptions, tourTypeOptions } from 'constants/common'
-import PrivateTour from './PrivateTour'
 import ManageHotels from './ManageHotels'
 import VirtualTour from './VirtualTour';
 import ItinerarySetup from './ItinerarySetup';
 import MapSelector from 'components/MapSelector'
+import { IHotel } from 'interfaces/hotel';
+import { ITransportation } from 'interfaces/transportation';
+import ManageTransportations from './ManageTransportations';
 const Dropdown = dynamic(() => import('components/Dropdown'), {
   ssr: false,
 })
-
 
 export interface IUpdateTourForm extends ITour {
   typeValue: IOption
@@ -68,10 +69,12 @@ const UpdateTourDetail = () => {
   const [isImageLoading, setIsImageLoading] = useState<boolean>(false)
   const [isManageInclusion, setIsManageInclusion] = useState<boolean>(false)
   const [isManageExclusion, setIsManageExclusion] = useState<boolean>(false)
-  const [isPrivateTour, setIsPrivateTour] = useState<boolean>(false)
   const [isManageHotels, setIsManageHotels] = useState<boolean>(false)
+  const [isManageTransports, setIsManageTransports] = useState<boolean>(false)
   const [isManagePriceOptions, setIsManagePriceOptions] = useState<boolean>(false)
   const [existingPriceOptions, setExistingPriceOptions] = useState<IPriceOption[]>([])
+  const [existingHotels, setExistingHotels] = useState<IHotel[]>([])
+  const [existingTransports, setExistingTransports] = useState<ITransportation[]>([])
   const [privateTour, setPrivateTour] = useState<boolean>(false)
   const [isMapReady, setIsMapReady] = useState<boolean>(false)
   const thumbnail = useWatch({ control, name: 'thumbnail' }) ?? ''
@@ -87,7 +90,7 @@ const UpdateTourDetail = () => {
   function deleteImages(url: string) {
     setValue('images', images.filter((image: string) => image !== url))
   }
-
+ 
   async function uploadImages(event: ChangeEvent<HTMLInputElement>) {
     setIsImageLoading(true)
     if (!event.target.files || event.target.files.length === 0) {
@@ -177,8 +180,7 @@ const UpdateTourDetail = () => {
       setImageFiles([]);
     }
 
-    const data: ITour = formatFormData(formData, existingPriceOptions)
-    console.log("data", data)
+    const data: ITour = formatFormData(formData, existingPriceOptions, existingHotels, existingTransports)
     try {
       if (isEditMode) {
         await updateTourDetail(tourId, data)
@@ -212,6 +214,7 @@ const UpdateTourDetail = () => {
       tourStore.fetchTourDetail(tourId).finally(() => {
         setIsLoading(false)
         setIsMapReady(true)
+        // setIsPrivateTour(tourDetail.)
       })
     } else {
       setIsMapReady(true)
@@ -247,10 +250,25 @@ const UpdateTourDetail = () => {
         return {
           title: option?.title,
           value: Number(option?.value),
-          currency: option?.currency
+          currency: option?.currency,
+          participantsCategoryIdentifier: option?.participantsCategoryIdentifier
+        }
+      })
+      const HotelsData: IHotel[] = getValidArray(tourDetail?.hotels).map(option => {
+        return {
+           _id: option._id,
+           name: option.name
+        }
+      })
+      const TransportsData: ITransportation[] = getValidArray(tourDetail?.transports).map(option => {
+         return {
+           _id: option._id,
+           name: option.name
         }
       })
       setExistingPriceOptions(priceOptionsData)
+      setExistingHotels(HotelsData)
+      setExistingTransports(TransportsData)
     }
   }, [tourDetail])
 
@@ -351,7 +369,7 @@ const UpdateTourDetail = () => {
                   <FormInput name="duration" label="Duration" type="number" min={0} />
                   <FormInput name="priceOptions" label="Price Options">
                     <ManageText onClick={() => setIsManagePriceOptions(true)}>
-                      Manage Price Options
+                      Manage Price Options 
                     </ManageText>
                   </FormInput>
                   <FormInput name="inclusions" label="Inclusions">
@@ -366,19 +384,14 @@ const UpdateTourDetail = () => {
                   </FormInput>
                   {privateTour &&
                     <>
-                      <FormInput name="privateTourPriceOptions" label="Private Tour Price Options">
-                        <ManageText onClick={() => setIsPrivateTour(true)}>
-                          Private Tour Price Options
+                      <FormInput name="transports" label="Transports">
+                        <ManageText onClick={() => setIsManageTransports(true)}>
+                          Manage Transports
                         </ManageText>
                       </FormInput>
-                      <FormInput name="itinerary" label="Itinerary">
-                        <ManageText onClick={() => setIsPrivateTour(true)}>
-                          Manage itinerary
-                        </ManageText>
-                      </FormInput>
-                      <FormInput name="hotel" label="Hotel">
+                      <FormInput name="hotels" label="Hotels">
                         <ManageText onClick={() => setIsManageHotels(true)}>
-                          Manage hotel
+                          Manage Hotels
                         </ManageText>
                       </FormInput>
                     </>
@@ -525,10 +538,22 @@ const UpdateTourDetail = () => {
             existingOptions={existingPriceOptions}
             setExistingOptions={setExistingPriceOptions}
           />
+          <ManageHotels 
+            isOpen={isManageHotels} 
+            onClose={() => setIsManageHotels(false)} 
+            methods={methods}
+            existingOptions={existingHotels}
+            setExistingOptions={setExistingHotels}
+          />
+          <ManageTransportations
+            isOpen={isManageTransports} 
+            onClose={() => setIsManageTransports(false)} 
+            methods={methods}
+            existingOptions={existingTransports}
+            setExistingOptions={setExistingTransports}
+          />
           <ManageInclusions methods={methods} isOpen={isManageInclusion} onClose={() => setIsManageInclusion(false)} />
           <ManageExclusions methods={methods} isOpen={isManageExclusion} onClose={() => setIsManageExclusion(false)} />
-          <PrivateTour methods={methods} isOpen={isPrivateTour} onClose={() => setIsPrivateTour(false)} tourId={tourId} existingOptions={existingPriceOptions} setExistingOptions={setExistingPriceOptions} />
-          <ManageHotels isOpen={isManageHotels} onClose={() => setIsManageHotels(false)} methods={methods}/>
         </form>
       </FormProvider>
     </Box>
