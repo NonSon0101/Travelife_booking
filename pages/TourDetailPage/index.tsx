@@ -20,16 +20,7 @@ import {
   Switch,
   FormControl,
   FormLabel,
-  Container,
   useDisclosure,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalCloseButton,
-  ModalFooter,
-  useToast,
   Skeleton
 } from "@chakra-ui/react";
 import { toast } from 'react-toastify'
@@ -48,13 +39,11 @@ import { LuCalendarDays } from "react-icons/lu";
 import { IoPeople } from "react-icons/io5";
 import { BiLeftArrowAlt, BiRightArrowAlt } from "react-icons/bi";
 import { FaLocationDot } from "react-icons/fa6";
-import PageLayout from "components/Layout/WebLayout/PageLayout";
 import { TriangleDownIcon } from "@chakra-ui/icons";
 import MenuItem from "components/Layout/WebLayout/components/MenuItem";
 import CustomCalendar from "./Calendar";
 import { IAddToCart, IParticipants } from "interfaces/cart";
 import { PLATFORM } from "enums/common";
-import Maps from "./Maps";
 import RatingStart from "components/RatingStart";
 import { formatCurrency } from "utils/common";
 import routes from "routes";
@@ -224,7 +213,7 @@ const TourDetailPage = () => {
         setIsLoading(false)
         toast.success('Add to cart successfully')
         window.scrollTo({ top: 0, behavior: 'smooth' });
-        router.refresh()
+        location.reload();
       } else {
         toast.warning("Please login first")
         setIsLoading(false)

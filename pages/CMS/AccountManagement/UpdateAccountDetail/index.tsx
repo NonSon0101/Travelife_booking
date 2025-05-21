@@ -3,7 +3,7 @@ import { ChangeEvent, createElement, forwardRef, useEffect, useRef, useState } f
 import { Avatar, Box, Button, FormControl, FormLabel, HStack, Radio, RadioGroup, SimpleGrid, Text, VStack } from '@chakra-ui/react'
 import { uploadUserImage } from 'API/upload'
 import { updateUser } from 'API/user'
-import DateInput from 'components/DateInput'
+import { DateInput } from 'components/DateInput'
 import FormInput from 'components/FormInput'
 import dayjs from 'dayjs'
 import { EGender, ERole } from 'enums/user'

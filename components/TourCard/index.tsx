@@ -62,12 +62,12 @@ const TourCard = (props: ITourCard) => {
             align="flex-start"
             padding="8px 12px 0px"
           >
-            <Text>Hiking</Text>
+            <Text>{tour?.type ? tour?.type : " "}</Text>
             <Text color="gray.800" fontWeight={700} lineHeight={1} mb="4px">
               {tour.title}
             </Text>
             <Text fontSize="md" mb="4px" fontWeight="500">
-              2 hours
+              {tour?.duration} hours
             </Text>
             <RatingStart sizeStar={24} sizeText="sm" ratingAverage={tour.ratingAverage} numOfRating={tour.numOfRating} />
           </VStack>

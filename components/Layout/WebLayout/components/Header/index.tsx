@@ -32,6 +32,7 @@ const Header = (props: IHeader) => {
       flexDirection="column"
       justifyContent="center"
       alignItems="center"
+      zIndex={999}
       {...(bgGradient
         ? { bgGradient: `${bgGradient}` }
         : { background: `${background}` })}
