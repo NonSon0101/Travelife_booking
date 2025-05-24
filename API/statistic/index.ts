@@ -7,7 +7,7 @@ const STATISTIC_URL = '/api/v1/statistics'
 
 export async function getRevenue(filter = ''): Promise<IRevenues> {
   try {
-    const response = await api.get(`${STATISTIC_URL}/revenue?startDate=2024-01&endDate=2024-12&period=month`, {
+    const response = await api.get(`${STATISTIC_URL}/revenue?startDate=2025-01&endDate=2025-05&period=month`, {
       headers: auth(PLATFORM.CMS)
     })
     return response.data

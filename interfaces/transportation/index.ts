@@ -1,7 +1,7 @@
 export interface ITransportation {
   _id: string
   name: string
-  image: string
+  image?: string
   capacity?: number
   brand?: string
   isActive?: boolean

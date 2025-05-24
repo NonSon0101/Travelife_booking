@@ -34,10 +34,11 @@ export interface ITour {
   regularPrice?: number
   currency?: string
   isActive?: boolean
-  hotels?: IHotel[]
+  hotels?: IHotel[] | string[]
   location?: string
-  transports?: ITransportation[]
-  virtualTours?: IVirtualTour[]
+  transports?: ITransportation[] | string[]
+  virtualTours?: IVirtualTour[],
+  isPrivate?: boolean
 }
 
 export interface ITourPagination {

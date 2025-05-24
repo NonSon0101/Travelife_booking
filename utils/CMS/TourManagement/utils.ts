@@ -3,6 +3,8 @@ import { IPriceOption } from 'interfaces/common'
 import { ITour } from 'interfaces/tour'
 import { getValidArray } from 'utils/common'
 import { IUpdateTourForm } from 'pages/CMS/TourManagement/UpdateTourDetail'
+import { IHotel } from 'interfaces/hotel'
+import { ITransportation } from 'interfaces/transportation'
 
 export function getHeaderList(): ITableHeader[] {
   return [
@@ -33,7 +35,7 @@ export function getHeaderList(): ITableHeader[] {
   ]
 }
 
-export function formatFormData(formData: IUpdateTourForm, priceOptions: IPriceOption[]): ITour {
+export function formatFormData(formData: IUpdateTourForm, priceOptions: IPriceOption[], hotels: string[], transports: string[]): ITour {
   return {
     //_id: formData?._id,
     highlights: formData?.highlights,
@@ -45,9 +47,9 @@ export function formatFormData(formData: IUpdateTourForm, priceOptions: IPriceOp
     ratingAverage: formData?.ratingAverage, 
     // numOfRating: formData?.numOfRating,
     //isActive: formData?.isActive, 
-    hotels: formData?.hotels, 
+    hotels,
     location: formData?.locationValue?.value, 
-    transports: formData?.transports,
+    transports,
     code: formData?.code,
     title: formData?.title,
     summary: formData?.summary,
@@ -72,6 +74,7 @@ export function formatFormData(formData: IUpdateTourForm, priceOptions: IPriceOp
       name: tour?.name,
       processedImage: tour?.processedImage,
     })) || [],
+    isPrivate: formData?.isPrivate
   }
 }
 
