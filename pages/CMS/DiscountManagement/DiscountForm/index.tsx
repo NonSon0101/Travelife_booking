@@ -237,7 +237,6 @@ const DiscountForm = (props: IDiscountFormProps) => {
                     label="Applies To Tour"
                     options={tourOptions}
                     setValue={setValue}
-                    isRequired={true}
                   />
                 )}
               </SimpleGrid>
