@@ -52,12 +52,29 @@ const ManageHotels = (props: IManageHotelsProps) => {
     const newHotelName = getValues('newHotelsTitle.label');
     const newHotel = { _id: newHotelId, name: newHotelName }
 
+    // Add to existingOptions for display
     setExistingOptions([...existingOptions, newHotel]);
+    
+    // Add only ID to form data
+    const hotels = getValues('hotels') || [];
+    const currentHotels = Array.isArray(hotels) 
+      ? hotels.map(hotel => typeof hotel === 'string' ? hotel : hotel._id)
+      : [];
+    setValue('hotels', [...currentHotels, newHotelId]);
   }
 
   function handleDeleteHotelOption(index: number): void {
     const newOptions = existingOptions.filter((_, i) => i !== index)
     setExistingOptions(newOptions);
+    
+    // Remove ID from form data
+    const hotels = getValues('hotels') || [];
+    const currentHotels = Array.isArray(hotels) 
+      ? hotels.map(hotel => typeof hotel === 'string' ? hotel : hotel._id)
+      : [];
+    const hotelToRemove = existingOptions[index];
+    const newHotels = currentHotels.filter(id => id !== hotelToRemove._id);
+    setValue('hotels', newHotels);
   }
 
   useEffect(() => {

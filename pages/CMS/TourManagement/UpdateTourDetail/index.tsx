@@ -82,6 +82,7 @@ const UpdateTourDetail = () => {
   const locationOptions = getOptions(locations, 'title', '_id')
   const categoryOptions = getOptions(categories, 'name', '_id')
   const [imageFiles, setImageFiles] = useState<File[]>([])
+  const { getValues } = methods
 
   function backToTourList() {
     router.push(routes.cms.tourManagement.value)
@@ -180,7 +181,16 @@ const UpdateTourDetail = () => {
       setImageFiles([]);
     }
 
-    const data: ITour = formatFormData(formData, existingPriceOptions, existingHotels, existingTransports)
+    const hotels = getValues('hotels') || [];
+    const transports = getValues('transports') || [];
+    const hotelsData = Array.isArray(hotels) 
+      ? hotels.map(hotel => typeof hotel === 'string' ? hotel : hotel._id)
+      : [];
+    const transportsData = Array.isArray(transports) 
+      ? transports.map(transport => typeof transport === 'string' ? transport : transport._id)
+      : [];
+
+    const data: ITour = formatFormData(formData, existingPriceOptions, hotelsData, transportsData)
     try {
       if (isEditMode) {
         await updateTourDetail(tourId, data)
@@ -254,16 +264,28 @@ const UpdateTourDetail = () => {
           participantsCategoryIdentifier: option?.participantsCategoryIdentifier
         }
       })
-      const HotelsData: IHotel[] = getValidArray(tourDetail?.hotels).map(option => {
+      const HotelsData: IHotel[] = getValidArray(tourDetail?.hotels as IHotel[]).map(option => {
+        if (typeof option === 'string') {
+          return {
+            _id: option,
+            name: ''
+          }
+        }
         return {
-           _id: option._id,
-           name: option.name
+          _id: option._id,
+          name: option.name
         }
       })
-      const TransportsData: ITransportation[] = getValidArray(tourDetail?.transports).map(option => {
-         return {
-           _id: option._id,
-           name: option.name
+      const TransportsData: ITransportation[] = getValidArray(tourDetail?.transports as ITransportation[]).map(option => {
+        if (typeof option === 'string') {
+          return {
+            _id: option,
+            name: ''
+          }
+        }
+        return {
+          _id: option._id,
+          name: option.name
         }
       })
       setExistingPriceOptions(priceOptionsData)

@@ -35,7 +35,7 @@ export function getHeaderList(): ITableHeader[] {
   ]
 }
 
-export function formatFormData(formData: IUpdateTourForm, priceOptions: IPriceOption[], hotels: IHotel[], transports: ITransportation[]): ITour {
+export function formatFormData(formData: IUpdateTourForm, priceOptions: IPriceOption[], hotels: string[], transports: string[]): ITour {
   return {
     //_id: formData?._id,
     highlights: formData?.highlights,

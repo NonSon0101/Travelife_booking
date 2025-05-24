@@ -34,9 +34,9 @@ export interface ITour {
   regularPrice?: number
   currency?: string
   isActive?: boolean
-  hotels?: IHotel[]
+  hotels?: IHotel[] | string[]
   location?: string
-  transports?: ITransportation[]
+  transports?: ITransportation[] | string[]
   virtualTours?: IVirtualTour[]
 }
 

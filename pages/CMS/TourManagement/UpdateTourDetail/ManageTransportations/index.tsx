@@ -52,12 +52,25 @@ const ManageHotels = (props: IManageTransportationProps) => {
     const newTransportName = getValues('newTransportationTitle.label');
     const newHotel = { _id: newTransportId, name: newTransportName }
 
+    const transports = getValues('transports') || [];
+    const currentTransports = Array.isArray(transports) 
+      ? transports.map(transport => typeof transport === 'string' ? transport : transport._id)
+      : [];
+    setValue('transports', [...currentTransports, newTransportId]);
     setExistingOptions([...existingOptions, newHotel]);
   }
 
   function handleDeleteTransportOption(index: number): void {
     const newOptions = existingOptions.filter((_, i) => i !== index)
     setExistingOptions(newOptions);
+
+    const transports = getValues('transports') || [];
+    const currentTransports = Array.isArray(transports) 
+      ? transports.map(transport => typeof transport === 'string' ? transport : transport._id)
+      : [];
+    const transportToRemove = existingOptions[index];
+    const newTransports = currentTransports.filter(id => id !== transportToRemove._id);
+    setValue('transports', newTransports);
   }
 
   useEffect(() => {
