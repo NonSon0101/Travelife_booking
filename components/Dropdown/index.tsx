@@ -16,29 +16,39 @@ interface IDropdownProps {
   placeholder?: string
   setValue: any
   gridColumn?: string
+  isRequired?: boolean
+  isMulti?: boolean
+  isClearable?: boolean
 }
 
 const Dropdown = (props: IDropdownProps) => {
-  const { name, label, options, placeholder, setValue, gridColumn } = props
+  const { name, label, options, placeholder, setValue, gridColumn, isRequired, isMulti, isClearable = true } = props
   const { control } = useFormContext()
   const value = useWatch({ control, name })
 
+  const handleChange = (option: MultiValue<IOption>) => {
+    if (isMulti) {
+      setValue(name, option)
+    } else {
+      setValue(name, { label: get(option, 'label', ''), value: get(option, 'value', '') })
+    }
+  }
+
   return (
-    <FormControl gridColumn={gridColumn}>
+    <FormControl gridColumn={gridColumn} isRequired={isRequired}>
       <FormLabel color="gray.700" marginBottom={2}>
         {label}
       </FormLabel>
-      <Select<IOption, true, GroupBase<IOption>>
+      <Select<IOption, boolean, GroupBase<IOption>>
         size="md"
         name={name}
         value={value}
         options={options}
         colorScheme="teal"
         placeholder={placeholder}
-        isClearable
-        onChange={(option: MultiValue<IOption>) => {
-          setValue(name, { label: get(option, 'label', ''), value: get(option, 'value', '') })
-        }}
+        isClearable={isClearable}
+        isMulti={isMulti}
+        onChange={handleChange}
         chakraStyles={{
           container: (provided: Record<string, unknown>) => ({
             ...provided,
@@ -75,6 +85,25 @@ const Dropdown = (props: IDropdownProps) => {
             _selected: {
               background: isSelected ? 'teal.100' : 'auto'
             }
+          }),
+          multiValue: (provided: Record<string, unknown>) => ({
+            ...provided,
+            backgroundColor: 'teal.100',
+            borderRadius: '4px',
+            margin: '2px',
+          }),
+          multiValueLabel: (provided: Record<string, unknown>) => ({
+            ...provided,
+            color: 'teal.700',
+            padding: '2px 6px',
+          }),
+          multiValueRemove: (provided: Record<string, unknown>) => ({
+            ...provided,
+            color: 'teal.700',
+            _hover: {
+              backgroundColor: 'teal.200',
+              color: 'teal.800',
+            },
           }),
         }}
       />
