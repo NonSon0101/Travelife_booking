@@ -74,6 +74,7 @@ export function formatFormData(formData: IUpdateTourForm, priceOptions: IPriceOp
       name: tour?.name,
       processedImage: tour?.processedImage,
     })) || [],
+    isPrivate: formData?.isPrivate
   }
 }
 

@@ -440,12 +440,12 @@ const TourDetailPage = () => {
               <Text fontSize="2xl" fontWeight="bold" color="#fff">
                 Select participant and date
               </Text>
-              <FormControl display='flex' alignItems='center' width='unset'>
+              {tourDetail?.isPrivate && <FormControl display='flex' alignItems='center' width='unset'>
                 <FormLabel htmlFor='private-tour' mb='0' color='#fff'>
                   Private tour?
                 </FormLabel>
                 <Switch id='private-tour' isChecked={privateTour} onChange={handleEnablePrivate} />
-              </FormControl>
+              </FormControl>}
             </Stack>
             <Stack
               width="full"

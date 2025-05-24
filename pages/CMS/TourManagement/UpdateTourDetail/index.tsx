@@ -75,7 +75,7 @@ const UpdateTourDetail = () => {
   const [existingPriceOptions, setExistingPriceOptions] = useState<IPriceOption[]>([])
   const [existingHotels, setExistingHotels] = useState<IHotel[]>([])
   const [existingTransports, setExistingTransports] = useState<ITransportation[]>([])
-  const [privateTour, setPrivateTour] = useState<boolean>(false)
+  const [isPrivate, setIsPrivate] = useState<boolean>(false)
   const [isMapReady, setIsMapReady] = useState<boolean>(false)
   const thumbnail = useWatch({ control, name: 'thumbnail' }) ?? ''
   const images = useWatch({ control, name: 'images' }) ?? []
@@ -256,6 +256,7 @@ const UpdateTourDetail = () => {
           value: get(tourDetail?.location, '_id') ?? ''
         }
       })
+      setIsPrivate(tourDetail?.isPrivate || false)
       const priceOptionsData: IPriceOption[] = getValidArray(tourDetail?.priceOptions).map(option => {
         return {
           title: option?.title,
@@ -307,7 +308,14 @@ const UpdateTourDetail = () => {
                 <Text mb='0'>
                   Private tour?
                 </Text>
-                <Switch id='private-tour' isChecked={privateTour} onChange={() => setPrivateTour(!privateTour)} />
+                <Switch 
+                  id='private-tour' 
+                  isChecked={isPrivate} 
+                  onChange={(e) => {
+                    setIsPrivate(e.target.checked);
+                    setValue('isPrivate', e.target.checked);
+                  }} 
+                />
               </HStack>
             </VStack>
             <HStack spacing={4}>
@@ -404,7 +412,7 @@ const UpdateTourDetail = () => {
                       Manage Exclusions
                     </ManageText>
                   </FormInput>
-                  {privateTour &&
+                  {isPrivate &&
                     <>
                       <FormInput name="transports" label="Transports">
                         <ManageText onClick={() => setIsManageTransports(true)}>

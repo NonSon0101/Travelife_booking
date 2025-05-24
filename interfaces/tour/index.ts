@@ -37,7 +37,8 @@ export interface ITour {
   hotels?: IHotel[] | string[]
   location?: string
   transports?: ITransportation[] | string[]
-  virtualTours?: IVirtualTour[]
+  virtualTours?: IVirtualTour[],
+  isPrivate?: boolean
 }
 
 export interface ITourPagination {
