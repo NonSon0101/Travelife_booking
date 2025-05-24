@@ -29,9 +29,9 @@ export const DateInput = React.forwardRef<HTMLInputElement, DateInputProps>(
           {...props}
           getInputRef={ref}
           customInput={ChakraInput}
-          format="##/##/####"
-          placeholder="MM/DD/YYYY"
-          mask={['M', 'M', 'D', 'D', 'Y', 'Y', 'Y', 'Y']}
+          format="##/##/#### ##:##"
+          placeholder="MM/DD/YYYY HH:mm"
+          mask={['M', 'M', 'D', 'D', 'Y', 'Y', 'Y', 'Y', 'H', 'H', 'M', 'M']}
           size="sm"
           fontSize="md"
           border="none"

@@ -13,7 +13,9 @@ export interface IDiscount {
   appliesTo?: string
   tours?: string[]
   createdAt?: Date
-  updatedAt?: Date
+  updatedAt?: Date,
+  applyUsers?: string[],
+  scheduleAt?: Date
 }
 
 export interface IDiscountPagination {

@@ -1,4 +1,4 @@
-import React, { createElement, forwardRef, useEffect } from 'react'
+import React, { createElement, forwardRef, useEffect, useState } from 'react'
 import {
   Button,
   Modal,
@@ -12,10 +12,13 @@ import {
 } from '@chakra-ui/react'
 import { createDiscount, updateDiscount } from 'API/discount'
 import DateInput from 'components/DateInput'
+import DateTimeInput from 'components/DateTimeInput'
 import Dropdown, { IOption } from 'components/Dropdown'
 import FormInput from 'components/FormInput'
 import { discountAppliesToOptions, discountTypeOptions } from 'constants/common'
 import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
+import timezone from 'dayjs/plugin/timezone'
 import { EDiscountAppliesTo } from 'enums/discount'
 import { useStores } from 'hooks/useStores'
 import { IDiscount } from 'interfaces/discount'
@@ -24,6 +27,11 @@ import DatePicker from 'react-datepicker'
 import { FormProvider, useForm, useWatch } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import { getValidArray } from 'utils/common'
+import { ITour } from 'interfaces/tour'
+import { IUser } from 'interfaces/user'
+
+dayjs.extend(utc)
+dayjs.extend(timezone)
 
 interface IDiscountForm {
   name: string
@@ -33,11 +41,14 @@ interface IDiscountForm {
   minOrder: number
   appliesTo: string
   tours: string[]
+  users: string[]
   startDate: Date
   endDate: Date
+  scheduleAt: Date
   typeValue: IOption
   appliesToValue: IOption
   tourValue: IOption
+  applyUsers: IOption[]
 }
 
 interface IDiscountFormProps {
@@ -47,10 +58,12 @@ interface IDiscountFormProps {
 }
 
 const DiscountForm = (props: IDiscountFormProps) => {
-  const { discountStore, tourStore } = useStores()
-  const { tours } = tourStore
+  const { discountStore, tourStore, userStore } = useStores()
   const { discountDetail } = discountStore
   const { isOpen, onClose, discountId } = props
+  const [tours, setTours] = useState<ITour[]>([])
+  const [users, setUsers] = useState<IUser[]>([])
+  const [isDataReady, setIsDataReady] = useState(false)
   const methods = useForm<IDiscountForm>()
   const {
     control,
@@ -63,8 +76,29 @@ const DiscountForm = (props: IDiscountFormProps) => {
   const startDate: Date = dayjs(useWatch({ control, name: 'startDate' }) || new Date()).toDate()
   const endDate: Date = dayjs(useWatch({ control, name: 'endDate' }) || new Date()).toDate()
   const appliesToValue = useWatch({ control, name: 'appliesToValue' })
+  const scheduleAt = useWatch({ control, name: 'scheduleAt' })
   const tourOptions = getValidArray(tours).map(tour => ({ label: tour?.title ?? '', value: tour?._id ?? '' }))
+  const userOptions = getValidArray(users).map(user => ({ label: user?.email ?? '', value: user?._id ?? '' }))
   const isSpecific = appliesToValue?.value === EDiscountAppliesTo.SPECIFIC
+
+  async function fetchTours() {
+    await tourStore.fetchAllActiveTours()
+    setTours(tourStore.tours)
+  }
+
+  async function fetchUsers() {
+    await userStore.fetchAllActiveUsers()
+    setUsers(userStore.users)
+  }
+
+  async function fetchData() {
+    if (discountId) {
+      await discountStore.fetchDiscountDetail(discountId)
+    }
+    await fetchTours()
+    await fetchUsers()
+    setIsDataReady(true)
+  }
 
   function handleOnClose(): void {
     reset()
@@ -80,8 +114,10 @@ const DiscountForm = (props: IDiscountFormProps) => {
       minOrder: data?.minOrder,
       appliesTo: data?.appliesToValue?.value,
       tours: isSpecific ? [data?.tourValue?.value] : undefined,
+      applyUsers: data?.applyUsers?.map(user => user?.value) ?? [],
       startDate: dayjs(data?.startDate).toDate(),
       endDate: dayjs(data?.endDate).toDate(),
+      scheduleAt: dayjs(data?.scheduleAt).utc().toDate(),
     }
     try {
       if (discountId) {
@@ -99,29 +135,37 @@ const DiscountForm = (props: IDiscountFormProps) => {
   }
 
   useEffect(() => {
-    if (isOpen && discountId) {
-      reset({
-        ...discountDetail,
-        tourValue: tourOptions.find(option => option?.value === discountDetail?.tours?.[0]),
-        typeValue: discountTypeOptions.find(option => option?.value === discountDetail?.type),
-        appliesToValue: discountAppliesToOptions.find(option => option?.value === discountDetail?.appliesTo)
-      })
-    } else {
-      reset({})
+    if (isOpen) {
+      setIsDataReady(false)
+      fetchData()
     }
-  }, [isOpen, discountDetail])
+  }, [isOpen, discountId])
 
   useEffect(() => {
-    if (discountId) {
-      discountStore.fetchDiscountDetail(discountId)
+    if (isOpen && !discountId) {
+      reset({})
     }
-  }, [discountId])
+  }, [isOpen, discountId])
+
+  useEffect(() => {
+    if (isDataReady && discountDetail && isOpen && discountId) {
+      const formData = {
+        ...discountDetail,
+        tourValue: tourOptions.find(option => option?.value === discountDetail?.tours?.[0]),
+        applyUsers: userOptions.filter(option => discountDetail?.applyUsers?.includes(option?.value)),
+        typeValue: discountTypeOptions.find(option => option?.value === discountDetail?.type),
+        appliesToValue: discountAppliesToOptions.find(option => option?.value === discountDetail?.appliesTo),
+        scheduleAt: discountDetail?.scheduleAt ? dayjs.utc(discountDetail.scheduleAt).toDate() : new Date()
+      }
+      reset(formData)
+    }
+  }, [isDataReady, discountDetail, discountId])
 
   return (
     <Modal size="xl" isOpen={isOpen} onClose={handleOnClose}>
       <ModalOverlay />
       <ModalContent borderRadius={8}>
-        <ModalHeader  color="gray.800"fontSize="18px" fontWeight={500} lineHeight={7}>
+        <ModalHeader color="gray.800" fontSize="18px" fontWeight={500} lineHeight={7}>
           {discountId ? 'Update Discount Detail' : 'Create New Discount'}
         </ModalHeader>
         <ModalCloseButton />
@@ -147,6 +191,22 @@ const DiscountForm = (props: IDiscountFormProps) => {
                     customInput={<DateInput />}
                   />
                 </FormInput>
+                <FormInput name="scheduleAt" label="Schedule At">
+                  <DatePicker
+                    {...register('scheduleAt')}
+                    selected={scheduleAt ? new Date(scheduleAt) : new Date()}
+                    dateFormat="MM/dd/yyyy HH:mm"
+                    // showTimeSelect
+                    // timeFormat="HH:mm"
+                    // timeIntervals={1}
+                    onChange={(date: Date) => {
+                      const dateWithZeroSeconds = dayjs(date).second(0).toDate()
+                      setValue('scheduleAt', dateWithZeroSeconds, { shouldDirty: true })
+                    }}
+                    showTimeInput={true}
+                    customInput={<DateTimeInput />}
+                  />
+                </FormInput>
                 <FormInput name="code" label="Code" placeholder="Enter Code" />
                 <FormInput name="name" label="Name" placeholder="Enter Name" />
                 <FormInput name="value" label="Value" placeholder="Enter Value" />
@@ -162,6 +222,14 @@ const DiscountForm = (props: IDiscountFormProps) => {
                   label="Applies To"
                   options={discountAppliesToOptions}
                   setValue={setValue}
+                />
+                <Dropdown
+                  name="applyUsers"
+                  label="Applies To Users"
+                  options={userOptions}
+                  setValue={setValue}
+                  isMulti={true}
+                  isClearable={true}
                 />
                 {isSpecific && (
                   <Dropdown
@@ -206,3 +274,4 @@ const DiscountForm = (props: IDiscountFormProps) => {
 }
 
 export default observer(DiscountForm)
+

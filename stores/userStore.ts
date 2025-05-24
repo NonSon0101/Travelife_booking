@@ -22,6 +22,11 @@ class UserStore {
     this.totalCount = total
   }
 
+  async fetchAllActiveUsers(): Promise<void> {
+    const { users } = await getAllUsers(`?sort=-lastSignInAt&isActive=true`)
+    this.users = users
+  }
+
   async fetchUserDetail(userId: string, platform: PLATFORM): Promise<void> {
     const user = await getUserById(userId, platform)
     this.userDetail = user

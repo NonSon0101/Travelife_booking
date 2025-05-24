@@ -2,6 +2,8 @@
 import { SimpleGrid, VStack, Text, Box, HStack, Button, MenuButton, RadioGroup, MenuList, Menu, Stack, Radio } from "@chakra-ui/react"
 import ListTourLayout from "components/Layout/WebLayout/ListTourLayout"
 import PageLayout from "components/Layout/WebLayout/PageLayout";
+import { IPagination } from "components/Table";
+import Pagination from "components/Table/components/Pagination";
 import Title from "components/Title"
 import TourCard from "components/TourCard";
 import { useStores } from "hooks";
@@ -21,12 +23,14 @@ const ListTourPage = () => {
   const { tourStore, locationStore } = useStores();
   const { tours, totalCount } = tourStore;
   const { locationDetail } = locationStore;
-  const [pageIndex, setPageIndex] = useState<number>(1)
-  const [filterOptions, setFliterOptions] = useState<IApplyFilter>({} as IApplyFilter)
-  const [countFilter, setCountFilter] = useState<number>(0)
-  const [isApplySort, setIsApplySort] = useState<string>('')
-  const [isOpenFilterModal, setIsOpenFilterModal] = useState<boolean>(false)
-  const [locId, setLocId] = useState<string>()
+  const [pageIndex, setPageIndex] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(10);
+  const [filterOptions, setFliterOptions] = useState<IApplyFilter>({} as IApplyFilter);
+  const [countFilter, setCountFilter] = useState<number>(0);
+  const [isApplySort, setIsApplySort] = useState<string>('');
+  const [isOpenFilterModal, setIsOpenFilterModal] = useState<boolean>(false);
+  const [locId, setLocId] = useState<string>();
+  const pagination: IPagination = { pageIndex, tableLength: totalCount, gotoPage: setPageIndex };
 
   useEffect(() => {
     const currentUrl = window.location.href;
@@ -201,6 +205,9 @@ const ListTourPage = () => {
             <TourCard key={tour?._id} tour={tour} />
           ))}
         </SimpleGrid>
+        <Box alignSelf="center" marginY="8px">
+          <Pagination pagination={pagination} pageSize={pageSize - 1} setPageSize={setPageSize} />
+        </Box>
       </VStack>
       <FilterModal
         isOpen={isOpenFilterModal}

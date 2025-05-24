@@ -193,7 +193,7 @@ const AllActivitiesPage = () => {
             : tours?.map((tour) => <TourCard key={tour?._id} tour={tour} />)}
         </SimpleGrid>
         <Box alignSelf="center" marginY="8px">
-          <Pagination pagination={pagination} pageSize={4} setPageSize={setPageSize}/>
+          <Pagination pagination={pagination} pageSize={pageSize - 1} setPageSize={setPageSize}/>
         </Box>
       </VStack>
       <FilterModal
