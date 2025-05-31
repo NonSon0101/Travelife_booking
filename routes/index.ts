@@ -1,4 +1,3 @@
-import VirtualTour from 'app/virtual-tour/[tourId]/[page]/page'
 import cmsRoutes from './cms'
 
 const routes = {

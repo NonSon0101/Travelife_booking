@@ -207,7 +207,6 @@ const ItinerarySetup = ({ methods }: IItinerarySetupProps) => {
     setSelectedLocation(null)
     cleanupMap()
     setIsAdding(false)
-    console.log(getValues('itinerary'))
     toast.success('Added itinerary item successfully')
   }
 

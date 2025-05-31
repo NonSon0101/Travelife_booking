@@ -7,8 +7,6 @@ import {
   extendTheme,
   ThemeProvider,
   Link,
-  Skeleton,
-  SkeletonText
 } from "@chakra-ui/react";
 import { usePathname, useSearchParams } from 'next/navigation'
 import { useRouter } from "next/navigation";
@@ -20,6 +18,7 @@ import { useStores } from "hooks";
 import { observer } from "mobx-react";
 import Title from "components/Title";
 import { PLATFORM } from "enums/common";
+import ChatBot from "components/ChatBot";
 
 const breakpoints = {
   base: '0px',
@@ -141,6 +140,7 @@ const HomePage = () => {
             </Button>
           </Link>
         </Box>
+        <ChatBot />
       </HomeLayout>
     </ThemeProvider>
   );

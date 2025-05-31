@@ -149,7 +149,6 @@ const UpdateTourDetail = () => {
   }
 
   async function onSubmit(formData: IUpdateTourForm) {
-    console.log(formData);
     setIsLoading(true)
 
     // handle files in virtual tours
@@ -235,8 +234,6 @@ const UpdateTourDetail = () => {
 
   useEffect(() => {
     if (tourDetail?._id && isEditMode) {
-      console.log('tourDetail in useEffect:', tourDetail);
-      console.log('startLocation in useEffect:', tourDetail?.startLocation);
       reset({
         ...tourDetail,
         typeValue: {

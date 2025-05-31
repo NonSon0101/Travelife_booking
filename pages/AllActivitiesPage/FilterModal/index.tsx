@@ -105,7 +105,7 @@ const FilterModal = (props: IFilterModal) => {
 
   const cancelFilter = (key: string) => {
     let newFilter = { ...filterValue };
-    console.log('before cancel', newFilter)
+    
     if (key === 'duration')
       delete newFilter.duration;
     if (key === 'star')
@@ -115,10 +115,7 @@ const FilterModal = (props: IFilterModal) => {
     if (key === 'priceMax')
       delete newFilter.priceMax;
     setFliterOptions(newFilter)
-    console.log('after cancel', newFilter)
-    console.log('after cancel filter value', filterValue)
-    console.log('after cancel filter options', filterOptions)
-
+    
   }
 
   const resetAllFilter = () => {

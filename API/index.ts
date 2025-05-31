@@ -3,7 +3,7 @@ import { PLATFORM } from "enums/common";
 import { toast } from "react-toastify";
 import routes from "routes";
 import { IHeader } from "./constants";
-export const API_URL = "https://travelifeapis.site";
+export const API_URL = process.env.NEXT_PUBLIC_API_END_POINT;
 
 const api = axios.create({
   baseURL: API_URL,
@@ -47,7 +47,7 @@ export function handleUnauthorized(): void {
   } else if (localStorage) {
     localStorage?.removeItem("websiteToken");
     localStorage?.removeItem("websiteUserId");
-    window.location.href = "/";
+    window.location.reload;
   }
 }
 
