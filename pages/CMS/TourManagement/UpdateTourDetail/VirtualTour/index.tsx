@@ -129,10 +129,18 @@ const VirtualTour = (props: IVirtualTourProps) => {
         try {
             setIsImageLoading(true)
             const currentPage = virtualTours[pageIndex]
-            
+            let  code, currentPageId;
+            if (!currentPage) {
+                code = "temp";
+                currentPageId = "temp";
+            } else {
+                code = tourCode || "temp";
+                currentPageId = currentPage.id;
+            }
+
             const response = await processVirtualTour(
-                tourCode ?? "temp",
-                currentPage.id ?? "temp",
+                code,
+                currentPageId,
                 {
                     files: currentPage.files || [],
                     images: currentPage.images
