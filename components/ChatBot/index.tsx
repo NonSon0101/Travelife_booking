@@ -105,7 +105,7 @@ const ChatBot = () => {
     });
 
     return unsubscribe;
-  }, []);
+  }, [messages]);
 
   function tokenizeHTML(html: string): string[] {
     const regex = /(<[^>]+>|[^<]+)/g;
@@ -123,7 +123,7 @@ const ChatBot = () => {
     const userMessage = text || inputValue.trim();
     if (userMessage === "") return;
 
-    //setMessages((prev) => [...prev, { sender: "user", text: userMessage }]);
+    setMessages((prev) => [...prev, { sender: "user", text: userMessage }]);
     setInputValue("");
     await sendMessage(userId, "user", userMessage, [])
     setIsLoading(true);
@@ -137,10 +137,10 @@ const ChatBot = () => {
       await sendMessage(userId, "bot", botHTML, suggestions)
 
     } catch (error) {
-      // setMessages((prev) => [
-      //   ...prev,
-      //   { sender: "bot", text: "Sorry, something went wrong." },
-      // ]);
+      setMessages((prev) => [
+        ...prev,
+        { sender: "bot", text: "Sorry, something went wrong." },
+      ]);
       setDisplayedBotText("");
     } finally {
       setIsLoading(false);

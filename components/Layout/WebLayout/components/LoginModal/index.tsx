@@ -48,7 +48,7 @@ const LoginModal = (props: ILoginModalProps) => {
       console.log("Login with:", data.email, data.password);
       await authStore.login({ ...data, isRemember: true }, PLATFORM.WEBSITE);
       if (await checkIfUserExists(data.email)) {
-        signInWithEmailAndPassword(auth, data.email, data.password)
+        await signInWithEmailAndPassword(auth, data.email, data.password)
           .then((userCredential) => {
             const user = userCredential.user;
             if (user) { console.log('signed in to firestore with user: ', user) }
@@ -86,7 +86,9 @@ const LoginModal = (props: ILoginModalProps) => {
 
   async function checkIfUserExists(email) {
     try {
+      console.log('user email', email)
       const methods = await fetchSignInMethodsForEmail(auth, email);
+      console.log('methods', methods)
       if (methods.includes('password')) {
         console.log("User exists with email/password sign-in.");
         return true;

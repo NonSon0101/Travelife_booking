@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   SimpleGrid,
   Box,
@@ -19,6 +19,8 @@ import { observer } from "mobx-react";
 import Title from "components/Title";
 import { PLATFORM } from "enums/common";
 import ChatBot from "components/ChatBot";
+import { createUserWithEmailAndPassword, fetchSignInMethodsForEmail, signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "lib/firestore";
 
 const breakpoints = {
   base: '0px',
@@ -39,22 +41,61 @@ const HomePage = () => {
   const route = useRouter();
   const { tourStore, authStore } = useStores();
   const { tours } = tourStore;
+  const { user } = authStore;
 
   const [isLoading, setIsLoading] = useState(true);
+  const [isFromGoogle, setIsFromGoogle] = useState(false);
+  const [isCalled, setIsCalled] = useState(false);
+  const hasRun = useRef(false); 
 
   useEffect(() => {
-    const platform = PLATFORM.WEBSITE
+    const platform = PLATFORM.WEBSITE;
 
-    if (userId && accessToken && localStorage) {
-      localStorage?.setItem(`${platform}UserId`, userId);
-      localStorage?.setItem(`${platform}Token`, accessToken);
-    }
-    if (userId) {
-      authStore.getUserById(PLATFORM.WEBSITE)
-      route.push('/')
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const getUser = async () => {
+      if (userId && accessToken && typeof window !== "undefined") {
+        localStorage.setItem(`${platform}UserId`, userId);
+        localStorage.setItem(`${platform}Token`, accessToken);
+        setIsFromGoogle(true);
+
+        await authStore.getUserById(platform);
+      } else {
+        setIsFromGoogle(false);
+      }
+    };
+
+    getUser();
   }, [userId, accessToken]);
+
+  useEffect(() => {
+    const loginFireStore = async () => {
+      if ((!user._id && !user.email) || isCalled || !isFromGoogle || hasRun.current) return;
+
+      console.log('user', user)
+
+      hasRun.current = true;
+
+      try {
+        const exists = await checkIfUserExists(user.email);
+        const action = exists
+          ? signInWithEmailAndPassword(auth, user.email!, user._id!)
+          : createUserWithEmailAndPassword(auth, user.email!, user._id!);
+
+        const userCredential = await action;
+        const firebaseUser = userCredential.user;
+
+        if (firebaseUser) {
+          console.log(`${exists ? 'signed in' : 'signed up'} to Firestore with user: `, firebaseUser);
+          setIsCalled(true);
+          route.push('/');
+        }
+      } catch (err: any) {
+        console.error(`Couldn’t authenticate with Firestore ${err.code}, \n ${err.message}`);
+      }
+    };
+
+    loginFireStore();
+  }, [user, isFromGoogle, isCalled]);
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -65,6 +106,25 @@ const HomePage = () => {
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  async function checkIfUserExists(email) {
+    try {
+      console.log('user email', email)
+      const methods = await fetchSignInMethodsForEmail(auth, email);
+      console.log('methods', methods)
+      if (methods.includes('password')) {
+        console.log("User exists with email/password sign-in.");
+        return true;
+      } else {
+        console.log("Email exists but not with email/password (maybe Google, Facebook, etc).");
+        return true;
+      }
+    } catch (error) {
+      console.error("Error checking user:", error);
+      return false;
+    }
+  }
+
 
   return (
     <ThemeProvider theme={theme}>
@@ -94,11 +154,11 @@ const HomePage = () => {
         >
           {isLoading
             ? [...Array(8)].map((_, i) => (
-               <TourCardSkeleton key={i} />
-              ))
+              <TourCardSkeleton key={i} />
+            ))
             : tours?.map((tour) => (
-                <TourCard key={tour?._id} tour={tour} />
-              ))}
+              <TourCard key={tour?._id} tour={tour} />
+            ))}
         </SimpleGrid>
 
         <Box
