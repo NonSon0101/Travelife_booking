@@ -222,7 +222,7 @@ const TourDetailPage = () => {
         setIsLoading(false)
         toast.success('Add to cart successfully')
         window.scrollTo({ top: 0, behavior: 'smooth' });
-        location.reload();
+        router.refresh()
       } else {
         toast.warning("Please login first")
         setIsLoading(false)

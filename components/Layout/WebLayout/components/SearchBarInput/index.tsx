@@ -53,6 +53,7 @@ const SearchBarInput = (props: ISearchInputProps) => {
     setSearchResult(true)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debounceVal])
+  
 
   function handleGoToAllActivities() {
     if (debounceVal !== "")

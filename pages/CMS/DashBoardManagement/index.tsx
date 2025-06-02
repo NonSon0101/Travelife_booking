@@ -9,8 +9,8 @@ import { useEffect, useState } from "react";
 
 
 const DashBoardManagement = () => {
-  const {statisticsStore} = rootStore
-  const {revenues} = statisticsStore
+  const { statisticsStore } = rootStore
+  const { revenues } = statisticsStore
   const [filters, setFilters] = useState<string>('')
   const [revenueStats, setRevenueStats] = useState<{
     data: number[];
@@ -21,8 +21,16 @@ const DashBoardManagement = () => {
   });
 
   useEffect(() => {
-    statisticsStore.fetchRevenue(filters)
-  },[filters])
+    const now = new Date()
+    const currentYear = now.getFullYear()
+    const currentMonth = now.getMonth() + 1
+
+    const pad2 = (n: number) => n.toString().padStart(2, '0')
+
+    const startDate = `${currentYear}-01`
+    const endDate = `${currentYear}-${pad2(currentMonth)}`
+    statisticsStore.fetchRevenue(startDate, endDate)
+  }, [filters])
 
   useEffect(() => {
     if (revenues && revenues.length > 0) {
@@ -31,16 +39,16 @@ const DashBoardManagement = () => {
         categories: revenues.map((revenue) => revenue.date),
       });
     }
-  }, [revenues]);  
+  }, [revenues]);
 
   return (
     <HStack width='full' alignItems='start'>
       <Box width='full' flex={2} alignItems="start">
-        <RevenueChart revenueData={revenueStats.data} revenueCategories={revenueStats.categories}/>
+        <RevenueChart revenueData={revenueStats.data} revenueCategories={revenueStats.categories} />
         <StatsOverview />
       </Box>
       <Box flex={1}>
-        <TopToursList /> 
+        <TopToursList />
       </Box>
     </HStack>
   );

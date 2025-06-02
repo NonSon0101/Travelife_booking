@@ -31,6 +31,7 @@ const AllActivitiesPage = () => {
   const [countFilter, setCountFilter] = useState<number>(0);
   const [isApplySort, setIsApplySort] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true);
+  const [filterString, setFilterString] = useState<string>('')
   const pagination: IPagination = { pageIndex, tableLength: totalCount, gotoPage: setPageIndex };
 
   useEffect(() => {
@@ -42,56 +43,64 @@ const AllActivitiesPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
-      await tourStore.fetchActiveTours(pageIndex);
+      let filter = ""
+      setCountFilter(0)
+      if (filterOptions.priceMax && filterOptions.priceMin) {
+        filter += `regularPrice[lt]=${filterOptions.priceMax.value}&`
+        filter += `regularPrice[gt]=${filterOptions.priceMin.value}&`
+        setCountFilter(prevCount => prevCount + 1)
+      }
+      if (filterOptions.star) {
+        filter += `ratingAverage[gt]=${filterOptions.star.value}&`
+        setCountFilter(prevCount => prevCount + 1)
+      }
+      if (filterOptions.duration) {
+        filter += `duration[lt]=${filterOptions.duration.value}&`
+        setCountFilter(prevCount => prevCount + 1)
+      }
+      if (filterOptions.sort) {
+        filter += `sort=${filterOptions.sort.value}`
+      }
+      setFilterString(filter)
+      await tourStore.fetchActiveTours(pageIndex, filter);
       setIsLoading(false);
     };
     fetchData();
-  }, [pageIndex]);
+  }, [pageIndex, filterOptions]);
 
-  useEffect(() => {
-    let filter = ""
-    setCountFilter(0)
-    if (filterOptions.priceMax && filterOptions.priceMin) {
-      filter += `regularPrice[lt]=${filterOptions.priceMax.value}&`
-      filter += `regularPrice[gt]=${filterOptions.priceMin.value}&`
-      setCountFilter(prevCount => prevCount + 1)
-    }
-    if (filterOptions.star) {
-      filter += `ratingAverage[gt]=${filterOptions.star.value}&`
-      setCountFilter(prevCount => prevCount + 1)
-    }
-    if (filterOptions.duration) {
-      filter += `duration[lt]=${filterOptions.duration.value}&`
-      setCountFilter(prevCount => prevCount + 1)
-    }
-
-    tourStore.fetchActiveTours(pageIndex, filter)
-  }, [filterOptions])
 
   async function handleSort(sortOption: string) {
-    let sortFilter = '';
+    let sortFilter = filterString;
+    let sortType = ''
 
     switch (sortOption) {
       case 'recommended':
-        sortFilter = ''
         setIsApplySort('Recommended')
         break;
       case 'priceUp':
-        sortFilter = 'sort=regularPrice';
+        sortFilter += 'sort=regularPrice';
+        sortType = 'regularPrice'
         setIsApplySort('Price - Low To High')
         break;
       case 'priceDown':
-        sortFilter = 'sort=-regularPrice';
+        sortFilter += 'sort=-regularPrice';
+        sortType = '-regularPrice'
         setIsApplySort('Price - Hign To Low')
         break;
       case 'rating':
-        sortFilter = 'sort=-ratingAverage';
+        sortFilter += 'sort=-ratingAverage';
+        sortType = '-ratingAverage'
         setIsApplySort('Rating')
         break;
       default:
         console.warn('Invalid sort option:', sortOption);
         return;
     }
+    setFliterOptions(prevOptions => ({
+      ...prevOptions,
+      sort: { name: 'Sort', value: sortType },
+    }));
+    setFilterString(sortFilter)
     await tourStore.fetchActiveTours(pageIndex, sortFilter);
   }
 
@@ -184,17 +193,17 @@ const AllActivitiesPage = () => {
         >
           {isLoading
             ? Array.from({ length: 8 }).map((_, idx) => (
-                <VStack key={idx} spacing={3} align="flex-start">
-                  <Skeleton height="200px" width="full" borderRadius="md" />
-                  {/* just a workaround solution and need improve further */}
-                  {typeof window !== 'undefined' && <SkeletonText noOfLines={3} spacing={2} skeletonHeight={3} width="full" />}
-                  <Skeleton height="20px" width="40%" />
-                </VStack>
-              ))
+              <VStack key={idx} spacing={3} align="flex-start">
+                <Skeleton height="200px" width="full" borderRadius="md" />
+                {/* just a workaround solution and need improve further */}
+                {typeof window !== 'undefined' && <SkeletonText noOfLines={3} spacing={2} skeletonHeight={3} width="full" />}
+                <Skeleton height="20px" width="40%" />
+              </VStack>
+            ))
             : tours?.map((tour) => <TourCard key={tour?._id} tour={tour} />)}
         </SimpleGrid>
         <Box alignSelf="center" marginY="8px">
-          <Pagination pagination={pagination} pageSize={pageSize - 1} setPageSize={setPageSize}/>
+          <Pagination pagination={pagination} pageSize={pageSize - 1} setPageSize={setPageSize} />
         </Box>
         <ChatBot/>
       </VStack>

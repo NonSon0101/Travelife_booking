@@ -164,6 +164,7 @@ const FilterModal = (props: IFilterModal) => {
                     height='60px'
                     id='priceMin'
                     type='number'
+                    defaultValue={filterValue.priceMin?.value}
                     placeholder='Enter Minimum Price'
                     {...register('priceMin', {
                       required: 'This is required',
@@ -178,6 +179,7 @@ const FilterModal = (props: IFilterModal) => {
                     height='60px'
                     id='priceMax'
                     type='number'
+                    defaultValue={filterValue.priceMax?.value}
                     placeholder='Enter Maximum Price'
                     {...register('priceMax', {
                       required: 'This is required',

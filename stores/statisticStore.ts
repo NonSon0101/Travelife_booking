@@ -14,8 +14,8 @@ class StatisticsStore {
   revenues: IRevenue[] = []
   bookedTour: ITopBookedTour[] = []
 
-  async fetchRevenue(filter = ''): Promise<void> {
-    const {metadata} = await getRevenue(filter)
+  async fetchRevenue(startDate = '', endDate = ''): Promise<void> {
+    const {metadata} = await getRevenue(startDate, endDate)
     this.revenues = metadata
   }
 

@@ -22,4 +22,8 @@ export interface IApplyFilter {
     name: string
     value: number
   };
+  sort?: {
+    name: string
+    value: string
+  }
 }

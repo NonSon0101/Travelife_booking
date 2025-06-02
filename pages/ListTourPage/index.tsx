@@ -31,13 +31,8 @@ const ListTourPage = () => {
   const [isApplySort, setIsApplySort] = useState<string>('');
   const [isOpenFilterModal, setIsOpenFilterModal] = useState<boolean>(false);
   const [locId, setLocId] = useState<string>();
+  const [isLoading, setIsLoading] = useState(true);
   const pagination: IPagination = { pageIndex, tableLength: totalCount, gotoPage: setPageIndex };
-
-  useEffect(() => {
-    const currentUrl = window.location.href;
-    const urlParts = currentUrl.split("/");
-    setLocId(urlParts[urlParts.length - 1])
-  }, [])
 
   useEffect(() => {
     if (locId) {
@@ -46,11 +41,11 @@ const ListTourPage = () => {
   }, [locId])
 
   useEffect(() => {
-    tourStore.fetchActiveTours();
-  }, []);
+    const currentUrl = window.location.href;
+    const urlParts = currentUrl.split("/");
+    setLocId(urlParts[urlParts.length - 1])
 
-  useEffect(() => {
-    let filter = ""
+    let filter = `location=${urlParts[urlParts.length - 1]}&`
     setCountFilter(0)
     if (filterOptions.priceMax && filterOptions.priceMin) {
       filter += `regularPrice[lt]=${filterOptions.priceMax.value}&`
@@ -66,8 +61,13 @@ const ListTourPage = () => {
       setCountFilter(prevCount => prevCount + 1)
     }
 
-    tourStore.fetchActiveTours(pageIndex, filter)
-  }, [filterOptions])
+    const fetchData = async () => {
+      setIsLoading(true);
+      await tourStore.fetchActiveTours(pageIndex, filter);
+      setIsLoading(false);
+    };
+    fetchData();
+  }, [pageIndex, filterOptions]);
 
   async function handleSort(sortOption: string) {
     let sortFilter = '';
