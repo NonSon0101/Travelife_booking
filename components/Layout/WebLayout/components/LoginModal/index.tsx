@@ -24,6 +24,8 @@ import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import { fetchSignInMethodsForEmail, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth } from "lib/firestore";
 
 interface ILoginModalProps {
   openSignUpModal: () => void;
@@ -43,10 +45,29 @@ const LoginModal = (props: ILoginModalProps) => {
   async function onSubmit(data: ILoginForm): Promise<void> {
     try {
       setIsLoading(true);
+      console.log("Login with:", data.email, data.password);
       await authStore.login({ ...data, isRemember: true }, PLATFORM.WEBSITE);
+      if (await checkIfUserExists(data.email)) {
+        signInWithEmailAndPassword(auth, data.email, data.password)
+          .then((userCredential) => {
+            const user = userCredential.user;
+            if (user) { console.log('signed in to firestore with user: ', user) }
+          })
+          .catch((err) => {
+            console.error(`Couldnt sign in to firestore ${err.code}, \n ${err.message}`)
+          });
+      } else {
+        await createUserWithEmailAndPassword(auth, data.email, data.password)
+          .then((userCredential) => {
+            const user = userCredential.user;
+          })
+          .catch((err) => {
+            console.error(`Couldnt sign in to firestore ${err.code}, \n ${err.message}`)
+          });
+      }
       setIsLoading(false);
       onClose();
-      router.refresh();
+      window.location.reload();
       toast.success("Login successfully");
     } catch (error) {
       setIsLoading(false);
@@ -63,7 +84,23 @@ const LoginModal = (props: ILoginModalProps) => {
     openSignUpModal();
   }
 
-  function handleFogotPass() {}
+  async function checkIfUserExists(email) {
+    try {
+      const methods = await fetchSignInMethodsForEmail(auth, email);
+      if (methods.includes('password')) {
+        console.log("User exists with email/password sign-in.");
+        return true;
+      } else {
+        console.log("Email exists but not with email/password (maybe Google, Facebook, etc).");
+        return false;
+      }
+    } catch (error) {
+      console.error("Error checking user:", error);
+      return false;
+    }
+  }
+
+  function handleFogotPass() { }
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -77,7 +114,7 @@ const LoginModal = (props: ILoginModalProps) => {
               </Heading>
               <Text color="fg.muted">
                 {`Don't have an account?`}{" "}
-                <button onClick={handleOpenSigupModal}>Sign Up</button>
+                <button onClick={handleOpenSigupModal}><Text color='teal' _hover={{ textDecoration: 'underline' }} >Sign Up</Text></button>
               </Text>
             </Stack>
           </Stack>
@@ -101,6 +138,10 @@ const LoginModal = (props: ILoginModalProps) => {
                     <Button
                       variant="text"
                       size="sm"
+                      _hover={{
+                        color: 'teal',
+                        textDecoration: 'underline'
+                      }}
                       onClick={openForgotPasswordModal}
                     >
                       Forgot password?

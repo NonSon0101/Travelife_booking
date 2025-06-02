@@ -43,7 +43,7 @@ const UserProfile = (props: IUserProfileProps) => {
     try {
       authStore.getMyUser(PLATFORM.WEBSITE)
     } catch (error) {
-      console.log('error at get user', error)
+      console.warn('error at get user', error)
     }
   }, [])
 

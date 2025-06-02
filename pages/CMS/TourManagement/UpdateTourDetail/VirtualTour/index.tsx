@@ -38,7 +38,6 @@ const VirtualTour = (props: IVirtualTourProps) => {
     function deleteImages(url: string, pageIndex: number) {
         const newVirtualTours = [...virtualTours]
         newVirtualTours[pageIndex].images = newVirtualTours[pageIndex].images.filter(image => image !== url)
-        console.log(newVirtualTours[pageIndex].images)
         setValue('virtualTours', newVirtualTours)
     }
 
@@ -146,8 +145,6 @@ const VirtualTour = (props: IVirtualTourProps) => {
                     images: currentPage.images
                 }
             )
-
-            console.log('Process response:', response)
             
             // Update state with new URLs
             const newVirtualTours = [...virtualTours]
@@ -175,7 +172,6 @@ const VirtualTour = (props: IVirtualTourProps) => {
     }
 
     function handleClickHotspot(hotspot: IHotSpot) {
-        console.log('Hotspot clicked:', hotspot);
         if (hotspot.action) {
             const pageIndex = parseInt(hotspot.action) - 1
             const newVirtualTour = virtualTours[pageIndex]

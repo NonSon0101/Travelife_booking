@@ -19,6 +19,7 @@ import { observer } from "mobx-react";
 import Title from "components/Title";
 import { formatCurrency } from "utils/common";
 import { FaShoppingCart } from "react-icons/fa";
+import ChatBot from "components/ChatBot";
 
 const CartPage = () => {
   const { cartStore, authStore } = useStores();
@@ -178,6 +179,7 @@ const CartPage = () => {
           </Box>
         )}
       </Flex>
+      <ChatBot/>
     </Box>
 
   );

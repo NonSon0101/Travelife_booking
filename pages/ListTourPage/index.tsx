@@ -1,5 +1,6 @@
 "use client";
 import { SimpleGrid, VStack, Text, Box, HStack, Button, MenuButton, RadioGroup, MenuList, Menu, Stack, Radio } from "@chakra-ui/react"
+import ChatBot from "components/ChatBot";
 import ListTourLayout from "components/Layout/WebLayout/ListTourLayout"
 import PageLayout from "components/Layout/WebLayout/PageLayout";
 import { IPagination } from "components/Table";
@@ -208,6 +209,7 @@ const ListTourPage = () => {
         <Box alignSelf="center" marginY="8px">
           <Pagination pagination={pagination} pageSize={pageSize - 1} setPageSize={setPageSize} />
         </Box>
+        <ChatBot/>
       </VStack>
       <FilterModal
         isOpen={isOpenFilterModal}

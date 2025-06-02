@@ -61,6 +61,7 @@ import Timeline from "./TimeLineItems";
 import PrivateOptions from "components/Layout/WebLayout/components/privateOptions";
 import ItineraryMap, { ItineraryMapRef } from "./ItineraryMap";
 import { IItineraryItem } from "interfaces/tour";
+import ChatBot from "components/ChatBot";
 
 type ValuePiece = Date | null;
 
@@ -839,6 +840,7 @@ const TourDetailPage = () => {
       <Divider borderColor="#888" />
       <Title text='Customer reviews' />
       <TourReviews tourId={`${tourDetail?._id}`} ratingAverage={tourDetail?.ratingAverage ?? 0} numOfRating={tourDetail?.numOfRating ?? 0} />
+      <ChatBot/>
     </VStack>
   );
 };

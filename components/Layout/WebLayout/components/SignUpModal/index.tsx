@@ -3,11 +3,7 @@ import { useState } from 'react'
 import {
   Box,
   Button,
-  Checkbox,
-  Divider,
   Heading,
-  HStack,
-  Link,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -16,14 +12,14 @@ import {
 } from '@chakra-ui/react'
 import { toast } from 'react-toastify'
 import FormInput from 'components/FormInput'
-import PasswordField from 'components/PasswordField'
-import Icon from 'components/Icon'
-import { PLATFORM } from 'enums/common'
 import { useStores } from 'hooks/useStores'
-import { ILoginForm, ISignUpForm } from 'interfaces/auth'
+import { ISignUpForm } from 'interfaces/auth'
 import get from 'lodash/get'
 import { useForm, FormProvider } from 'react-hook-form'
-import { FaPray } from 'react-icons/fa'
+import { createUserWithEmailAndPassword, sendSignInLinkToEmail } from "firebase/auth";
+import { actionCodeSettings } from 'utils/firestoreChat'
+import { auth } from 'lib/firestore'
+
 
 interface ISignUpModalProps {
   openLoginModal: () => void
@@ -42,6 +38,13 @@ const SignUpModal = (props: ISignUpModalProps) => {
     try {
       setIsLoading(true)
       await authStore.signUp(data)
+      await createUserWithEmailAndPassword(auth, data.email, data.password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+        })
+        .catch((err) => {
+          console.error(`Couldnt sign in to firestore ${err.code}, \n ${err.message}`)
+        });
       setIsLoading(false)
       onClose()
       toast.success('Sign up successfully')
@@ -66,7 +69,7 @@ const SignUpModal = (props: ISignUpModalProps) => {
             <Stack spacing={{ base: 2, md: 3 }} textAlign="center">
               <Heading size={{ base: 'xs', md: 'lg' }}>Begin Your Adventure Sign Up!</Heading>
               <Text color="fg.muted">
-                {`Already have an account?`} <button onClick={handleOpenLoginModal}>Login</button>
+                {`Already have an account?`} <button onClick={handleOpenLoginModal}><Text color='teal' _hover={{ textDecoration: 'underline' }}>Login</Text></button>
               </Text>
             </Stack>
           </Stack>

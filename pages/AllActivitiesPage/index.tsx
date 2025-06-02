@@ -15,6 +15,7 @@ import { IPagination } from "components/Table"
 import FilterModal from "./FilterModal"
 import { IApplyFilter } from "interfaces/common"
 import CustomMenuButton from "./CustomMenuButton"
+import ChatBot from "../../components/ChatBot";
 
 const AllActivitiesPage = () => {
   const pathname = usePathname();
@@ -195,6 +196,7 @@ const AllActivitiesPage = () => {
         <Box alignSelf="center" marginY="8px">
           <Pagination pagination={pagination} pageSize={pageSize - 1} setPageSize={setPageSize}/>
         </Box>
+        <ChatBot/>
       </VStack>
       <FilterModal
         isOpen={isOpenFilterModal}
