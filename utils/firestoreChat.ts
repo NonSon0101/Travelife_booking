@@ -40,10 +40,11 @@ export const sendMessage = async (
 
   const now = new Date();
   const expiredAt = new Date(now.getTime() + 20 * 60 * 1000);
+  const expiredAtSeconds = Math.floor(expiredAt.getTime() / 1000);
 
   await updateDoc(sessionRef, {
     updated_at: serverTimestamp(),
-    expried_at: Timestamp.fromDate(expiredAt),
+    expried_at: expiredAtSeconds,
   });
 };
 
