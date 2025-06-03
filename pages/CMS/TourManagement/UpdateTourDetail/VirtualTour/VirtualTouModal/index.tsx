@@ -93,7 +93,7 @@ const VirtualTourModal = ({
             },
             autoLoad: true,
             hfov: 110,
-            yaw: 180,
+            yaw: 100,
             pitch: 10,
             compass: true,
             autoRotate: -2,

@@ -95,7 +95,7 @@ const VirtualTourPage = (props: IVirtualTourPageProps) => {
                 author="Vo Minh Dat"
                 previewAuthor="Vo Minh Dat"
                 pitch={10}
-                yaw={180}
+                yaw={100}
                 hfov={110}
                 autoRotate={-2}
                 // @ts-ignore
