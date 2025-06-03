@@ -46,7 +46,7 @@ const HomePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isFromGoogle, setIsFromGoogle] = useState(false);
   const [isCalled, setIsCalled] = useState(false);
-  const hasRun = useRef(false); 
+  const hasRun = useRef(false);
 
   useEffect(() => {
     const platform = PLATFORM.WEBSITE;
@@ -75,19 +75,28 @@ const HomePage = () => {
       hasRun.current = true;
 
       try {
-        const exists = await checkIfUserExists(user.email);
-        const action = exists
-          ? signInWithEmailAndPassword(auth, user.email!, user._id!)
-          : createUserWithEmailAndPassword(auth, user.email!, user._id!);
-
-        const userCredential = await action;
-        const firebaseUser = userCredential.user;
-
-        if (firebaseUser) {
-          console.log(`${exists ? 'signed in' : 'signed up'} to Firestore with user: `, firebaseUser);
-          setIsCalled(true);
-          route.push('/');
-        }
+        await signInWithEmailAndPassword(auth, user.email!, user._id!)
+          .then((userCredential) => {
+            const user = userCredential.user;
+            if (user) { 
+              console.log('signed in to firestore with user: ', user) 
+              route.push('/')
+            }
+          })
+          .catch(async (err) => {
+            console.error(`Couldnt sign in to firestore ${err.code}, \n ${err.message}`)
+            await createUserWithEmailAndPassword(auth, user.email!, user._id!)
+              .then((userCredential) => {
+                const user = userCredential.user;
+                if (user) { 
+                  console.log('signed up to firestore with user: ', user)
+                  route.push('/')
+                }
+              })
+              .catch((err) => {
+                console.error(`Couldnt sign in to firestore ${err.code}, \n ${err.message}`)
+              });
+          });
       } catch (err: any) {
         console.error(`Couldn’t authenticate with Firestore ${err.code}, \n ${err.message}`);
       }
@@ -117,7 +126,7 @@ const HomePage = () => {
         return true;
       } else {
         console.log("Email exists but not with email/password (maybe Google, Facebook, etc).");
-        return true;
+        return false;
       }
     } catch (error) {
       console.error("Error checking user:", error);

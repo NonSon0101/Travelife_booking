@@ -104,44 +104,29 @@ const ChatBot = () => {
       setMessages(fetchedMessages);
     });
 
-    return unsubscribe;
-  }, [messages]);
-
-  function tokenizeHTML(html: string): string[] {
-    const regex = /(<[^>]+>|[^<]+)/g;
-    const tokens: string[] = [];
-    let match: RegExpExecArray | null;
-
-    while ((match = regex.exec(html)) !== null) {
-      tokens.push(match[0]);
-    }
-
-    return tokens;
-  }
+    return () => unsubscribe();
+  }, [userId]);
 
   const handleSend = async (text?: string) => {
     const userMessage = text || inputValue.trim();
     if (userMessage === "") return;
 
-    setMessages((prev) => [...prev, { sender: "user", text: userMessage }]);
     setInputValue("");
-    await sendMessage(userId, "user", userMessage, [])
     setIsLoading(true);
     setDisplayedBotText("");
 
     try {
+      await sendMessage(userId, "user", userMessage, []);
+
       const res = await fetchBotReply(userMessage);
-      
       const botHTML = res.reply || "No reply found.";
       const suggestions = res.suggestions || [];
-      await sendMessage(userId, "bot", botHTML, suggestions)
+
+      await sendMessage(userId, "bot", botHTML, suggestions);
 
     } catch (error) {
-      setMessages((prev) => [
-        ...prev,
-        { sender: "bot", text: "Sorry, something went wrong." },
-      ]);
-      setDisplayedBotText("");
+      console.error(error);
+      await sendMessage(userId, "bot", "Sorry, something went wrong.", []);
     } finally {
       setIsLoading(false);
     }

@@ -47,24 +47,22 @@ const LoginModal = (props: ILoginModalProps) => {
       setIsLoading(true);
       console.log("Login with:", data.email, data.password);
       await authStore.login({ ...data, isRemember: true }, PLATFORM.WEBSITE);
-      if (await checkIfUserExists(data.email)) {
-        await signInWithEmailAndPassword(auth, data.email, data.password)
-          .then((userCredential) => {
-            const user = userCredential.user;
-            if (user) { console.log('signed in to firestore with user: ', user) }
-          })
-          .catch((err) => {
-            console.error(`Couldnt sign in to firestore ${err.code}, \n ${err.message}`)
-          });
-      } else {
-        await createUserWithEmailAndPassword(auth, data.email, data.password)
-          .then((userCredential) => {
-            const user = userCredential.user;
-          })
-          .catch((err) => {
-            console.error(`Couldnt sign in to firestore ${err.code}, \n ${err.message}`)
-          });
-      }
+      await signInWithEmailAndPassword(auth, data.email, data.password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          if (user) { console.log('signed in to firestore with user: ', user) }
+        })
+        .catch(async (err) => {
+          console.error(`Couldnt sign in to firestore ${err.code}, \n ${err.message}`)
+          await createUserWithEmailAndPassword(auth, data.email, data.password)
+            .then((userCredential) => {
+              const user = userCredential.user;
+              if (user) { console.log('signed in to firestore with user: ', user) }
+            })
+            .catch((err) => {
+              console.error(`Couldnt sign in to firestore ${err.code}, \n ${err.message}`)
+            });
+        });
       setIsLoading(false);
       onClose();
       window.location.reload();
@@ -88,7 +86,9 @@ const LoginModal = (props: ILoginModalProps) => {
     try {
       console.log('user email', email)
       const methods = await fetchSignInMethodsForEmail(auth, email);
-      console.log('methods', methods)
+      console.log("Checking email:", email);
+      console.log("Returned sign-in methods:", methods);
+
       if (methods.includes('password')) {
         console.log("User exists with email/password sign-in.");
         return true;
