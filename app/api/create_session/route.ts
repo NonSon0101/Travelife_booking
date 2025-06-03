@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import axios from "axios";
 import { createCollection } from "utils/firestoreChat";
 
+
 export async function POST(req: Request) {
   try {
     const { userId } = await req.json();
@@ -22,10 +23,17 @@ export async function POST(req: Request) {
 
     return NextResponse.json(response.data);
   } catch (error: any) {
-    console.error("Axios error:", error?.response?.data || error.message);
+    const detail = error?.response?.data?.detail;
+
+    if (typeof detail === "string" && detail.includes("Session already exists:")) {
+      return NextResponse.json({ message: detail }, { status: 200 });
+    }
+
+    console.error("Axios error:", detail || error.message);
     return NextResponse.json(
-      { error: error?.response?.data || "Unknown error" },
+      { error: detail || "Unknown error" },
       { status: 500 }
     );
   }
 }
+

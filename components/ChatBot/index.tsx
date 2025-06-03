@@ -133,7 +133,7 @@ const ChatBot = () => {
   };
 
   const handleStartChat = async () => {
-    const userId = localStorage.getItem(`${PLATFORM.WEBSITE}UserId`)
+    const userId = localStorage.getItem(`${PLATFORM.WEBSITE}UserId`);
     if (!userId) {
       toast.warn("Please login first");
       return;
@@ -141,21 +141,25 @@ const ChatBot = () => {
     setUserId(userId);
 
     try {
-      setIsCeatingChat(true)
+      setIsCeatingChat(true);
       const sessionData = await createChatSession();
-      if (sessionData) {
-        const expiresAtSeconds = sessionData.last_update_time + 1200;
-        const expiresAtISO = new Date(expiresAtSeconds * 1000).toISOString();
 
+      if (sessionData?.message?.includes("Session already exists")) {
+        setIsStarted(true);
+      } else if (sessionData) {
+        
+        const expiresAtSeconds = sessionData.last_update_time + 1200;
         await createCollection(userId, expiresAtSeconds);
-        setIsCeatingChat(false)
-        setIsStarted(true)
+        setIsStarted(true);
       }
+
+      setIsCeatingChat(false);
     } catch (err: any) {
-      setIsCeatingChat(false)
+      setIsCeatingChat(false);
       toast.error("Can't create chat session: " + err.message);
     }
   };
+
 
   const renderMessage = (msg: ChatMessage, i: number) => (
     <HStack

@@ -21,7 +21,7 @@ export async function createChatSession(): Promise<any> {
     return await response.json();
     
   } catch (error: any) {
-    console.error("createChatSessionClient error:", error.response?.data || error.message);
+    console.error("createChatSessionClient error:", error);
     throw new Error(error.response?.data?.error || error.message || "Unknown error");
   }
 }
