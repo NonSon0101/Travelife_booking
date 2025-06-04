@@ -436,6 +436,7 @@ const TourDetailPage = () => {
             padding="16px"
             background="rgb(4, 54, 74)"
             borderRadius="15px"
+            id="available_box"
           >
             <Stack width='full' flexDirection={{ base: 'column', lg: 'row' }} justifyContent={{ lg: 'space-between' }}>
               <Text fontSize="2xl" fontWeight="bold" color="#fff">
@@ -779,6 +780,12 @@ const TourDetailPage = () => {
                     flex={1}
                     alignSelf='center'
                     marginTop='24px'
+                    onClick={() => {
+                      const el = document.getElementById('available_box');
+                      if (el) {
+                        el.scrollIntoView({ behavior: 'smooth' });
+                      }
+                    }}
                   >
                     Check availability
                   </Button>
@@ -800,15 +807,15 @@ const TourDetailPage = () => {
               borderRadius={2}
               spacing={4}
             >
-                {!userId ? (
+              {!userId ? (
                 <Text fontSize="md" textAlign="center">
                   To view the 360 Tour, please login first, then click the button below.
                 </Text>
-                ) : (
+              ) : (
                 <Text fontSize="md" textAlign="center">
                   To view the 360 Tour, please click the button below.
                 </Text>
-                )}
+              )}
 
               <Button
                 colorScheme="teal"
@@ -817,7 +824,7 @@ const TourDetailPage = () => {
                 width="content"
                 flex={1}
                 alignSelf="center"
-                isDisabled={!userId || !tourDetail?.virtualTours || tourDetail?.virtualTours.length === 0 }
+                isDisabled={!userId || !tourDetail?.virtualTours || tourDetail?.virtualTours.length === 0}
                 onClick={() => {
                   if (tourDetail?.virtualTours && tourDetail?.virtualTours.length > 0) {
                     const previewUrl = window.open(routes.virtualTour.value(tourDetail?._id ?? '', '1'), '_blank')
@@ -840,7 +847,7 @@ const TourDetailPage = () => {
       <Divider borderColor="#888" />
       <Title text='Customer reviews' />
       <TourReviews tourId={`${tourDetail?._id}`} ratingAverage={tourDetail?.ratingAverage ?? 0} numOfRating={tourDetail?.numOfRating ?? 0} />
-      <ChatBot/>
+      <ChatBot />
     </VStack>
   );
 };
