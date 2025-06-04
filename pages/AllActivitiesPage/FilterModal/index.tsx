@@ -114,6 +114,8 @@ const FilterModal = (props: IFilterModal) => {
       delete newFilter.priceMin;
     if (key === 'priceMax')
       delete newFilter.priceMax;
+    if (key === 'sort')
+      delete newFilter.sort;
     setFliterOptions(newFilter)
     
   }
