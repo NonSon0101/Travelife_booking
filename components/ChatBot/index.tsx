@@ -156,7 +156,7 @@ const ChatBot = () => {
       setIsCeatingChat(false);
     } catch (err: any) {
       setIsCeatingChat(false);
-      toast.error("Can't create chat session: " + err.message);
+      console.error("Can't create chat session: " + err.message);
     }
   };
 
