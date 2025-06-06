@@ -23,6 +23,7 @@ const CheckoutPage = () => {
   const route = useRouter();
   const { checkoutStore, cartStore, authStore, bookingStore } = useStores();
   const [coupon, setCoupon] = useState<string>("");
+  const [appliedCoupon, setAplliedCoupon] = useState<string>("");
   const [checkCoupon, setCheckCoupon] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isLoadingContinue, setIsLoadingContinue] = useState<boolean>(false)
@@ -93,12 +94,13 @@ const CheckoutPage = () => {
       setIsLoading(true)
       const dataCoupon = { ...dataCheckoutReview, discountCode: !isCancel ? coupon : '' };
       await checkoutStore.fetchCheckoutReview(dataCoupon);
-      if (checkCoupon) {
+      if (checkCoupon && !isCancel) {
         if (order.discount === 0)
           toast.error('Not found discount match with tour')
         else if (checkout.length > itemPrice.length)
           toast.warn("Some tours can't apply this discount")
         else if (!isCancel)
+          setCoupon('')
           toast.success('Apply discount successfully')
       }
       setIsLoading(false)

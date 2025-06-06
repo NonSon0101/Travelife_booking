@@ -39,6 +39,8 @@ class CheckoutStore {
     this.currentCurrecy = checkoutReview[0].participants[0].currency ?? ''
     if (itemPrices) {
       this.itemPrice = itemPrices;
+    } else {
+      this.itemPrice = []
     }
   }
 
