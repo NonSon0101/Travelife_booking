@@ -14,7 +14,7 @@ const SearchItem = (props: ISearchItem) => {
   const route = useRouter()
 
   function handleClick() {
-    if (type === 'city') {
+    if (type === 'city' || type === 'point') {
       route.push(routes.listtour.value(_id))
     } else {
       route.push(routes.detail.value(_id))
