@@ -66,11 +66,16 @@ const CartItem = (props: ICartItem) => {
   const [price, setPrice] = useState<number>(0);
   const [initialMount, setInitialMount] = useState(true);
   const [checked, setChecked] = useState<boolean>(false);
-  const [hotel, setHotel] = useState<{ id: string, name: string }>(
-    tour?.hotels && tour?.hotels?.length > 0
-      ? { id: tour?.hotels[0]._id, name: tour?.hotels[0]?.name }
-      : { id: '', name: '' }
+  const [hotel, setHotel] = useState<{ id: string, name: string, coordinates: number[] }>(
+    tour?.hotels && tour?.hotels.length > 0
+      ? {
+        id: tour.hotels[0]._id ?? '',
+        name: tour.hotels[0].name ?? '',
+        coordinates: tour.hotels[0].coordinates ?? []
+      }
+      : { id: '', name: '', coordinates: [] }
   );
+
   const [transport, setTransport] = useState<{ id: string, name: string }>(
     tour?.transports && tour?.transports?.length > 0
       ? { id: tour?.transports[0]?._id, name: tour?.transports[0]?.name }
@@ -239,9 +244,9 @@ const CartItem = (props: ICartItem) => {
     }
   };
 
-  function setPrivateOptions(type: string, id: string, value: string) {
+  function setPrivateOptions(type: string, id: string, value: string, coordinates: number[] = []) {
     if (type === 'hotel')
-      setHotel({ id: id, name: value })
+      setHotel({ id: id, name: value, coordinates: coordinates })
     else
       setTransport({ id: id, name: value })
   }
@@ -408,7 +413,7 @@ const CartItem = (props: ICartItem) => {
                       <MenuList>
                         <VStack spacing={2}>
                           {tourDetail?.hotels && tourDetail?.hotels.map((hotel, index) => (
-                            <Button height={{ base: '70px' }} width={{ base: 'full' }} onClick={() => setPrivateOptions('hotel', hotel._id, hotel.name)}>
+                            <Button height={{ base: '70px' }} width={{ base: 'full' }} onClick={() => setPrivateOptions('hotel', hotel._id, hotel.name, hotel.coordinates)}>
                               <PrivateOptions index={index} name={hotel.name} image={hotel.thumbnail} />
                             </Button>
                           ))}

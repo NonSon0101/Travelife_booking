@@ -31,6 +31,7 @@ import MapSelector from 'components/MapSelector'
 import { IHotel } from 'interfaces/hotel';
 import { ITransportation } from 'interfaces/transportation';
 import ManageTransportations from './ManageTransportations';
+import { coordinates } from '@maptiler/sdk';
 const Dropdown = dynamic(() => import('components/Dropdown'), {
   ssr: false,
 })
@@ -266,12 +267,14 @@ const UpdateTourDetail = () => {
         if (typeof option === 'string') {
           return {
             _id: option,
-            name: ''
+            name: '',
+            coordinates: []
           }
         }
         return {
           _id: option._id,
-          name: option.name
+          name: option.name,
+          coordinates: option.coordinates
         }
       })
       const TransportsData: ITransportation[] = getValidArray(tourDetail?.transports as ITransportation[]).map(option => {

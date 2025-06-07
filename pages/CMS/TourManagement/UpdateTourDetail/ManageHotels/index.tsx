@@ -18,6 +18,7 @@ import { IHotel } from 'interfaces/hotel'
 import { useEffect } from 'react'
 import Icon from 'components/Icon';
 import { getOptions, getValidArray } from 'utils/common'
+import { coordinates } from '@maptiler/sdk'
 
 
 interface IManageHotelsProps {
@@ -50,7 +51,8 @@ const ManageHotels = (props: IManageHotelsProps) => {
   function handleAddNewHotel(): void {
     const newHotelId = getValues('newHotelsTitle.value');
     const newHotelName = getValues('newHotelsTitle.label');
-    const newHotel = { _id: newHotelId, name: newHotelName }
+    const newHotelCoordinates = getValues('newHotelsTitle.coordinates')
+    const newHotel = { _id: newHotelId, name: newHotelName, coordinates: newHotelCoordinates}
 
     // Add to existingOptions for display
     setExistingOptions([...existingOptions, newHotel]);

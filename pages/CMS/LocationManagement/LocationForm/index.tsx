@@ -1,5 +1,6 @@
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
 import {
+  Box,
   Button,
   FormControl,
   FormLabel,
@@ -14,7 +15,9 @@ import {
   ModalOverlay,
   Radio,
   RadioGroup,
-  SimpleGrid
+  SimpleGrid,
+  VStack,
+  Text
 } from '@chakra-ui/react'
 import { createLocation, updateLocation } from 'API/location'
 import { uploadImage } from 'API/upload'
@@ -24,6 +27,7 @@ import { useStores } from 'hooks/useStores'
 import { ILocation } from 'interfaces/location'
 import { FormProvider, useForm, useWatch } from 'react-hook-form'
 import { toast } from 'react-toastify'
+import MapSelector from 'components/MapSelector'
 
 interface ILocationForm extends ILocation {
   latitude: number
@@ -50,6 +54,19 @@ const LocationForm = (props: ILocationFormProps) => {
     setValue
   } = methods
   const [isUploading, setIsUploading] = useState<boolean>(false)
+  const [pointLocation, setPointLocation] = useState<{
+    name: string
+    coordinates: {
+      long: number
+      lat: number
+    }
+  }>({
+    name: '',
+    coordinates: {
+      long: 0,
+      lat: 0
+    }
+  })
   const type: string = useWatch({ control, name: 'type' }) ?? ''
   const thumbnail: string = useWatch({ control, name: 'thumbnail' }) ?? ''
 
@@ -63,7 +80,7 @@ const LocationForm = (props: ILocationFormProps) => {
     if (!event.target.files || event.target.files.length === 0) {
       return
     }
-    try { 
+    try {
       const formData = new FormData()
       formData.append('image', event.target.files[0])
       const imageUrl: string = await uploadImage('location', formData)
@@ -83,7 +100,7 @@ const LocationForm = (props: ILocationFormProps) => {
       thumbnail: form?.thumbnail,
       loc: {
         type: 'Point',
-        coordinates: [Number(form?.longitude), Number(form?.latitude)]
+        coordinates: [Number(pointLocation?.coordinates.long), Number(pointLocation?.coordinates.lat)]
       }
     }
     try {
@@ -120,7 +137,7 @@ const LocationForm = (props: ILocationFormProps) => {
     <Modal size="xl" isOpen={isOpen} onClose={handleOnClose}>
       <ModalOverlay />
       <ModalContent borderRadius={8}>
-        <ModalHeader  color="gray.800"fontSize="18px" fontWeight={500} lineHeight={7}>
+        <ModalHeader color="gray.800" fontSize="18px" fontWeight={500} lineHeight={7}>
           {location ? 'Edit Location' : 'Create New Location'}
         </ModalHeader>
         <ModalCloseButton />
@@ -162,6 +179,41 @@ const LocationForm = (props: ILocationFormProps) => {
                   <input type="file" ref={fileInputRef} onChange={handleUploadImage} style={{ display: 'none' }} />
                 </FormInput>
               </SimpleGrid>
+              <VStack
+                width="full"
+                height={500}
+                align="flex-start"
+                background="white"
+                padding={8}
+                borderRadius={8}
+                borderWidth={1}
+                boxShadow="sm"
+                spacing={4}
+                mt={16}
+              >
+                <Text color="gray.700" fontWeight={500} lineHeight={6}>
+                  City/Point Location
+                </Text>
+                <Box flex={1} width="full">
+                  <MapSelector
+                    onLocationSelect={(address, coordinates) => {
+                      setPointLocation({
+                        name: address,
+                        coordinates: {
+                          long: coordinates[0],
+                          lat: coordinates[1]
+                        }
+                      });
+                      setValue('latitude', coordinates[1])
+                      setValue('longitude', coordinates[0])
+                    }}
+                    initialLocation={props.location ? {
+                      address: props.location?.title!,
+                      coordinates: props.location?.loc?.coordinates as [number, number]
+                    } : undefined}
+                  />
+                </Box>
+              </VStack>
             </ModalBody>
             <ModalFooter>
               <Button

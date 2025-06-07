@@ -4,7 +4,7 @@ export interface ILocation {
   type?: string
   thumbnail?: string
   loc?: {
-    type: string
+    type?: string
     coordinates: number[]
   }
 }
