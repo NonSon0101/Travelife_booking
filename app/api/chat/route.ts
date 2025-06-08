@@ -28,23 +28,33 @@ export async function POST(request: Request) {
 
     const data = response.data;
 
-    const functionResponse = data.find(
+    const functionResponseDestination = data.find(
       (entry: any) =>
         entry.content?.parts?.[0]?.functionResponse?.name === "suggest_destinations"
     );
 
-    const suggestions =
-      functionResponse?.content?.parts?.[0]?.functionResponse?.response?.result?.data?.destinations?.suggestions || [];
-
-    const textReply = data.find(
+    const functionResponseTourDetail = data.find(
       (entry: any) =>
-        entry.content?.parts?.[0]?.text &&
-        entry.content?.role === "model"
-    )?.content?.parts?.[0]?.text || "No reply text.";
+        entry.content?.parts?.[0]?.functionResponse?.name === "give_tour_detail_infomation"
+    );
+
+    const suggestions = functionResponseDestination?.content?.parts?.[0]?.functionResponse?.response?.result?.data?.destinations?.suggestions || [];
+
+    const detailInformation = functionResponseTourDetail?.content?.parts?.[0]?.functionResponse?.response?.result?.data.tour_infomation
+
+    const textReply = data
+      .filter(
+        (entry: any) =>
+          entry.content?.role === "model" &&
+          entry.content?.parts?.[0]?.text
+      )
+      .map((entry: any) => entry.content.parts[0].text.replace(/^```html\s*|\s*```$/g, ''))
+      .join('\n');
 
     return NextResponse.json({
       reply: textReply,
       suggestions,
+      detailInformation
     });
   } catch (error: any) {
     const errorMessage = error.response?.data || error.message || JSON.stringify(error);
