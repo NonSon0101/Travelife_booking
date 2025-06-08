@@ -92,6 +92,7 @@ const VirtualTour = (props: IVirtualTourProps) => {
         // Update IDs and reset hotspots that point to deleted page
         updatedVirtualTours.forEach((tour, index) => {
             tour.id = (index + 1).toString();
+            tour.name = `Page ${index + 1}`;
             
             // Reset hotspots that point to the deleted page
             tour.hotspots = tour.hotspots.map(hotspot => {
