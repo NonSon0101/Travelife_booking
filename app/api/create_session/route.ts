@@ -18,6 +18,7 @@ export async function POST(req: Request) {
         headers: {
           "Content-Type": "application/json",
         },
+        timeout: 15000,
       }
     );
 
