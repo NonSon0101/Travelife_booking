@@ -1,5 +1,8 @@
 import { Box, Flex, Stat, StatLabel, StatNumber, StatHelpText, Icon, useColorModeValue } from "@chakra-ui/react";
+import { useEffect } from "react";
 import { FaArrowUp, FaArrowDown } from "react-icons/fa";
+import { rootStore } from "stores";
+import { formatCurrency } from "utils/common";
 
 const StatsCard = ({ title, stat, change, positive }: { title: string; stat: string; change?: string; positive?: boolean }) => {
   const textColor = useColorModeValue("gray.600", "gray.400");
@@ -34,11 +37,29 @@ const StatsCard = ({ title, stat, change, positive }: { title: string; stat: str
 };
 
 const StatsOverview = () => {
+  const { statisticsStore } = rootStore
+  const { currentProfit, totalUsers, totalRevenue } = statisticsStore;
+
+  useEffect(() => {
+    const now = new Date();
+    const currentMonth = now.toISOString().slice(0, 7); // yyyy-mm
+    statisticsStore.fetchCurrentProfit(currentMonth);
+    statisticsStore.fetchTotalUsers();
+    statisticsStore.fetchTotalRevenue();
+  }, [])
+
+  const formatProfitTitle = (profit: number) => {
+    if (profit > 0) {
+      return `+${profit.toLocaleString()}% from last month`
+    }
+    return `-${Math.abs(profit).toLocaleString()}% from last month`
+  }
+
   return (
     <Flex width='full' justifyContent="space-between" direction={{ base: "column", md: "row" }} gap={8} p={5}>
-      <StatsCard title="Revenue This Month" stat="$12,345" change="+15% from last month" positive />
-      <StatsCard title="Profit Comparison" stat="$10,000" change="-5% from last month" positive={false} />
-      <StatsCard title="Users Today" stat="1,234" />
+      <StatsCard title="Revenue This Month" stat={formatCurrency(currentProfit.currentRevenue, "VND")} change={formatProfitTitle(currentProfit.profitPercentage)} positive />
+      <StatsCard title="Total Revenue" stat={formatCurrency(totalRevenue, "VND")} />
+      <StatsCard title="Total Users" stat={`${totalUsers} Active Users`} />
     </Flex>
   );
 };

@@ -3,7 +3,7 @@ import { PLATFORM } from "enums/common";
 import { toast } from "react-toastify";
 import routes from "routes";
 import { IHeader } from "./constants";
-export const API_URL = process.env.NEXT_PUBLIC_API_END_POINT;
+export const API_URL = "https://travelifeapis.site";
 
 const api = axios.create({
   baseURL: API_URL,

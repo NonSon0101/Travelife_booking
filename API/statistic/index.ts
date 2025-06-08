@@ -32,7 +32,41 @@ export async function getTopBookedTour(numOfTours = 5) {
 }
 
 export async function getTotalRevenue() {
+  try {
+    const response = await api.get(`${STATISTIC_URL}/total-revenue`, {
+      headers: auth(PLATFORM.CMS)
+    })
+    return response.data
+  } catch (error) {
+    handleError(error as Error, 'API/statistic', 'getTotalRevenue')
+    const errorMessage: string = get(error, 'data.error.message', '') || JSON.stringify(error)
+    throw new Error(errorMessage)
+  }
+}
 
+export async function getCurrentProfit(month: string) {
+  try {
+    const response = await api.get(`${STATISTIC_URL}/revenue-by-month?month=${month}`, {
+      headers: auth(PLATFORM.CMS)
+    })
+    return response.data
+  } catch (error) {
+    handleError(error as Error, 'API/statistic', 'getCurrentProfit')
+    const errorMessage: string = get(error, 'data.error.message', '') || JSON.stringify(error)
+    throw new Error(errorMessage)
+  }
+}
 
+export async function getTotalUsers() {
+  try {
+    const response = await api.get(`${STATISTIC_URL}/total-users`, {
+      headers: auth(PLATFORM.CMS)
+    })
+    return response.data
+  } catch (error) {
+    handleError(error as Error, 'API/statistic', 'getTotalUsers')
+    const errorMessage: string = get(error, 'data.error.message', '') || JSON.stringify(error)
+    throw new Error(errorMessage)
+  }
 }
 

@@ -18,3 +18,9 @@ export interface ITopBookedTour {
   total: number
   tour: ITour
 }
+
+export interface ICurrentProfit {
+  currentRevenue: number
+  previousRevenue: number
+  profitPercentage: number
+}
