@@ -14,6 +14,7 @@ import {
   Button,
   Wrap,
   WrapItem,
+  Link
 } from "@chakra-ui/react";
 import { ChatIcon, CloseIcon, ArrowForwardIcon } from "@chakra-ui/icons";
 import { fetchBotReply } from "API/agent/chat";
@@ -147,7 +148,7 @@ const ChatBot = () => {
       if (sessionData?.message?.includes("Session already exists")) {
         setIsStarted(true);
       } else if (sessionData) {
-        
+
         const expiresAtSeconds = sessionData.last_update_time + 1200;
         await createCollection(userId, expiresAtSeconds);
         setIsStarted(true);
@@ -190,9 +191,9 @@ const ChatBot = () => {
                 bg="white"
                 color="black"
               >
-                {s.image && (
+                {s.thumbnail && (
                   <img
-                    src={s.image}
+                    src={s.thumbnail}
                     alt={s.title}
                     width="100%"
                     height="auto"
@@ -200,7 +201,7 @@ const ChatBot = () => {
                   />
                 )}
                 <Box p={2}>
-                  <Text fontWeight="bold">{s.title}</Text>
+                  <Link href={`/${s.type === 'city' ? 'list-tour' : 'tour-detail'}/${s._id}`} target="_blank" fontWeight="bold">{s.title}</Link>
                   {s.description && (
                     <Text fontSize="sm" mt={1} color="gray.600">
                       {s.description}
@@ -218,6 +219,7 @@ const ChatBot = () => {
     </HStack>
   );
 
+  console.log('messages', messages)
   return (
     <Box
       position="fixed"

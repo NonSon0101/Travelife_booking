@@ -6,8 +6,9 @@ export async function fetchBotReply(message: string): Promise<{
   suggestions?: {
     _id: string;
     title: string;
+    type?: string;
     description?: string;
-    image?: string;
+    thumbnail?: string;
   }[];
 }> {
   try {
