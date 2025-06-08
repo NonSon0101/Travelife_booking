@@ -87,7 +87,32 @@ const VirtualTour = (props: IVirtualTourProps) => {
     }
 
     const handleDeletePage = (pageIndex: number) => {
-        setValue('virtualTours', virtualTours.filter((_, i) => i !== pageIndex))
+        const updatedVirtualTours = virtualTours.filter((_, i) => i !== pageIndex)
+        
+        // Update IDs and reset hotspots that point to deleted page
+        updatedVirtualTours.forEach((tour, index) => {
+            tour.id = (index + 1).toString();
+            
+            // Reset hotspots that point to the deleted page
+            tour.hotspots = tour.hotspots.map(hotspot => {
+                if (hotspot.action === (pageIndex + 1).toString()) {
+                    return {
+                        ...hotspot,
+                        action: ''
+                    };
+                }
+                // Update action if it points to a page after the deleted one
+                if (hotspot.action && parseInt(hotspot.action) > pageIndex + 1) {
+                    return {
+                        ...hotspot,
+                        action: (parseInt(hotspot.action) - 1).toString()
+                    };
+                }
+                return hotspot;
+            });
+        });
+        
+        setValue('virtualTours', updatedVirtualTours)
     }
 
     const handlePageNameChange = (pageIndex: number, value: string) => {
