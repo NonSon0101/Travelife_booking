@@ -33,7 +33,8 @@ export function getOptions<T>(array: T[], labelKey: string, valueKey: string): I
 }
 
 export function formatCurrency(amount: number, currency: string): string {
-  const amountString = amount.toString();
+  const intAmount = Math.floor(amount); 
+  const amountString = intAmount.toString();
   const amountArray = amountString.split('');
   const reversedArray = amountArray.reverse();
   let resultArray: string[] = [];

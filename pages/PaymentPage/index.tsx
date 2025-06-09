@@ -64,10 +64,10 @@ const PaymentPage = () => {
         boxShadow='lg'
         padding='20px 14px'
       >
-        <Title text='How would you like to pay?' />
+        <Title text='Continue secure payment with VNPay' />
 
         <Flex mt={10} justify="space-between" width="full" marginY='20px'>
-          <Box
+          {/* <Box
             width={100}
             alignItems='center'
             border='2px solid transparent'
@@ -87,7 +87,7 @@ const PaymentPage = () => {
             cursor="pointer"
           >
             <Image src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7Wl7obNMoRyoW5ZJirDhZVLf99NQKWw6UZv5zIUOLUuDn6UrCOU6qcqJx2VIrhRIRblg&usqp=CAU" alt="Mastercard" width={100} />
-          </Box>
+          </Box> */}
 
           <Box
             width={100}
@@ -99,7 +99,7 @@ const PaymentPage = () => {
           >
             <Image src="https://vnpay.vn/dat-ve-may-bay/1803/6.png?12" alt="VnPay" width={100} />
           </Box>
-          <Box
+          {/* <Box
             width={100}
             alignItems='center'
             border='2px solid transparent'
@@ -108,7 +108,7 @@ const PaymentPage = () => {
             cursor="pointer"
           >
             <Image src="https://upload.wikimedia.org/wikipedia/vi/f/fe/MoMo_Logo.png" alt="Momo" width={100} />
-          </Box>
+          </Box> */}
         </Flex>
         <Divider colorScheme='teal.300' size='xl' variant='solid' />
         {bookingDetail && bookingDetail.personalInfo && (

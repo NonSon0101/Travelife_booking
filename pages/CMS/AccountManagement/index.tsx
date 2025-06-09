@@ -19,6 +19,7 @@ import { getHeaderList } from '../../../utils/CMS/AccountManagement/utils'
 import { toast } from 'react-toastify'
 import routes from 'routes'
 import AccountFilter from './AccountFilter'
+import debounce from 'lodash/debounce'
 
 const AccountManagement = () => {
   const { userStore } = useStores()
@@ -26,14 +27,17 @@ const AccountManagement = () => {
   const router = useRouter()
   const [pageIndex, setPageIndex] = useState<number>(1)
   const [pageSize, setPageSize] = useState<number>(10)
+  const [searchUser, setSearchUser] = useState<IUser[]>([])
+  const [searchUserCount, setSearchUserCount] = useState<number>(0)
+  const [searchText, setSearchText] = useState<string>('')
   const [selectedUser, setSelectedUser] = useState<IUser>()
   const { isOpen: isConfirming, onOpen: onConfirm, onClose: closeConfirm } = useDisclosure()
   const { isOpen: isOpenFilterForm, onOpen: onOpenFilterForm, onClose: closeFilterForm } = useDisclosure()
   const { isOpen: isOpenAccountForm, onOpen: onOpenAccountForm, onClose: closeAccountForm } = useDisclosure()
 
-  const pagination: IPagination = { pageIndex, tableLength: totalCount, gotoPage: setPageIndex }
+  const pagination: IPagination = { pageIndex, tableLength: searchUserCount !== 0 ? searchUserCount : totalCount, gotoPage: setPageIndex }
 
-  const dataInTable = getValidArray(users).map(user => {
+  const dataInTable = getValidArray(searchUser.length !== 0 ? searchUser : users).map(user => {
     const statusTagColor = user?.role === ERole.ADMIN ? 'orange' : user?.role === ERole.GUIDE ? 'yellow' : 'blue'
 
     function gotoAccountDetail(): void {
@@ -69,7 +73,7 @@ const AccountManagement = () => {
     }
   })
 
-  function gotoPage(page: number): void {}
+  function gotoPage(page: number): void { }
 
   function setAccountForm(isOpen: boolean, user?: IUser): void {
     setSelectedUser(user)
@@ -100,8 +104,25 @@ const AccountManagement = () => {
   }
 
   useEffect(() => {
-    userStore.fetchAllUsers('', pageIndex)
-  }, [pageIndex])
+    if (searchText && searchText != '') {
+      userStore.fetchAllUsers()
+      console.log('searchText', searchText)
+      const filteredUsers = users.filter((user) =>
+        user.email?.includes(searchText)
+      );
+      console.log('searchResult', filteredUsers)
+      setSearchUser(filteredUsers)
+      setSearchUserCount(filteredUsers.length)
+    } else {
+      setSearchUser([])
+      setSearchUserCount(0)
+      userStore.fetchAllUsers('', pageIndex)
+    }
+  }, [searchText, pageIndex])
+
+  const debounceSearch = debounce((searchKeyword: string) => {
+    setSearchText(searchKeyword)
+  }, 500)
 
   return (
     <Box paddingX={{ base: 6, lg: 8 }} paddingY={6}>
@@ -114,7 +135,7 @@ const AccountManagement = () => {
             <Input
               type="search"
               placeholder="Search account by name or email"
-              // onChange={changeName}
+              onChange={(event) => debounceSearch(event?.target?.value)}
             />
           </InputGroup>
           <Button

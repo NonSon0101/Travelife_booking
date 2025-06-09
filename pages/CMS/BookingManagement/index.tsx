@@ -11,21 +11,26 @@ import { getValidArray } from 'utils/common'
 import { getHeaderList, getStatusColor } from '../../../utils/CMS/BookingManagement/utils'
 import { useRouter } from 'next/navigation'
 import routes from 'routes'
+import { IBooking } from 'interfaces/booking'
+import { debounce } from 'lodash'
 
 const BookingManagement = () => {
   const { bookingStore } = useStores()
   const { bookings, totalCount } = bookingStore
   const router = useRouter()
+  const [searchBooking, setSearchBooking] = useState<IBooking[]>([])
+  const [searchBookingCount, setSearchBookingCount] = useState<number>(0)
+  const [searchText, setSearchText] = useState<string>('')
   const [pageIndex, setPageIndex] = useState<number>(1)
   const [pageSize, setPageSize] = useState<number>(10)
 
-  const pagination: IPagination = { 
-    pageIndex, 
-    tableLength: totalCount, 
+  const pagination: IPagination = {
+    pageIndex,
+    tableLength: searchBookingCount !== 0 ? searchBookingCount : totalCount,
     gotoPage: setPageIndex
   }
 
-  const dataInTable = getValidArray(bookings).map(booking => {
+  const dataInTable = getValidArray(searchBooking.length !== 0 ? searchBooking : bookings).map(booking => {
     const tagColor = getStatusColor(booking?.status ?? '')
 
     function gotoBookingDetailPage(): void {
@@ -48,8 +53,25 @@ const BookingManagement = () => {
   })
 
   useEffect(() => {
-    bookingStore.fetchAllBookings(pageIndex)
-  }, [pageIndex])
+      if (searchText && searchText != '') {
+        bookingStore.fetchAllBookings()
+        console.log('searchText', searchText)
+        const filteredBookings = bookings.filter((booking) =>
+          booking?.personalInfo?.name?.includes(searchText)
+        );
+        console.log('searchResult', filteredBookings)
+        setSearchBooking(filteredBookings)
+        setSearchBookingCount(filteredBookings.length)
+      } else {
+        setSearchBooking([])
+        setSearchBookingCount(0)
+        bookingStore.fetchAllBookings(pageIndex)
+      }
+    }, [searchText, pageIndex])
+  
+    const debounceSearch = debounce((searchKeyword: string) => {
+      setSearchText(searchKeyword)
+    }, 500)
 
   return (
     <Box paddingX={{ base: 6, lg: 8 }} paddingY={6}>
@@ -61,7 +83,7 @@ const BookingManagement = () => {
           <Input
             type="search"
             placeholder="Search booking by name or email"
-            // onChange={changeName}
+            onChange={(event) => debounceSearch(event?.target?.value)}
           />
         </InputGroup>
       </HStack>
