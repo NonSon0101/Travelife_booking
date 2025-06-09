@@ -13,19 +13,25 @@ import { toast } from 'react-toastify'
 import routes from 'routes'
 import { getValidArray } from 'utils/common'
 import { getHeaderList } from 'utils/CMS/TourManagement/utils'
+import debounce from 'lodash/debounce'
+import { ITour } from 'interfaces/tour'
 
 const TourManagement = () => {
   const { tourStore } = useStores()
-  const { tours, totalCount } = tourStore
+  const { totalCount } = tourStore
+  let { tours } = tourStore
   const router = useRouter()
   const [pageIndex, setPageIndex] = useState<number>(1)
+  const [searchText, setSearchText] = useState<string>('')
+  const [searchTours, setSearchTours] = useState<ITour[]>([])
+  const [searchToursCount, setSearchToursCount] = useState<number>(0)
   const [pageSize, setPageSize] = useState<number>(10)
   const [selectedTourId, setSelectedTourId] = useState<string>()
   const { isOpen: isConfirming, onOpen: onConfirm, onClose: closeConfirm } = useDisclosure()
 
-  const pagination: IPagination = { pageIndex, tableLength: totalCount, gotoPage: setPageIndex }
+  const pagination: IPagination = { pageIndex, tableLength: searchToursCount !== 0 ? searchToursCount : totalCount, gotoPage: setPageIndex }
 
-  const dataInTable = getValidArray(tours).map(tour => {
+  const dataInTable = getValidArray(searchTours.length !== 0 ? searchTours : tours).map(tour => {
     return {
       ...tour,
       thumbnail: (
@@ -47,7 +53,6 @@ const TourManagement = () => {
         </HStack>
       )
     }
-  
   })
 
   function gotoTourDetailPage(tourId: string): void {
@@ -81,8 +86,26 @@ const TourManagement = () => {
   }
 
   useEffect(() => {
-    fetchData()
-  }, [pageIndex])
+    if (searchText && searchText != '') {
+      tourStore.fetchAllTours()
+      console.log('searchText', searchText)
+      const filteredTours = tours.filter((tour) =>
+        tour.title?.includes(searchText)
+      );
+      console.log('searchResult', filteredTours)
+      setSearchTours(filteredTours)
+      setSearchToursCount(filteredTours.length)
+    } else {
+      setSearchTours([])
+      setSearchToursCount(0)
+      fetchData()
+    }
+  }, [searchText, pageIndex])
+
+
+  const debounceSearch = debounce((searchKeyword: string) => {
+    setSearchText(searchKeyword)
+  }, 500)
 
   return (
     <Box paddingX={{ base: 6, lg: 8 }} paddingY={6}>
@@ -94,7 +117,7 @@ const TourManagement = () => {
           <Input
             type="search"
             placeholder="Search tour by name"
-            // onChange={changeName}
+            onChange={(event) => debounceSearch(event?.target?.value)}
           />
         </InputGroup>
         <Button colorScheme="teal" onClick={() => gotoTourDetailPage('create')}>
@@ -108,9 +131,9 @@ const TourManagement = () => {
         pageSize={pageSize}
         setPageSize={setPageSize}
         isManualSort
-        // setSort={setSort}
-        // setOrderBy={setOrderBy}
-        // subComponent={getSubComponent(getHeaderList(false), 2)}
+      // setSort={setSort}
+      // setOrderBy={setOrderBy}
+      // subComponent={getSubComponent(getHeaderList(false), 2)}
       />
       <ConfirmModal
         titleText="Delete Tour"
