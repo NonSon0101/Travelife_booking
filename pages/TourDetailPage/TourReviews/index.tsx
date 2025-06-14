@@ -37,6 +37,7 @@ const TourReviews = (props: ITourReviews) => {
         username={review?.user?.username}
         createDate={review.reviewAt}
         comment={review.content}
+        isApprove={review.approve}
       />
     ))} 
     

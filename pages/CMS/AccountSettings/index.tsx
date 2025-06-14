@@ -54,7 +54,7 @@ const AccountSettings = () => {
   async function onSubmit(data: IAccountSettingsForm) {
     setIsLoading(true)
     try {
-      await updateUser(userId, omit(data, ['dateOfIssuePassport', 'dateOfExpirationPassport']))
+      await updateUser(userId, omit(data, ['dateOfIssuePassport', 'dateOfExpirationPassport']), PLATFORM.WEBSITE)
       await userStore.fetchUserDetail(userId, PLATFORM.CMS)
       toast.success('Update account successfully')
     } catch (error) {

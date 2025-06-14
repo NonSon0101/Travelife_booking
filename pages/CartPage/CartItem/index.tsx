@@ -37,6 +37,7 @@ import { ISelectedCart } from "interfaces/checkout";
 import { formatCurrency } from "utils/common";
 import PrivateOptions from "components/Layout/WebLayout/components/privateOptions";
 import { toast } from "react-toastify";
+import routes from "routes";
 
 interface ICartItem {
   tour: ITourCart;
@@ -215,6 +216,7 @@ const CartItem = (props: ICartItem) => {
           itemId: idCart,
         };
         cartStore.deleteCart(data);
+        cartStore.fetchCartCount();
         route.refresh()
       }
     }

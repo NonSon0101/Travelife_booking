@@ -23,8 +23,7 @@ import { useEffect, useState } from "react";
 import { IRequestTour, IRequsetCheckoutReview } from "interfaces/checkout";
 import { ICreateBookingForm, ITourBookingInfo } from "interfaces/booking";
 import { formatCurrency } from "utils/common";
-
-
+import dayjs from "dayjs";
 
 const ContactPage = () => {
   const { checkoutStore, bookingStore } = useStores();
@@ -65,6 +64,13 @@ const ContactPage = () => {
       }
       data = orderSummary.discountCode ? { ...data, discountCode: orderSummary.discountCode } : data
       await bookingStore.createBooking(data)
+      const timeOut = dayjs().add(10, 'minute').format('YYYY-MM-DD HH:mm:ss');
+      const dataBooking = {
+        timeOut: timeOut,
+        userId: localStorage.getItem("websiteUserId"),
+        bookingId: listBooking?._id
+      }
+      localStorage.setItem('booking_timeout', JSON.stringify(dataBooking))
       toast.success('Create booking sucessfully')
     } catch {
       toast.error('Create booking failed')

@@ -19,6 +19,7 @@ import { formatCurrency } from "utils/common";
 import { observer } from "mobx-react";
 import BillingInfo from "./BillingInfo";
 import { PLATFORM } from "enums/common";
+import CountdownTimer from "components/CountDownTimer";
 
 
 const PaymentPage = () => {
@@ -46,28 +47,30 @@ const PaymentPage = () => {
     await checkoutStore.prePayCheckout(bookingId)
   }
   return (
-    <VStack
-      minHeight="700px"
-      height="full"
-      maxWidth="1300px"
-      marginX="auto"
-      width="full"
-      padding="24px">
-      <BookingStatus currentPage="payment" />
+    <>
+      <CountdownTimer/>
       <VStack
-        direction="column"
-        width="500px"
+        minHeight="700px"
         height="full"
-        backgroundColor="#fff"
-        align='flex-start'
-        borderRadius='15px'
-        boxShadow='lg'
-        padding='20px 14px'
-      >
-        <Title text='Continue secure payment with VNPay' />
+        maxWidth="1300px"
+        marginX="auto"
+        width="full"
+        padding="24px">
+        <BookingStatus currentPage="payment" />
+        <VStack
+          direction="column"
+          width="500px"
+          height="full"
+          backgroundColor="#fff"
+          align='flex-start'
+          borderRadius='15px'
+          boxShadow='lg'
+          padding='20px 14px'
+        >
+          <Title text='Continue secure payment with VNPay' />
 
-        <Flex mt={10} justify="space-between" width="full" marginY='20px'>
-          {/* <Box
+          <Flex mt={10} justify="space-between" width="full" marginY='20px'>
+            {/* <Box
             width={100}
             alignItems='center'
             border='2px solid transparent'
@@ -89,17 +92,17 @@ const PaymentPage = () => {
             <Image src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7Wl7obNMoRyoW5ZJirDhZVLf99NQKWw6UZv5zIUOLUuDn6UrCOU6qcqJx2VIrhRIRblg&usqp=CAU" alt="Mastercard" width={100} />
           </Box> */}
 
-          <Box
-            width={100}
-            alignItems='center'
-            border='2px solid transparent'
-            onClick={() => handlePaymentMethodClick('vnpay')}
-            borderColor={selectedPaymentMethod === 'vnpay' ? 'teal' : 'transparent'}
-            cursor="pointer"
-          >
-            <Image src="https://vnpay.vn/dat-ve-may-bay/1803/6.png?12" alt="VnPay" width={100} />
-          </Box>
-          {/* <Box
+            <Box
+              width={100}
+              alignItems='center'
+              border='2px solid transparent'
+              onClick={() => handlePaymentMethodClick('vnpay')}
+              borderColor={selectedPaymentMethod === 'vnpay' ? 'teal' : 'transparent'}
+              cursor="pointer"
+            >
+              <Image src="https://vnpay.vn/dat-ve-may-bay/1803/6.png?12" alt="VnPay" width={100} />
+            </Box>
+            {/* <Box
             width={100}
             alignItems='center'
             border='2px solid transparent'
@@ -109,18 +112,19 @@ const PaymentPage = () => {
           >
             <Image src="https://upload.wikimedia.org/wikipedia/vi/f/fe/MoMo_Logo.png" alt="Momo" width={100} />
           </Box> */}
-        </Flex>
-        <Divider colorScheme='teal.300' size='xl' variant='solid' />
-        {bookingDetail && bookingDetail.personalInfo && (
-          <BillingInfo bookingDetail={bookingDetail} currentCurrency={currentCurrency} />
-        )}
-        <Divider />
-        <Button marginY='20px' width='full' colorScheme="teal" onClick={handlePayment}>
-          Continue to secure payment
-        </Button>
+          </Flex>
+          <Divider colorScheme='teal.300' size='xl' variant='solid' />
+          {bookingDetail && bookingDetail.personalInfo && (
+            <BillingInfo bookingDetail={bookingDetail} currentCurrency={currentCurrency} />
+          )}
+          <Divider />
+          <Button marginY='20px' width='full' colorScheme="teal" onClick={handlePayment}>
+            Continue to secure payment
+          </Button>
 
+        </VStack>
       </VStack>
-    </VStack>
+    </>
   );
 };
 

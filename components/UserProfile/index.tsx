@@ -45,7 +45,7 @@ const UserProfile = (props: IUserProfileProps) => {
                 {truncate(user?.fullname)}
               </Text>
               <Text fontSize="xs" lineHeight="4" color="text.grey.500">
-                {user?.email}
+                {truncate(user?.email)}
               </Text>
             </Flex>
           </HStack>

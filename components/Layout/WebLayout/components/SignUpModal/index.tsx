@@ -83,6 +83,14 @@ const SignUpModal = (props: ISignUpModalProps) => {
                       label="Username"
                       autoComplete="off" />
                     <FormInput
+                      name="fullname"
+                      label="Full name"
+                      autoComplete="off" />
+                    <FormInput
+                      name="phone"
+                      label="Phone"
+                      autoComplete="off" />
+                    <FormInput
                       name="email"
                       label="Email"
                       autoComplete="off" />

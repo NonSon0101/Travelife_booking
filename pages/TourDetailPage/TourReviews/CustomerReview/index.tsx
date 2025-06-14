@@ -9,10 +9,11 @@ interface ICustomerReview {
   createDate?: Date
   comment?: string
   isLoading?: boolean
+  isApprove?: boolean
 }
 
 const CustomerReview = (props: ICustomerReview) => {
-  const { ratingStar, avatarImg, username, createDate, comment, isLoading = false } = props
+  const { ratingStar, avatarImg, username, createDate, comment, isLoading = false, isApprove = false } = props
 
   return (
     <VStack align="flex-start" spacing={3} width="full">
@@ -40,7 +41,7 @@ const CustomerReview = (props: ICustomerReview) => {
           </Skeleton>
           <Skeleton isLoaded={!isLoading}>
             <Text fontSize="sm" color="gray.500">
-              {createDate ? dayjs(createDate).format("YYYY-MM-DD") : "Unknown date"} - Verified booking
+              {createDate ? dayjs(createDate).format("YYYY-MM-DD") : "Unknown date"} {isApprove ? ' - Verified booking' : ''} 
             </Text>
           </Skeleton>
         </VStack>

@@ -32,8 +32,8 @@ class UserStore {
     this.userDetail = user
   }
 
-  async updateUser(data: IUser, userId: string) {
-    const user = await updateUser(userId, data)
+  async updateUser(data: IUser, userId: string, platform: PLATFORM) {
+    const user = await updateUser(userId, data, platform)
     this.userDetail = user
   }
 }

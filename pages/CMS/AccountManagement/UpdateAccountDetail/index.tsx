@@ -70,7 +70,7 @@ const UpdateAccountDetail = () => {
         ...omit(data, 'status'),
         isActive: data?.status === 'Active'
       }
-      await updateUser(userId, userData)
+      await updateUser(userId, userData, PLATFORM.CMS)
       await userStore.fetchUserDetail(userId, PLATFORM.CMS)
       toast.success('Update account successfully')
     } catch (error) {

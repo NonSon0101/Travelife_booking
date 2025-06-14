@@ -1,5 +1,5 @@
 "use client";
-import { Box, HStack, VStack } from "@chakra-ui/react";
+import { Box, HStack, VStack, Text, useDisclosure } from "@chakra-ui/react";
 import { observer } from "mobx-react";
 import PageLayout from "components/Layout/WebLayout/PageLayout";
 import { useStores } from "hooks";
@@ -8,11 +8,14 @@ import BookingItem from "./BookingItem";
 import { useEffect, useState } from "react";
 import { IPagination } from "components/Table";
 import Pagination from "components/Table/components/Pagination";
+import CountdownTimer from "components/CountDownTimer";
+import ConfirmModal from "components/ConfirmModal";
 
 
 const BookingPage = () => {
-  const { bookingStore } = useStores()
+  const { bookingStore, authStore } = useStores()
   const { bookingList, totalResult } = bookingStore
+  const { isLogin } = authStore
   const [pageIndex, setPageIndex] = useState<number>(1)
   const [pageSize, setPageSize] = useState<number>(10)
   const pagination: IPagination = { pageIndex, tableLength: totalResult, gotoPage: setPageIndex }
@@ -24,6 +27,9 @@ const BookingPage = () => {
 
   return (
     <>
+      {isLogin &&
+        <CountdownTimer />
+      }
       <VStack
         position='relative'
         minHeight="700px"

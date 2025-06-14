@@ -8,6 +8,8 @@ export interface ILoginForm {
 
 export interface ISignUpForm {
   username:string,
+  fullname: string,
+  phone: string,
   email:string,
   password:string,
   passwordConfirm:string

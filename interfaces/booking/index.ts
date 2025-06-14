@@ -71,6 +71,7 @@ export interface IBookingInfoBody {
   checkoutOrder: ICheckoutOrder
   personalInfo: IPersonalInfo
   payment?: IPayment
+  createdAt: Date
 }
 
 export interface IBookingDetail {

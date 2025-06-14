@@ -144,6 +144,7 @@ const HomePage = () => {
           justifyContent="center"
           alignItems="center"
           mt="32px"
+          id="homepage"
         >
           <Title
             maxWidth="1300px"

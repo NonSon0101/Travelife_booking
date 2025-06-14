@@ -17,6 +17,7 @@ const HeaderHome = (props: IHeaderProps) => {
       backgroundPosition="center"
       bgRepeat="no-repeat"
       height="603px"
+      id="headerhome"
     >
       <Header
         openLoginModal={openLoginModal}
@@ -36,6 +37,7 @@ const HeaderHome = (props: IHeaderProps) => {
           maxWidth='1300px'
           paddingX={{ base: '24px' }}
           width='full'
+          id="headercontent"
         >
           <Text
             width="50%"

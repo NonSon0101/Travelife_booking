@@ -219,6 +219,7 @@ const TourDetailPage = () => {
         }
         setIsLoading(true)
         await cartStore.addToCart(data)
+        await cartStore.fetchCartCount()
         setIsLoading(false)
         toast.success('Add to cart successfully')
         window.scrollTo({ top: 0, behavior: 'smooth' });

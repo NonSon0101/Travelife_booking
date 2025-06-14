@@ -11,13 +11,14 @@ class BookingStore {
   bookings: IBooking[] = []
   bookingList: IBookingInfoBody[] = []
   totalCount: number = 0
+  pendingCount: number = 0
   totalResult: number = 0
   bookingDetail: IBookingDetail | null = null
   discountCode: string = ''
   listBooking: ICreateBooking | null = null
   bookingId: string = ''
   responeBookNow: IRequsetCheckoutReview | null = null
-  currentCurrency: string =''
+  currentCurrency: string = ''
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore
     makeAutoObservable(this)
@@ -43,6 +44,11 @@ class BookingStore {
     this.totalResult = total
   }
 
+  async fetchPendingBooking(): Promise<void> {
+    const { bookings } = await getListBooking(`list`)
+    this.pendingCount = bookings.filter((booking) => booking.status === 'pending').length;
+    this.bookingList = bookings
+  }
 
   async fetchBookingDetail(bookingId = '', platform: PLATFORM): Promise<void> {
     const booking = await getBookingDetail(bookingId, platform)

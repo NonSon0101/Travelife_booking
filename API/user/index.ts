@@ -31,10 +31,10 @@ export async function getUserById(userId: string, platform: PLATFORM): Promise<I
   }
 }
 
-export async function updateUser(userId: string, data: IUser): Promise<IUser> {
+export async function updateUser(userId: string, data: IUser, platform: PLATFORM): Promise<IUser> {
   try {
     const response = await api.post(`${USER_URL}/${userId}`, data, {
-      headers: auth(PLATFORM.CMS)
+      headers: auth(platform)
     })
     return response.data.metadata.user
   } catch (error) {

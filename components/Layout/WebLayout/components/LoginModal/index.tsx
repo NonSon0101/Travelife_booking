@@ -65,7 +65,6 @@ const LoginModal = (props: ILoginModalProps) => {
         });
       setIsLoading(false);
       onClose();
-      window.location.reload();
       toast.success("Login successfully");
     } catch (error) {
       setIsLoading(false);

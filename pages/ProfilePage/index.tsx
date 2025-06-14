@@ -1,7 +1,7 @@
 "use client";
-import { Box, HStack, VStack, Text, Image, FormControl, Button, FormLabel, Input, FormErrorMessage, SimpleGrid, Skeleton } from "@chakra-ui/react";
+import { Box, HStack, VStack, Text, Image, FormControl, Button, FormLabel, Input, FormErrorMessage, SimpleGrid, Skeleton, Avatar } from "@chakra-ui/react";
 import { toast } from 'react-toastify';
-import { get } from "lodash";
+import { get, truncate } from "lodash";
 import { FaUser } from "react-icons/fa";
 import { useStores } from "hooks";
 import { observer } from "mobx-react";
@@ -51,7 +51,7 @@ const ProfilePage = () => {
         dateOfExpirationPassport: dayjs(data?.dateOfExpirationPassport).toDate()
       }
       const userId = user._id ?? ''
-      await userStore.updateUser(userInfo, userId)
+      await userStore.updateUser(userInfo, userId, PLATFORM.WEBSITE)
       toast.success("Update user successfully")
       setIsLoading(false)
 
@@ -79,11 +79,11 @@ const ProfilePage = () => {
         <Box w="full" alignItems="center" bg="#1F5855" px="12px" py="30px" borderTopRadius="2px" color="#fff">
           <HStack spacing={4}>
             <Skeleton isLoaded={!isUserLoading} borderRadius="4px">
-              <Image
+              <Avatar
                 w={{ base: '70px', md: '90px' }}
                 borderRadius="4px"
+                name={user?.fullname}
                 src={user?.profilePicture}
-                alt="avatar"
               />
             </Skeleton>
 
@@ -92,7 +92,7 @@ const ProfilePage = () => {
                 <Text fontWeight="bold" fontSize={{ base: 'md', md: 'lg' }}>{user.username}</Text>
               </Skeleton>
               <Skeleton isLoaded={!isUserLoading}>
-                <Text fontSize={{ base: 'sm', md: 'md' }}>{user.email}</Text>
+                <Text fontSize={{ base: 'sm', md: 'md' }}>{truncate(user.email)}</Text>
               </Skeleton>
             </VStack>
           </HStack>
