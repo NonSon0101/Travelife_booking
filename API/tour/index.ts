@@ -125,3 +125,12 @@ export async function processVirtualTour(tourCode: string, page: string, data: {
     throw new Error(errorMessage)
   }
 }
+
+export async function getVacancies(tourId: string, startDate: string | null, endDate: string | null) {
+  try {
+    const response = await api.get(`${TOUR_URL}/vacancies/${tourId}`)
+    return response.data.metadata
+  } catch (error) {
+    console.log(error)
+  }
+}

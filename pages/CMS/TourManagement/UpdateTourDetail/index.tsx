@@ -32,6 +32,7 @@ import { IHotel } from 'interfaces/hotel';
 import { ITransportation } from 'interfaces/transportation';
 import ManageTransportations from './ManageTransportations';
 import { coordinates } from '@maptiler/sdk';
+import VacancySetup from './VacancySetup';
 const Dropdown = dynamic(() => import('components/Dropdown'), {
   ssr: false,
 })
@@ -84,6 +85,7 @@ const UpdateTourDetail = () => {
   const categoryOptions = getOptions(categories, 'name', '_id')
   const [imageFiles, setImageFiles] = useState<File[]>([])
   const { getValues } = methods
+  const [isManageVacancy, setIsManageVacancy] = useState<boolean>(false)
 
   function backToTourList() {
     router.push(routes.cms.tourManagement.value)
@@ -402,7 +404,7 @@ const UpdateTourDetail = () => {
                       Manage Price Options 
                     </ManageText>
                   </FormInput>
-                  <FormInput name="inclusions" label="Inclusions">
+                  {/* <FormInput name="inclusions" label="Inclusions">
                     <ManageText onClick={() => setIsManageInclusion(true)}>
                       Manage Inclusions
                     </ManageText>
@@ -411,7 +413,15 @@ const UpdateTourDetail = () => {
                     <ManageText onClick={() => setIsManageExclusion(true)}>
                       Manage Exclusions
                     </ManageText>
-                  </FormInput>
+                  </FormInput> */}
+                  <ManageText onClick={() => setIsManageVacancy(true)}>
+                    Vacancy Setup
+                  </ManageText>
+                  <VacancySetup
+                    isOpen={isManageVacancy}
+                    onClose={() => setIsManageVacancy(false)}
+                    methods={methods}
+                  />
                   {isPrivate &&
                     <>
                       <FormInput name="transports" label="Transports">

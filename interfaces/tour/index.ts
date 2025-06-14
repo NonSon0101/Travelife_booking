@@ -38,7 +38,11 @@ export interface ITour {
   location?: string
   transports?: ITransportation[] | string[]
   virtualTours?: IVirtualTour[],
-  isPrivate?: boolean
+  isPrivate?: boolean,
+  defaultVacancies?: number,
+  vacancies?: {
+    [key: string]: number
+  }
 }
 
 export interface ITourPagination {
@@ -137,3 +141,4 @@ export interface IItineraryItem {
   }
   image: string | null
 }
+

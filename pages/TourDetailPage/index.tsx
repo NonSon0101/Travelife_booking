@@ -62,6 +62,7 @@ import PrivateOptions from "components/Layout/WebLayout/components/privateOption
 import ItineraryMap, { ItineraryMapRef } from "./ItineraryMap";
 import { IItineraryItem } from "interfaces/tour";
 import ChatBot from "components/ChatBot";
+import { getVacancies } from "API/tour";
 
 type ValuePiece = Date | null;
 
@@ -552,6 +553,8 @@ const TourDetailPage = () => {
                         <CustomCalendar
                           selectedDate={selectedDate}
                           setSelectedDate={setSelectedDate}
+                          vacancies={tourDetail?.vacancies || {}}
+                          defaultVacancies={tourDetail?.defaultVacancies || 20}
                         />
                       </HStack>
                     </MenuList>
