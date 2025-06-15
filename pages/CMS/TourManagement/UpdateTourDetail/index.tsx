@@ -396,8 +396,8 @@ const UpdateTourDetail = () => {
                   {/* <FormInput name="interest" label="Interest" /> */}
                   {/* <FormInput name="details" label="Details" /> */}
                   <FormInput name="regularPrice" label="Regular Price" type="number" min={1} />
-                  <FormInput name="discountPrice" label="Discount Price" type="number" min={1} />
-                  <FormInput name="discountPercentage" label="Discount Percentage" type="number" min={1} />
+                  {/* <FormInput name="discountPrice" label="Discount Price" type="number" min={1} />
+                  <FormInput name="discountPercentage" label="Discount Percentage" type="number" min={1} /> */}
                   <FormInput name="duration" label="Duration" type="number" min={0} />
                   <FormInput name="priceOptions" label="Price Options">
                     <ManageText onClick={() => setIsManagePriceOptions(true)}>
