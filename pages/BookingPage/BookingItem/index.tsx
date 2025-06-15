@@ -6,7 +6,7 @@ import { IBookingInfoBody } from "interfaces/booking";
 import { FaTrash } from "react-icons/fa";
 import { useStores } from "hooks";
 import { formatCurrency } from "utils/common";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import dayjs from "dayjs";
 import ConfirmModal from "components/ConfirmModal";
 
@@ -27,6 +27,8 @@ const BookingItem = (props: IBookingItem) => {
   const [isCalled, setIsCalled] = useState<boolean>(false)
   const [time, setTime] = useState(0);
   const [isExpired, setIsExpired] = useState(false);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const intervalRefs = useRef<NodeJS.Timeout[]>([]);
   const { isOpen: isConfirming, onOpen: onConfirm, onClose: closeConfirm } = useDisclosure()
 
   useEffect(() => {
@@ -51,7 +53,7 @@ const BookingItem = (props: IBookingItem) => {
         const timeout = dayjs(timeoutString, 'YYYY-MM-DD HH:mm:ss').add(10, 'minute');
 
         if (now.isAfter(timeout)) {
-          location.reload()
+          bookingStore.fetchPendingBooking()
           setIsExpired(true);
           return;
         }
@@ -59,21 +61,23 @@ const BookingItem = (props: IBookingItem) => {
         const remainingSeconds = timeout.diff(now, 'second');
         setTime(remainingSeconds);
 
-        const interval = setInterval(() => {
+        intervalRef.current = setInterval(() => {
           setTime((prevTime) => {
             if (prevTime <= 1) {
               setTimeout(() => {
-                location.reload()
-                clearInterval(interval);
+                bookingStore.fetchPendingBooking();
+                clearInterval(intervalRef.current!);
                 setIsExpired(true);
-                return 0;
-              }, 1000)
+              }, 1000);
+              return 0;
             }
             return prevTime - 1;
           });
         }, 1000);
 
-        return () => clearInterval(interval);
+        intervalRefs.current.push(intervalRef.current)
+
+        return () => clearInterval(intervalRef.current!);
       }
     }
   }, []);
@@ -102,16 +106,18 @@ const BookingItem = (props: IBookingItem) => {
   async function handleDeleteBooking() {
     try {
       setIsLoading(true)
+      console.log('intervalRefs.current', intervalRefs.current)
+      intervalRefs.current.forEach((id) => clearInterval(id));
+      intervalRefs.current = [];
       await bookingStore.deleteBooking(booking._id)
       localStorage.removeItem('booking_timeout')
       setIsExpired(true);
       bookingStore.fetchPendingBooking()
-      route.refresh()
+      location.reload()
       setIsLoading(false)
     } catch {
       setIsLoading(false)
     }
-
   }
 
   return (

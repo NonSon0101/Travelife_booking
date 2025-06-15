@@ -1,13 +1,16 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Box } from '@chakra-ui/react';
 import dayjs from 'dayjs';
 import { useStores } from 'hooks/useStores';
 
 const CountdownTimer = () => {
   const [time, setTime] = useState(0);
+  const { bookingStore } = useStores();
   const [isExpired, setIsExpired] = useState(false);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const intervalRefs = useRef<NodeJS.Timeout[]>([]);
   const [isFixed, setIsFixed] = useState(false);
 
   useEffect(() => {
@@ -38,18 +41,23 @@ const CountdownTimer = () => {
       const remainingSeconds = timeout.diff(now, 'second');
       setTime(remainingSeconds);
 
-      const interval = setInterval(() => {
+      intervalRef.current = setInterval(() => {
         setTime((prevTime) => {
           if (prevTime <= 1) {
-            clearInterval(interval);
-            setIsExpired(true);
+            setTimeout(() => {
+              bookingStore.fetchPendingBooking();
+              clearInterval(intervalRef.current!);
+              setIsExpired(true);
+            }, 1000);
             return 0;
           }
           return prevTime - 1;
         });
       }, 1000);
 
-      return () => clearInterval(interval);
+      intervalRefs.current.push(intervalRef.current)
+
+      return () => clearInterval(intervalRef.current!);
     }
   }, []);
 

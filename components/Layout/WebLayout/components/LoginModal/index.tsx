@@ -36,7 +36,7 @@ interface ILoginModalProps {
 
 const LoginModal = (props: ILoginModalProps) => {
   const { isOpen, onClose, openSignUpModal, openForgotPasswordModal } = props;
-  const { authStore } = useStores();
+  const { authStore, cartStore, bookingStore } = useStores();
   const methods = useForm<ILoginForm>();
   const { handleSubmit } = methods;
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -63,6 +63,8 @@ const LoginModal = (props: ILoginModalProps) => {
               console.error(`Couldnt sign in to firestore ${err.code}, \n ${err.message}`)
             });
         });
+        await cartStore.fetchCartCount()
+        await bookingStore.fetchPendingBooking()
       setIsLoading(false);
       onClose();
       toast.success("Login successfully");
