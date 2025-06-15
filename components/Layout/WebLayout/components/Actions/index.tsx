@@ -6,7 +6,7 @@ import routes from "routes";
 import UserProfile from "../UserProfile";
 import ActionItem from "./ActionItem";
 import { useStores } from "hooks";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { observer } from "mobx-react";
 import { IRequestTour, IRequsetCheckoutReview } from "interfaces/checkout";
 import dayjs from "dayjs";
@@ -30,6 +30,7 @@ const Action = (props: IHeaderProps) => {
 
   const [time, setTime] = useState(0);
   const [isExpired, setIsExpired] = useState(false);
+  const intervalRefs = useRef<NodeJS.Timeout[]>([]);
 
   useEffect(() => {
     const fetchActionData = async () => {
@@ -82,6 +83,8 @@ const Action = (props: IHeaderProps) => {
           return prevTime - 1;
         });
       }, 1000);
+
+      intervalRefs.current.push(interval)
 
       return () => clearInterval(interval);
     }
