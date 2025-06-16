@@ -92,7 +92,7 @@ const BookingItem = (props: IBookingItem) => {
 
   function handleGoToPayment() {
     bookingStore.setBookingId(booking._id)
-    route.push(routes.booking.payment)
+    route.push(routes.booking.payment(booking._id))
   }
 
   function handleViewBookingDetail() {

@@ -14,6 +14,7 @@ import RatingModal from "./RatingModal";
 import InvoiceItem from "./InvoiceItem";
 import { ITour } from "interfaces/tour";
 import { PLATFORM } from "enums/common";
+import QRCodeGenerator from "./QrCode";
 
 
 const BookingDetailsPage = () => {
@@ -35,7 +36,8 @@ const BookingDetailsPage = () => {
   function handleGoToPayment() {
     if (bookingDetail?._id) {
       bookingStore.setBookingId(bookingDetail?._id)
-      router.push(routes.booking.payment)
+      localStorage.removeItem('booking_timeout')
+      router.push(routes.booking.payment(bookingDetail?._id))
     }
   }
 
@@ -77,7 +79,7 @@ const BookingDetailsPage = () => {
 
           <Divider />
           <HStack width='full' justify='space-between' align='flex-start' paddingRight={6}>
-            <Image width={250} src='https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg' alt='qrcode' />
+            <QRCodeGenerator url={typeof window !== 'undefined' && window.location.href} />
             <VStack align='flex-start' spacing={5}>
               <HStack width='full' justify='space-between' spacing={4}>
                 <Text fontSize='lg' fontWeight='bold'>Subtotal: </Text>

@@ -22,7 +22,7 @@ const routes = {
   booking: {
     activity: "/booking/activity",
     contact: "/booking/contact",
-    payment: "/booking/payment",
+    payment: (bookingId: string) =>  `/booking/payment/${bookingId}`,
     view:  "/booking/view",
     detail: (bookingId: string) => `/booking/${bookingId}`
   },
