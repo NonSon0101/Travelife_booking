@@ -45,7 +45,6 @@ const LoginModal = (props: ILoginModalProps) => {
   async function onSubmit(data: ILoginForm): Promise<void> {
     try {
       setIsLoading(true);
-      console.log("Login with:", data.email, data.password);
       await authStore.login({ ...data, isRemember: true }, PLATFORM.WEBSITE);
       await signInWithEmailAndPassword(auth, data.email, data.password)
         .then((userCredential) => {
@@ -81,26 +80,6 @@ const LoginModal = (props: ILoginModalProps) => {
   function handleOpenSigupModal() {
     onClose();
     openSignUpModal();
-  }
-
-  async function checkIfUserExists(email) {
-    try {
-      console.log('user email', email)
-      const methods = await fetchSignInMethodsForEmail(auth, email);
-      console.log("Checking email:", email);
-      console.log("Returned sign-in methods:", methods);
-
-      if (methods.includes('password')) {
-        console.log("User exists with email/password sign-in.");
-        return true;
-      } else {
-        console.log("Email exists but not with email/password (maybe Google, Facebook, etc).");
-        return false;
-      }
-    } catch (error) {
-      console.error("Error checking user:", error);
-      return false;
-    }
   }
 
   function handleFogotPass() { }

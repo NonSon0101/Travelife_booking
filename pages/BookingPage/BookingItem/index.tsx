@@ -106,7 +106,6 @@ const BookingItem = (props: IBookingItem) => {
   async function handleDeleteBooking() {
     try {
       setIsLoading(true)
-      console.log('intervalRefs.current', intervalRefs.current)
       intervalRefs.current.forEach((id) => clearInterval(id));
       intervalRefs.current = [];
       await bookingStore.deleteBooking(booking._id)

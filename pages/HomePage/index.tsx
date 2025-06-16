@@ -70,16 +70,13 @@ const HomePage = () => {
     const loginFireStore = async () => {
       if ((!user._id && !user.email) || isCalled || !isFromGoogle || hasRun.current) return;
 
-      console.log('user', user)
-
       hasRun.current = true;
 
       try {
         await signInWithEmailAndPassword(auth, user.email!, user._id!)
           .then((userCredential) => {
             const user = userCredential.user;
-            if (user) { 
-              console.log('signed in to firestore with user: ', user) 
+            if (user) {
               route.push('/')
             }
           })
@@ -89,7 +86,6 @@ const HomePage = () => {
               .then((userCredential) => {
                 const user = userCredential.user;
                 if (user) { 
-                  console.log('signed up to firestore with user: ', user)
                   route.push('/')
                 }
               })
@@ -115,25 +111,6 @@ const HomePage = () => {
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  async function checkIfUserExists(email) {
-    try {
-      console.log('user email', email)
-      const methods = await fetchSignInMethodsForEmail(auth, email);
-      console.log('methods', methods)
-      if (methods.includes('password')) {
-        console.log("User exists with email/password sign-in.");
-        return true;
-      } else {
-        console.log("Email exists but not with email/password (maybe Google, Facebook, etc).");
-        return false;
-      }
-    } catch (error) {
-      console.error("Error checking user:", error);
-      return false;
-    }
-  }
-
 
   return (
     <ThemeProvider theme={theme}>

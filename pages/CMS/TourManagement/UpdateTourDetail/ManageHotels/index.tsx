@@ -46,7 +46,6 @@ const ManageHotels = (props: IManageHotelsProps) => {
   const { hotels } = hotelStore
   if (!methods) return null
   const hotelsOptions = getOptions(hotels, 'name', '_id')
-  console.log('hotelsOptions', hotelsOptions)
 
   function handleAddNewHotel(): void {
     const newHotelId = getValues('newHotelsTitle.value');
@@ -83,7 +82,6 @@ const ManageHotels = (props: IManageHotelsProps) => {
     hotelStore.fetchAllHotels();
   }, [])
 
-  console.log('existingOptions', existingOptions);
   return (
     <Modal size="md" isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />

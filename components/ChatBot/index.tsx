@@ -66,10 +66,7 @@ const ChatBot = () => {
       }
 
       const data = snapshot.data();
-      console.log('data from firestore: ', data)
       const expiredAt = new Date(data.expried_at * 1000);
-      console.log('expiredAt', expiredAt)
-      console.log('!expiredAt || new Date() > expiredAt', !expiredAt || new Date() > expiredAt)
 
       if (!expiredAt || new Date() > expiredAt || !data.expried_at) {
         setIsStarted(false);
@@ -119,14 +116,19 @@ const ChatBot = () => {
     try {
       await sendMessage(userId, "user", userMessage, []);
 
-      const res = await fetchBotReply(userMessage);
+      let res = await fetchBotReply(userMessage);
+
+      if (res.reply === "Session not found") {
+        await handleStartChat()
+        res = await fetchBotReply(userMessage);
+      }
+
       const botHTML = res.reply || "No reply found.";
       const suggestions = res.suggestions || [];
 
       await sendMessage(userId, "bot", botHTML, suggestions);
 
     } catch (error) {
-      console.error(error);
       await sendMessage(userId, "bot", "Sorry, something went wrong.", []);
     } finally {
       setIsLoading(false);
@@ -148,7 +150,6 @@ const ChatBot = () => {
       if (sessionData?.message?.includes("Session already exists")) {
         setIsStarted(true);
       } else if (sessionData) {
-
         const expiresAtSeconds = sessionData.last_update_time + 1200;
         await createCollection(userId, expiresAtSeconds);
         setIsStarted(true);
@@ -219,7 +220,6 @@ const ChatBot = () => {
     </HStack>
   );
 
-  console.log('messages', messages)
   return (
     <Box
       position="fixed"

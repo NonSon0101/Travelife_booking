@@ -45,7 +45,6 @@ const ManageHotels = (props: IManageTransportationProps) => {
   const { transportations } = transportationStore
   if (!methods) return null
   const TransportationsOptions = getOptions(transportations, 'name', '_id')
-  console.log('TransportationsOptions', TransportationsOptions)
 
   function handleAddNewHotel(): void {
     const newTransportId = getValues('newTransportationTitle.value');
@@ -77,7 +76,6 @@ const ManageHotels = (props: IManageTransportationProps) => {
     transportationStore.fetchAllTransportations();
   }, [])
 
-  console.log('existingOptions', existingOptions);
   return (
     <Modal size="md" isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
