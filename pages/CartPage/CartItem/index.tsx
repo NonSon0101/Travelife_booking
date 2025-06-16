@@ -30,7 +30,7 @@ import { LuCalendarDays } from "react-icons/lu";
 import { TriangleDownIcon } from "@chakra-ui/icons";
 import { FaCheckSquare } from "react-icons/fa";
 import { useStores } from "hooks";
-import CustomCalendar from "components/Layout/WebLayout/components/Calendar";
+import CustomCalendar from "../../TourDetailPage/Calendar";
 import MenuItem from "components/Layout/WebLayout/components/MenuItem";
 import { PLATFORM } from "enums/common";
 import { ISelectedCart } from "interfaces/checkout";
@@ -382,6 +382,8 @@ const CartItem = (props: ICartItem) => {
                         <CustomCalendar
                           selectedDate={selectedDate}
                           setSelectedDate={setSelectedDate}
+                          defaultVacancies={tour?.tour?.defaultVacancies ?? 0}
+                          vacancies={tour?.tour?.vacancies ?? {}}
                         />
                       </HStack>
                     </MenuList>

@@ -48,7 +48,9 @@ export interface ITourCart {
     title: string;
     thumbnail: string;
     numOfRating: number,
-    ratingAverage: number
+    ratingAverage: number,
+    defaultVacancies?: number;
+    vacancies?: { [key: string]: number };
   };
   isPrivate: boolean;
   startDate: string;
