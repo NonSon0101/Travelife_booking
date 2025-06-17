@@ -78,7 +78,7 @@ const BookingDetailsPage = () => {
             <InvoiceItem key={bookingItem._id} numOfItem={index} bookingItems={bookingItem} openRatingModal={handleOpenRatingModal} />)}
 
           <Divider />
-          <HStack width='full' justify='space-between' align='flex-start' paddingRight={6}>
+          <HStack width='full' justify='center' align='flex-start' paddingRight={6}>
             <QRCodeGenerator url={typeof window !== 'undefined' && window.location.href} />
             <VStack align='flex-start' spacing={5}>
               <HStack width='full' justify='space-between' spacing={4}>
