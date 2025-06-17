@@ -115,6 +115,7 @@ const ChatBot = () => {
 
     try {
       await sendMessage(userId, "user", userMessage, []);
+      setUserId(userId);
 
       let res = await fetchBotReply(userMessage);
 
@@ -127,6 +128,7 @@ const ChatBot = () => {
       const suggestions = res.suggestions || [];
 
       await sendMessage(userId, "bot", botHTML, suggestions);
+      setUserId(userId);
 
     } catch (error) {
       await sendMessage(userId, "bot", "Sorry, something went wrong.", []);

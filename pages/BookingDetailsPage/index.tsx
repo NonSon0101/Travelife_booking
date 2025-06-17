@@ -36,13 +36,18 @@ const BookingDetailsPage = () => {
   function handleGoToPayment() {
     if (bookingDetail?._id) {
       bookingStore.setBookingId(bookingDetail?._id)
-      localStorage.removeItem('booking_timeout')
       router.push(routes.booking.payment(bookingDetail?._id))
     }
   }
 
   useEffect(() => {
-    bookingStore.fetchBookingDetail(bookingId, PLATFORM.WEBSITE)
+    const fetchBooking = async() => {
+      await bookingStore.fetchBookingDetail(bookingId, PLATFORM.WEBSITE)
+      if (bookingDetail?.status === 'success') {
+        localStorage.removeItem('booking_timeout')
+      }
+    }
+    fetchBooking()
   }, [bookingId])
 
   return (
@@ -78,7 +83,7 @@ const BookingDetailsPage = () => {
             <InvoiceItem key={bookingItem._id} numOfItem={index} bookingItems={bookingItem} openRatingModal={handleOpenRatingModal} />)}
 
           <Divider />
-          <HStack width='full' justify='center' align='flex-start' paddingRight={6}>
+          <HStack width='full' justify='space-between' align='flex-start' paddingRight={6}>
             <QRCodeGenerator url={typeof window !== 'undefined' && window.location.href} />
             <VStack align='flex-start' spacing={5}>
               <HStack width='full' justify='space-between' spacing={4}>
