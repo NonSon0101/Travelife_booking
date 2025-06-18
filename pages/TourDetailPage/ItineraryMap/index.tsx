@@ -16,6 +16,7 @@ export interface ItineraryMapRef {
 const ItineraryMap = forwardRef<ItineraryMapRef, IItineraryMapProps>(({ itinerary }, ref) => {
   const mapContainer = useRef<HTMLDivElement | null>(null)
   const map = useRef<maptilersdk.Map | null>(null)
+  const [mapKey, setMapKey] = useState(0)
   const markers = useRef<maptilersdk.Marker[]>([])
   const [zoom] = useState(14)
   maptilersdk.config.apiKey = "PAckuW1Q20LwrRJCIs0n"
@@ -46,46 +47,61 @@ const ItineraryMap = forwardRef<ItineraryMapRef, IItineraryMapProps>(({ itinerar
 
     const center = calculateCenter()
 
-    map.current = new maptilersdk.Map({
+    const mapInstance = new maptilersdk.Map({
       container: mapContainer.current,
       style: maptilersdk.MapStyle.STREETS,
       center: [center.lng, center.lat],
       zoom: zoom,
     })
 
+    map.current = mapInstance
+
+    const canvas = mapInstance.getCanvas()
+    canvas.addEventListener('webglcontextlost', (e) => {
+      e.preventDefault()
+      console.warn('WebGL context lost — rebuilding map...')
+
+      if (mapContainer.current) {
+        mapContainer.current.innerHTML = ''
+      }
+
+      map.current = null
+
+      setMapKey(prev => prev + 1)
+
+    })
+
     itinerary.forEach((item, index) => {
       const [lng, lat] = item.location.coordinates
-      
-      const popup = new maptilersdk.Popup({ 
+
+      const popup = new maptilersdk.Popup({
         offset: 25,
         closeButton: false,
         closeOnClick: false
-      })
-        .setHTML(`
-          <div style="
-            max-width: 200px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            font-size: 14px;
-            font-weight: 500;
-          ">
-            ${item.activity}
-          </div>
-        `)
+      }).setHTML(`
+      <div style="
+        max-width: 200px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 14px;
+        font-weight: 500;
+      ">
+        ${item.activity}
+      </div>
+    `)
 
-      const marker = new maptilersdk.Marker({ 
-        color: index != 0 && index % 2 == 1 ? '#4A90E2' : '#FF0000' 
+      const marker = new maptilersdk.Marker({
+        color: index != 0 && index % 2 == 1 ? '#4A90E2' : '#FF0000'
       })
         .setLngLat([lng, lat])
         .setPopup(popup)
-        .addTo(map.current!)
+        .addTo(mapInstance)
 
       markers.current.push(marker)
     })
 
-    // Auto open all popups after map loads
-    map.current.on('load', () => {
+    mapInstance.on('load', () => {
       markers.current.forEach(marker => {
         marker.togglePopup()
       })
@@ -94,7 +110,7 @@ const ItineraryMap = forwardRef<ItineraryMapRef, IItineraryMapProps>(({ itinerar
     return () => {
       markers.current.forEach(marker => marker.remove())
       markers.current = []
-      
+
       if (map.current) {
         map.current.remove()
         map.current = null
@@ -102,9 +118,10 @@ const ItineraryMap = forwardRef<ItineraryMapRef, IItineraryMapProps>(({ itinerar
     }
   }, [itinerary, zoom])
 
+
   return (
     <Box className="map-wrap">
-      <Box ref={mapContainer} className="map" />
+      <Box key={mapKey} ref={mapContainer} className="map" />
     </Box>
   )
 })

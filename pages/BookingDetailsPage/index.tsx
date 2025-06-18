@@ -46,7 +46,7 @@ const BookingDetailsPage = () => {
       if (bookingDetail?.status === 'completed') {
         localStorage.removeItem('booking_timeout')
       }
-    }
+    } 
     fetchBooking()
   }, [bookingId])
 
