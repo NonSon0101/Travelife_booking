@@ -55,11 +55,9 @@ const BookingManagement = () => {
   useEffect(() => {
       if (searchText && searchText != '') {
         bookingStore.fetchAllBookings()
-        console.log('searchText', searchText)
         const filteredBookings = bookings.filter((booking) =>
           booking?.personalInfo?.name?.includes(searchText)
         );
-        console.log('searchResult', filteredBookings)
         setSearchBooking(filteredBookings)
         setSearchBookingCount(filteredBookings.length)
       } else {

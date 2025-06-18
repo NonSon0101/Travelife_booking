@@ -57,7 +57,12 @@ export async function POST(request: Request) {
       detailInformation
     });
   } catch (error: any) {
-    const errorMessage = error.response?.data || error.message || JSON.stringify(error);
+    const detail = error?.response?.data?.detail;
+
+    if (typeof detail === "string" && detail.includes("Session not found")) {
+      return NextResponse.json({ reply: detail }, { status: 200 });
+    }
+    const errorMessage = error.response?.data.detail || error.message || JSON.stringify(error);
     return NextResponse.json({ error: errorMessage || "Unknown error" }, { status: 500 });
   }
 }

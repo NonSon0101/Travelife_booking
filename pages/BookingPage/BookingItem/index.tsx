@@ -92,7 +92,7 @@ const BookingItem = (props: IBookingItem) => {
 
   function handleGoToPayment() {
     bookingStore.setBookingId(booking._id)
-    route.push(routes.booking.payment)
+    route.push(routes.booking.payment(booking._id))
   }
 
   function handleViewBookingDetail() {
@@ -106,7 +106,6 @@ const BookingItem = (props: IBookingItem) => {
   async function handleDeleteBooking() {
     try {
       setIsLoading(true)
-      console.log('intervalRefs.current', intervalRefs.current)
       intervalRefs.current.forEach((id) => clearInterval(id));
       intervalRefs.current = [];
       await bookingStore.deleteBooking(booking._id)

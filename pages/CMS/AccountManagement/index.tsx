@@ -106,11 +106,9 @@ const AccountManagement = () => {
   useEffect(() => {
     if (searchText && searchText != '') {
       userStore.fetchAllUsers()
-      console.log('searchText', searchText)
       const filteredUsers = users.filter((user) =>
         user.email?.includes(searchText)
       );
-      console.log('searchResult', filteredUsers)
       setSearchUser(filteredUsers)
       setSearchUserCount(filteredUsers.length)
     } else {

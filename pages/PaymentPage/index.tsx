@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import BookingStatus from "components/BookingStatus";
 import PageLayout from "components/Layout/WebLayout/PageLayout";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Title from "components/Title";
 import { useEffect, useState } from "react";
 import { useStores } from "hooks";
@@ -25,8 +25,12 @@ import CountdownTimer from "components/CountDownTimer";
 const PaymentPage = () => {
   const route = useRouter()
   const { bookingStore, checkoutStore } = useStores();
-  const { bookingDetail, bookingId, currentCurrency } = bookingStore
+  const { bookingDetail, currentCurrency } = bookingStore
   const { paymentURL } = checkoutStore
+  const params = useParams();
+  const bookingId = Array.isArray(params?.bookingId)
+    ? params.bookingId[0]
+    : params?.bookingId;
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('');
 
   const handlePaymentMethodClick = (paymentMethod: string) => {
@@ -44,7 +48,7 @@ const PaymentPage = () => {
   }, [paymentURL])
 
   async function handlePayment() {
-    await checkoutStore.prePayCheckout(bookingId)
+    await checkoutStore.prePayCheckout(bookingId!)
   }
   return (
     <>
@@ -69,7 +73,7 @@ const PaymentPage = () => {
         >
           <Title text='Continue secure payment with VNPay' />
 
-          <Flex mt={10} justify="space-between" width="full" marginY='20px'>
+          <Flex mt={10} justify="center" width="full" marginY='20px'>
             {/* <Box
             width={100}
             alignItems='center'

@@ -47,7 +47,7 @@ const ContactPage = () => {
   useEffect(() => {
     if (listBooking) {
       bookingStore.setBookingId(listBooking._id)
-      route.push(routes.booking.payment)
+      route.push(routes.booking.payment(listBooking._id))
     }
   }, [listBooking])
 

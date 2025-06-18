@@ -88,11 +88,9 @@ const TourManagement = () => {
   useEffect(() => {
     if (searchText && searchText != '') {
       tourStore.fetchAllTours()
-      console.log('searchText', searchText)
       const filteredTours = tours.filter((tour) =>
         tour.title?.includes(searchText)
       );
-      console.log('searchResult', filteredTours)
       setSearchTours(filteredTours)
       setSearchToursCount(filteredTours.length)
     } else {
