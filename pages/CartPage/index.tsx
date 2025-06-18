@@ -86,7 +86,7 @@ const CartPage = () => {
           gap={{ base: 10, lg: 6 }}
         >
           {/* LEFT SIDE: Cart Items */}
-          <Box flex={{ base: "1 1 auto", lg: "2" }} w="100%">
+          <Box flex={{ base: "1 1 auto", lg: "2" }} width="full">
             <Title text="Shopping cart" mb={4} />
 
             {isLoadingCart ? (

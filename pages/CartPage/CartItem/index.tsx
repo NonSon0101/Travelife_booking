@@ -258,6 +258,7 @@ const CartItem = (props: ICartItem) => {
       height="full"
       position="relative"
       justifyContent="start"
+      width="full"
       spacing={9}
       onClick={() => handleCheckboxChange}
     >
@@ -288,7 +289,7 @@ const CartItem = (props: ICartItem) => {
           onChange={handleCheckboxChange}
         />
       </VStack>
-      <VStack align="flex-start" minWidth="740px">
+      <VStack align="flex-start" minWidth="740px" width="full">
         <Text textAlign="start" fontSize="xl" fontWeight="500" color={checked ? "#38A59F" : "#636A80"}>
           {convertDate}
         </Text>
