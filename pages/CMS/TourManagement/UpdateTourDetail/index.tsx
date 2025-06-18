@@ -107,11 +107,6 @@ const UpdateTourDetail = () => {
         toast.error('Only image files (JPEG, PNG, GIF, WEBP) are allowed')
         return
     }
-    if (!isEditMode) {
-      setImageFiles(files)
-      setIsImageLoading(false)
-      return;
-    }
     try {
       const formData = new FormData()
       for (let i = 0; i < files?.length; i++) {
@@ -172,16 +167,16 @@ const UpdateTourDetail = () => {
       ); 
     }
 
-    if (!isEditMode && imageFiles.length > 0) {
-      const base64Images: string[] = await Promise.all(
-          imageFiles.map(async (file: File) => {
-            const base64 = await convertToBase64(file);
-            return base64;
-          })
-      )
-      setValue('images', [...images, ...base64Images]);
-      setImageFiles([]);
-    }
+    // if (!isEditMode && imageFiles.length > 0) {
+    //   const base64Images: string[] = await Promise.all(
+    //       imageFiles.map(async (file: File) => {
+    //         const base64 = await convertToBase64(file);
+    //         return base64;
+    //       })
+    //   )
+    //   setValue('images', [...images, ...base64Images]);
+    //   setImageFiles([]);
+    // }
 
     const hotels = getValues('hotels') || [];
     const transports = getValues('transports') || [];
