@@ -95,38 +95,14 @@ const UpdateTourDetail = () => {
     setValue('images', images.filter((image: string) => image !== url))
   }
  
-  async function uploadImages(event: ChangeEvent<HTMLInputElement>) {
-    setIsImageLoading(true)
-    if (!event.target.files || event.target.files.length === 0) {
-      return
-    }
-    const files = Array.from(event.target.files)
-    const imageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
-    const invalidFiles = files.filter(file => !imageTypes.includes(file.type))
-    if (invalidFiles.length > 0) {
-        toast.error('Only image files (JPEG, PNG, GIF, WEBP) are allowed')
-        return
-    }
-    try {
-      const formData = new FormData()
-      for (let i = 0; i < files?.length; i++) {
-        formData.append('images', files[i])
-      }
-      const { imagesURL } = await uploadTourImage(tourId, formData)
-      setValue('images', [...images, ...imagesURL])
-    } catch (error) {
-      setIsImageLoading(false)
-      toast.error('Upload images failed')
-    } finally {
-      setIsImageLoading(false)
-    }
-  }
+
 
   async function deleteFile(file: File) {
     const newFiles = [...imageFiles]
     newFiles.splice(newFiles.indexOf(file), 1)
     setImageFiles(newFiles)
   }
+
 
   async function uploadThumbnail(event: ChangeEvent<HTMLInputElement>) {
     setIsImageLoading(true)
@@ -141,6 +117,52 @@ const UpdateTourDetail = () => {
     } catch (error) {
       setIsImageLoading(false)
       toast.error('Upload thumbnail failed')
+    } finally {
+      setIsImageLoading(false)
+    }
+  }
+
+  async function uploadImages(event: ChangeEvent<HTMLInputElement>) {
+    setIsImageLoading(true)
+    if (!event.target.files || event.target.files.length === 0) {
+      return
+    }
+    const files = Array.from(event.target.files)
+    const imageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
+    const invalidFiles = files.filter(file => !imageTypes.includes(file.type))
+    if (invalidFiles.length > 0) {
+        toast.error('Only image files (JPEG, PNG, GIF, WEBP) are allowed')
+        return
+    }
+    if (!isEditMode) {
+      try {
+        const base64Promises = files.map(file => {
+          return new Promise<string>((resolve, reject) => {
+            const reader = new FileReader()
+            reader.readAsDataURL(file)
+            reader.onload = () => resolve(reader.result as string)
+            reader.onerror = error => reject(error)
+          })
+        })
+        const base64Images = await Promise.all(base64Promises)
+        setValue('images', base64Images)
+      } catch (error) {
+        toast.error('Failed to convert images to base64')
+      } finally {
+        setIsImageLoading(false)
+      }
+      return
+    }
+    try {
+      const formData = new FormData()
+      for (let i = 0; i < files?.length; i++) {
+        formData.append('images', files[i])
+      }
+      const { imagesURL } = await uploadTourImage(tourId, formData)
+      setValue('images', [...images, ...imagesURL])
+    } catch (error) {
+      setIsImageLoading(false)
+      toast.error('Upload images failed')
     } finally {
       setIsImageLoading(false)
     }
@@ -168,14 +190,23 @@ const UpdateTourDetail = () => {
     }
 
     // if (!isEditMode && imageFiles.length > 0) {
-    //   const base64Images: string[] = await Promise.all(
+    //   try {
+    //     const base64Images: string[] = await Promise.all(
     //       imageFiles.map(async (file: File) => {
     //         const base64 = await convertToBase64(file);
     //         return base64;
     //       })
-    //   )
-    //   setValue('images', [...images, ...base64Images]);
-    //   setImageFiles([]);
+    //     );
+    //     console.log('base64Images', base64Images);
+    //     const currentImages = getValues('images') ?? [];
+    //     setValue('images', [...currentImages, ...base64Images], {
+    //       shouldDirty: true,
+    //       shouldValidate: true,
+    //     });
+    //     setImageFiles([]);
+    //   } catch (error) {
+    //     console.error('Error converting images to base64:', error);
+    //   }
     // }
 
     const hotels = getValues('hotels') || [];
