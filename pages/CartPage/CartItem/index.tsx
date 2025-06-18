@@ -257,7 +257,7 @@ const CartItem = (props: ICartItem) => {
     <HStack
       height="full"
       position="relative"
-      justifyContent="space-between"
+      justifyContent="start"
       spacing={9}
       onClick={() => handleCheckboxChange}
     >

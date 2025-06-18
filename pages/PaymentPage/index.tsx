@@ -39,6 +39,7 @@ const PaymentPage = () => {
 
   useEffect(() => {
     bookingStore.fetchBookingDetail(bookingId, PLATFORM.WEBSITE);
+    bookingStore.fetchPendingBooking()
   }, [bookingId]);
 
   useEffect(() => {

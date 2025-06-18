@@ -169,7 +169,8 @@ const TourDetailPage = () => {
       totalPrice += guest.price * guest.quantity;
     });
     setTotalPrice(totalPrice);
-  }, [guestInfo]);
+    //total price private tour not update
+  }, [guestInfo, privateTour]);
 
   useEffect(() => {
     if (!selectedDate) return;
@@ -255,6 +256,14 @@ const TourDetailPage = () => {
             participants: participant,
           },
         };
+        if (privateTour) {
+          data.tour = {
+            ...data.tour,
+            isPrivate: true,
+            transports: [transport.id],
+            hotels: [hotel.id]
+          }
+        }
         await bookingStore.createBookNow(data)
         setIsLoading(false)
         router.push(routes.booking.activity)
@@ -283,8 +292,8 @@ const TourDetailPage = () => {
         normalItem.price = privateItem.value ?? 0;
       }
     });
-
   }
+
   function handleCheckAvailability() {
     guestInfo.length ? setIsMenuParticipant(true) : setIsMenuParticipant(false);
     showDate.length ? setIsMenuDatePick(true) : setIsMenuDatePick(false);

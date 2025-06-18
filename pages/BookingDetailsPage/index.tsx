@@ -41,14 +41,15 @@ const BookingDetailsPage = () => {
   }
 
   useEffect(() => {
-    const fetchBooking = async() => {
-      await bookingStore.fetchBookingDetail(bookingId, PLATFORM.WEBSITE)
-      if (bookingDetail?.status === 'completed') {
-        localStorage.removeItem('booking_timeout')
-      }
-    } 
-    fetchBooking()
+    bookingStore.fetchBookingDetail(bookingId, PLATFORM.WEBSITE)
   }, [bookingId])
+
+  useEffect(() => {
+    console.log('bookingDetail?.status', bookingDetail)
+    if (bookingDetail?.status === 'completed') {
+      localStorage.removeItem('booking_timeout')
+    }
+  }, [bookingDetail])
 
   return (
     <>

@@ -49,7 +49,7 @@ const Action = (props: IHeaderProps) => {
     const dataBookingString = localStorage.getItem('booking_timeout')!;
     
     const userId = localStorage.getItem('websiteUserId')
-    if (!dataBookingString) {
+    if (!dataBookingString || pendingCount === 0) {
       setIsExpired(true);
       return;
     } else {
@@ -88,7 +88,7 @@ const Action = (props: IHeaderProps) => {
 
       return () => clearInterval(interval);
     }
-  }, []);
+  }, [pendingCount]);
 
   function gotoCartPage() {
     route.push(routes.cart.value);
